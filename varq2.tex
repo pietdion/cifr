@@ -1,0 +1,610 @@
+
+\section{Proposed research team}
+
+The proposed revised research agenda is structured to optimally capitalise on the expertise of three investigators:
+\bi
+\i   {\it Professor Piet de Jong:   Lead Investigator.}   Will direct and control the overall thrust and implementation of the project.    Design theoretical quantitative tools for assessing systematic risk and contagion effects and how these should or can be appropriately linked to drivers of the same.   
+\i   {\it Associate Professor Geoff Louden.}  Mainly in charge of econometric estimation and implementation, and detailed quantitative appraisal.
+\i   {\it Mr Weihao Choo.}   Presently working in private industry in Singapore and PhD student at Macquarie University.    Working together with the Lead Investigator on risk measures and risk contagion and systemic risk measures.
+\ei
+
+Advice and cooperation is requested  from appropriate research personal within APRA to assist in both development and implementation. 
+
+\section{Proposed research agenda}  
+
+The proposed revised agenda is as follows:
+
+\begin{itemize}
+
+\item  {\it Design, implement and test methods for assessing the level of systemic risk.    Implementation and testing on the basis of  Australian economic data including  the  ADI, insurance and superannuation industries.    Systemic risk is to be related to external and  domestic drivers of Australian economic shocks.  Methods and empirical results to  suggest  potential and practical methods to protect against or remediate  shocks.}
+
+\item  {\it Assess the effectiveness of the developed and implemented stress testing methods in group structures such as those administered by APRA as a means of enhancing the resilience of the group and entities within, to financial and economic shocks.    Advise on reserving rules and  methods to limit within group contagion.}
+
+\item {\it Make recommendations on  how APRA and industry can enhance stress testing procedures, particularly in relation to potential contagion effects, and learn more from the results of this testing.}
+
+\end{itemize}
+
+
+
+\section{Recent Literature and Methodological Developments}
+
+
+
+\subsection{\cite{adrian2011covar}}
+
+The thrust of this paper is to propose and empirically implement  a particular  measure of contagion and exposure  called $\covar$.   
+The $\covar_q$ between variables $x$ and $y$ is
+$$
+\covar_q(x,y) = \var_q\{x|y=\var_q(y)\} - \var_q\{x|y=\var_{0.5}(y)\}\ .
+$$
+Hence $\covar_q(x,y)$ is the change in the $\var_q$ of $x$  when $y$ moves from its median to its $\var_q$ point.   Moving $y$ is  thought of as ``stressing" $y$. $\covar_q(x,y)$ and can be thought of as the contagion effect of $y$ on $x$ or the exposure of $x$ to $y$.  Note $\covar_q$ is not standardised  and depends on the joint distributions of $(x,y)$.    If $x$ is a specific institution and  $y$ is say ``the market" or ``economy" then $\covar_q(x,y)$ measures the exposure of the institution to the market.  Further $\covar_q(x,y)\ne\covar(y,x)$ while  $\covar_q$ is ill defined.  If $x$ and $y$ are independent then $\covar_q(x,y)=0$.
+
+
+
+
+
+\subsection{\cite{brownlees2010volatility}}
+
+\renewcommand{\k}{\ensuremath{k}}
+
+This paper defines divides the current value of  assets of an institution into  fraction $\k$ without  risk and $1-\k$ with risk.   These fractions are determined based on current values.   If riskless The expectation the value one period ahead is $\k f + (1-\k)\E(r)$.
+Budget constraint at time $t=0$ is
+
+Suppose a firm has wealth $w$.   It borrows amounts $f$ and $g$, risky and guaranteed debt to arrive at total assets
+$w + f + g$ which it allocates to a vector $x$ of risky assets: $w+f+g=1'x$.  Suppose   $w=k(f+g+w)$ where $0<k<1$ where $k$ measures
+the leverage.
+
+After 1 period $f$,  $g$ and $x$ grow to $f^+$, $g^+$ and $x^+$, respectively to yield asset position $w^+=1'x^+ - f^+-g^+-\phi$ where $\phi$ is the cost of distress.  Hence the capital buffer at the end of the period is
+$$
+k(f^++g^++w^+)-w^+
+$$
+
+
+Stating that the wealth plus  
+ 
+This paper exploits the two period model developed by \cite{acharya2012measuring}.  Let $f$, $g$ and $w$ denote risky debt, guaranteed  debt and capital, respectively.     Risky assets enumerated in vector $x$. The equation $f+gb+w=1'x$ indicates the allocation  of debt and capital to risky assets, where $b$ is the discount applied to guaranteed debt.   One period later the wealth  of the institution is
+$x'r-f-g-\phi$ where $r$ is the return vector and $\phi$ is the cost of distress.
+
+The whole argument then focusses on $\E\{r_{it}|F(r_{mt})<q\}$
+
+
+\section{Improved  measures of contagion and systematic risk}
+\renewcommand{\c}{\ensuremath{\mathrm{CoV_q}}}
+\renewcommand{\v}{\ensuremath{\mathrm{VaR_q}}}
+
+$\covar_q$ as proposed in \cite{adrian2011covar} suffers from a number of difficulties:
+\bi
+\i Couched in terms of $\var_q$ which contains the scale of the original measurements.   It is worthwhile to have a scale independent measures
+\i  Conditioning  on $\var_{0.5}$ is undesirable as it ...   In our proposed approach we condition of the unconditional $\var_q$.   This permits a more transparent treatment and estimation. 
+\i  Relatively intractable function of the joint distrutions
+\ei
+
+To address these shortcomings and provide a more fundamental basis for empirical work based on the following definition
+\be\label{ncovar}
+\c(x,y) \equiv \v(x|y>q) - \v(x)\cq \c(x)\equiv \c(x,x)\ .
+\ee 
+It is shown below that \eref{ncovar} is a more robust and extensible definition, more readily amenable and useful to empirical work.
+
+
+\subsection{Contagious stress effects for percentiles}
+
+To contextualise the  proposed  research agenda of this project, initially suppose $u$ and $v$ are uniform random variables on $[0,1]$. Then obviously  $\v(u)=\v(v)=q$.  
+
+Define $u^+\equiv\v(u|v>q)$ as the $\var_q$ of $u$ given $v$ exceeds its $\var_q$:
+\be\label{Qdef}
+ \P(u\leq u^+|v>q)=q \cq 0<q<1\ .
+\ee
+The left hand side equals
+$$
+ \frac{\P(u\leq u^+,v>q)}{1-q} 
+=\frac{u^+-C(u^+,q)}{1-q} \ ,
+$$
+where  $C(u,v)$ is the joint distribution (copula) of $u$ and $v$.
+Rearranging yields
+\be\label{uplus}
+u^+ \equiv \v(u|v>q) = q(1-q)+C(u^+,q)\ .
+\ee
+If $u$ and $v$ are independent then $C(u,v)=uv$ and  $u^+=q$.   If $u=v$ then 
+ $u^+=q+q(1-q)=2q-q^2$ and $u^+-q=q(1-q)$.  Thus if $u$ and $v$ are non--negatively related, $0\le u^+-q\le q(1-q)$.
+
+\bi  
+\i Note
+$
+u^+_{t+1} = q(1-q)+C(u_t^+,q)
+$.
+Iterate this equation and make $C$ a function of forcing variables.  e.g. a Clayton copula where the parameter is a function of forcing variables.
+\i  If $u$ and $v$ are negatively dependent then define
+$$
+\c(u,v)\equiv -\c(u,1-v)
+$$
+\ei 
+ 
+In terms of  $u^+\equiv\v(u|v>q)$, define the contagion effect of $v$ on $u$ as
+\be\label{ruv}
+ \beta_{uv} \equiv \frac{u^+-q}{q(1-q)}=\frac{\c(u,v)}{\c(v)}  \ .
+\ee
+Thus $\beta_{uv}$ is the change in $\var_q$  of $u$ given $v$ becomes $q$--stressed as a proportion of the change if $u=v$.   For positively dependent random variables $0<\beta_{uv}\le 1$ with the lower and upper limits attained under independence and perfect dependence, respectively.    If $u$ and $v$ are negatively dependent then $1-1/(1-q)\le \beta_{uv}<0$.   Negative dependence is not be studied in great detail in this project.  Note $\beta_{uv}\ne \beta_{vu}$.
+
+Furthermore we may define quantities such as
+$
+u^- \equiv \var_q(u|v\le q)
+$
+measuring the impact of a non distressed state in $v$.  For brevity we do not dwell on these constructs in this writeup although the ramifications and potential uses of these constructs will be  investigated in the research.
+
+\subsection{Contagious stress effects for financial variables}
+
+We now discuss actual variables on actual scales.   Suppose $F_x$ and $F_y$ are the marginal distributions of $x$ and $y$ with $x=F_x^-(u)$ and $y=F_y^-(v)$.   Then the contagion effect 
+ of $y$ on $x$ is defined as the change in $\var_q(x)$ when $y$ becomes $q$--distressed as in \eref{AB2}, equal to
+ \be\label{covar}
+\covar_q(x,y)\equiv\v\{x|y>\v(y)\} - \v(x) 
+\ee
+\be
+= F_x^-\{q+\beta_{uv}q(1-q)\}-F_x^-(q) \approx \frac{q\beta_{uv}}{\lambda}=\frac{ \c(u,v)}{q'} \ ,
+\ee
+where  $'$ denotes differentiation and $\lambda$ is the hazard of $x$ at $x=\var_q(x)$.  If $F_x$ is linear then the approximation is exact.   Hence it is appropriate to scale $x$ such that $F_x^-$ is linear in the tail.   Rescaling has no effect on the copulas connecting variables.
+
+\subsection{The contagion matrix}
+If $x$ is vector then $\c(x)$ is the (non--symmetric) matrix with entries $\c(x_i,x_j)$ and 
+$$
+R\equiv\c(x) = D^{-1}\times \c(u)\cq D=\diag\left(q_1',\ldots,q_m'\right)\ ,
+$$ 
+where $m$ is the number of components in $x$. 
+
+
+   
+The sum of all entries $s\equiv 1'R1$ where $1$ is a vector of 1's is the sum of all contagion or exposures is called the systemic risk.   Thus $s$ measures the total effect on other institutions' $\v$ of moving each institution, from its unconditional position to its $\var_q$ position. 
+
+\bi
+\i Let 1 indicate a column vector of 1's.   Then  vector $r\equiv R'1$ is the sum of each column of $R$ and indicates the  sum of all the contagion effects  in response to   stressing a given institution.    Large (negative) entries  of $r$  indicate  institutions with a combined major impact on other institutions.    Hence $r$ is called the contagion vector. 
+\i In contrast  $e\equiv R1$ is the  vector of row sums.   Entries indicate the sum of contagion effects on  $i$ when stressing all other institutions called exposures.    If a particular component is zero, then the corresponding institution is not affected by stresses elsewhere in the system.    Large  components of $e$ indicate  exposed institutions and $e$ is called the  exposure vector. 
+\i $e\circ r$ is the exposure times contagion effect and hence is a second order effect.           
+\i Note $s\equiv1'e=1'r=1'R1$ the total systemic risk measuring total losses  when all $i$ move from average risk to $\var_q$.   
+\i The above has assumed measurement is relative to the median i.e. the 0.5 quantile.    However suppose we measure contagion effects relative to the current state of each institution: $R_t\equiv R(x_t)$   where $x_t$ is  the vector $x$ observed at time $t$.   Then $R_t$ is the contagion matrix at time $t$ where contagion effects are measured with respect to the actual percentiles applicable at time $t$ i.e. entry $(i,j)$ of $R_t$ is the change $\var_q$ of $i$ when $j$ moves from its current profitability to its $\var_q$.
+\i  Write $r_t\equiv R_t1$ and $e_t=R_t'1$.    Hence with $R_t$, $r_t$ and $e_t$  focus  on measuring risk, exposure and contagion effects given the actual state percentile state at each time $t$.
+\i Total systemic risk  in the system at time $t$ is $s_t\equiv 1'R_t1$.    Note   $x_t\rightarrow q$ implies $s_t\rightarrow 0$.
+\i A more general analysis is where 
+$$
+r_{i} \equiv \v(x_i|x^i=v^i)-\v(x_i|x^i)
+$$
+where $x^i$ is $x$ excluding component $i$.   In this case $r_i$ measures the the effect on $\var_q$ of $i$ of stressing all other institutions from their current position to stressed positions. 
+\i  Systemic risk is measured relative to $q$.   This can be varied.  Furthermore the risk is measured through a specific risk measure.   More generally we can substitute $\var_\phi$ with say $v_i\equiv v(x_i)\equiv\E\{x_i\phi(u_i)\}$ where $\phi$ defines a risk measure.   Further
+$$
+r_{ijt} \equiv v(x_i|x_j=v_j)-v(x_i|x_j=x_{jt})  \ ,
+$$
+arranged into the matrix $R_t$.    Thus $R_t$ measures the contagion effects on $i$ of $j$ where the effect is measured by the expected change in the risk floor of $x_i$ if $x_j$ moves from its current value to its risk floor. 
+\i  One of the institutions may be the financial system as a whole denoted $y$.    In this case 
+\be\label{f}
+r^+_j\equiv\v\{y|F(x_j)=q)-\v\{y|F(x_j)=0.5\}
+\ee
+measures the exposure of the financial system to  institution $j$.  
+\i   Quantile regression is  used to estimate the exposure of the financial system to $j$.   Consider the regression model 
+$
+y_t = q_j + \beta_j x_{jt} + \eps_t\ ,
+$
+estimated using quantile regression techniques leads to $\var_q$ of $y$  as a function of  $x_j$.   Given  $q_j$ and $\beta_j$ then  \eref{f} becomes 
+$$
+r_j^+=q_j+\beta_j \v_{jt}  - (q_j+\beta_j\m_{jt}) = \beta_j(\v_{jt} -\m_{jt})\ .
+$$
+\i The next step relates $\var$ of $x_j$ to state variables.    In this prescription state variables at different points of time become critical 
+$$
+y_t =q_j+\beta_j x_{jt} + \gamma_jq_t + \eps_t\cq x_{jt} = a_j + g_jq_t + \eta_t
+$$
+where $q_t$ is a  state variable.  Again quantile regression is used and the results from the regression are used to predict the quantile of $y_t$ given the quantile of $x_{jt}$. 
+
+   In terms of this notation 
+$$
+q_j+\beta_j\v_{jt} + \gamma_jq_t - (a_j + b_jq_t) = 
+$$
+\ei
+
+\subsubsection{Quantile regression of contagion effects}
+Suppose we have a vector time series of losses for each institution:  $x_t$, $t=1,\ldots n$.    Then we can regress each component of $x_t$, denoted $x_{it}$ on regressor variables.    Using absolute values leads to median regression and a more generalised penalising function leads to appropriate percentiles.  In this project we are interested in the $q$--percentiles.    Why not just regress each component on losses in other sectors and use a penalty function that tunes to the $q$ quantile.  In particular we solve the following problem
+$$
+\min_{\beta}\sum\rho_q\{x_{it}-f(x_t^i,\beta)\}
+$$
+where $\rho_q$ is the tilting function appropriate to $\var_q$ and $x_t^i$ is vector $x_t$ excluding component $i$, while $f$ is some function.    Given $\beta$,
+$$
+r_{ijt} \equiv v(x_i|x_{jt}=v_{jt})-v(x_i|x_{jt})
+$$      
+
+ 
+Suppose we regress parameters of the distribution of $x_i$ on external factors.  Here $x_i$ is the loss of $i$ typically observed over time. This will take the form of a generalised linear regression using one of the extreme tail distributions.    We can related the parameters of this distribution to the profitability of all other instructions.    This will result in a distribution conditioned on the other variables and a $\var_q$ value.   The contagion effect is then straightforward to estimate.
+
+The regression curve gives the average of the distributions for the different xï¿½s. Percentage points or $\var+q$ can be similarly summarised  for a more complete picture. Ordinarily this is not done, and so regression often gives a rather incomplete picture. Just as the mean gives an incomplete picture of a single distribution, so the regression curve gives a corresponding incomplete picture for a set of distributions.
+
+
+The contagion effect $r_{xy}$  depends on:
+\bi
+\i   The $q$ level.    As $q\rightarrow 1$, other things equal, $\beta_{xy}\rightarrow r_{uv}/\lambda$.
+\i  ``correlation" $\beta_{uv}$ as determined by the copula in \eref{ruv}.   
+\i  Hazard of $x$ at $x=c$.   Small hazard implies $r_{xy}$ is large.
+\ei
+
+In practice $q\approx 1$ implying $r_{xy}$ is effectively equal to $r_{uv}/\lambda$.   
+If $F_x$ is tail exponential with mean $\mu$ then $1/\lambda=\mu$ and $r_{xy}=\mu q r_{uv}$.  With  the Pareto  $\lambda$ is decreasing which means $1/\lambda$ is increasing and  the impact of a ``stress" is larger when $q$ is larger, given the same $r_{uv}$.
+
+
+
+\section{Measures based on \tvar\ and other variants}
+
+$\var_q$ can be written as $\E\{x\phi(u)\}$ where $u=F_x(x)$ and $\phi(u)$ is zero unless $u=q$ in which case it is infinite.    Changing  $\phi(u)=(u>q)$, the indicator of $u>q$ or $qu^{q-1}$ then  $\var_q(x)$ becomes $\E\{x|x>F_x^{-1}(q)\}$ and $\E\{\max(x_1,\ldots,x_q)\}$, respectively.   Here $x_1,\ldots,x_q$ are $q$ independent copies of $x$.  Using these alternative definitions for $\phi$ to define $\var_q$ need not alter the definition of $\covar_q$ in \eref{}
+
+With these alternative definitions there need be no change to the definition of $\covar_q$.
+
+ 
+Let $(u,v)$ represent percentile ranks of two random quantities, thus $(u,v)$ is multivariate uniform. In this paper ``uniform'' refers to the uniform distribution over the unit interval unless stated otherwise. Assume the joint distribution of $(u,v)$ is exchangeable. Define the ``$q$-percentile rank gap'' between $u$ and $v$ as
+\begin{equation}\label{definition}
+\rho_q \equiv \frac{\E(v|u>q)-\E(v|u\leq q)}{\E(u|u>q)-\E(u|u\leq q)}= \frac{\E(v|u>q)-\E(v|u\leq q)}{1-q}
+\end{equation}
+In other worlds
+$$
+\E(v|u>q)  = \E(v|u\leq q)+(1-q)\rho_q
+$$
+But
+$$
+1/2 =(1- q)\E(v|u>q) + q\E(v|u\leq q)
+$$
+implying 
+$$
+\E(v|u\leq q) = \frac{1/2 -(1- q)\E(v|u>q)}{q}
+$$
+Substituting yields 
+$$
+\E(v|u>q)  = \frac{1/2 -(1- q)\E(v|u>q)}{q}+(1-q)\rho_q
+$$
+or 
+$$
+\frac{q\E(v|u>q)+(1-q)\E(v|u>q)}{q} = \frac{1/2}{q}+(1-q)\rho_q
+$$
+or
+$$
+\E(v|u>q) = 1/2+q(1-q)\rho_q
+$$
+where $\E$ calculates expectations under the joint distribution of $(u,v)$. Hence $q$-percentile rank gap $\rho_q$ is the scaled difference between upper and lower conditional tail expectations of $v$ with respect to $u$, using threshold $q$. Since $u$ is uniform and the joint distribution of $(u,v)$ is exchangeable,
+$$
+\rho_q = 2 \left\{\E(v|u>q)-\E(v|u\leq q)\right\}=2 \left\{\E(u|v>q)-\E(u|v\leq q)\right\} \;.
+$$
+Comparing to CoVaR the analogy is 
+$$
+r_{ij} \equiv \E(u_i|u_j=q)-\E(u_i|u_j=0.5)  \ ,
+$$
+
+
+\subsubsection{Generalized linear model distributional approach}
+
+ 
+\subsection{\cite{brownlees2010volatility}}
+
+
+
+The method  computes \sr,  defined as the capital  a firm is expected to need given a financial crisis:
+$$
+\sr_{it} = \E(\cs_{it}|\cri_t) 
+$$
+(2) This can be estimated with a bivariate daily time series model of equity returns on firm i and on
+a broad market index (which could be just the financial sector).
+
+\section{Action Points from Notes from the meeting with Charles L}
+\bi
+\i Tell Weihao he needs to send his CV.   Quite positive about employing someone like him.   Will end up in right hands.  Need to improve CV
+\i Speak to Jeff Sheen.
+\i  Interested in Linkages NOT is the systemic risk of individual  institutions.
+\i  Avoid the obvious (e.g. if CBA falls over then there will be spillover effects)
+\i Looked at world through GI, Banking, Super sectors and linkages related thereto
+\i What happens on the capital side is of interest but what about if customers leave.
+\i Talked about knock on effects of say customers being distressed and how to quantify this effect e.g. if instead of 10\% of customers becoming distressed that proportion increases to 25\%.
+\i Cross contagion
+\i Super -> Economy
+\i Smaller Banks -> Economy
+\i Credit Unions -> Economy
+\i  RBA has guys interest in systemic risk
+\i House prices.  What is the knock on effect of a tumble.
+\i How do we know we are in a bubble.
+\i Gridlock -- how can it be predicted/avoided
+\i  Much published stress testing is not useful as they never publish events/situations that brings bank down
+\i Balance sheet versus income statement of SME's what happens when banks call loans.
+\i How to use household data as maintained in Canberra
+\i Stressing a household.   What happens.
+\i APRA board members look at practical impact -- Academic guys on board look at academic merit.
+\i How to capture 1st round , 2nd round , 3rd round effects etc.
+\i Approval rates of loans to SME's impact.
+\i Can be put in touch with data guys.
+\i 
+\ei
+
+
+\section{Sheedy paper}
+
+The Basel 2 Accord requires regulatory capital sufficient to cover losses under unlikely yet plausible scenarios. This is called ``stress testing."  Yet no coherent and objective framework for stress testing portfolios exists. We propose a new methodology for stress testing in the context of market risk models that can incorporate both volatility clustering and heavy tails. Empirical results compare the performance of eight risk models with four possible conditional and unconditional return distributions over different rolling estimation periods. 
+
+Most stress tests are currently designed around a series of scenarios based either on historical events, hypothetical events, or some combination of the two.  They are typically conducted without a risk model so the probability of each scenario is unknown, making its importance difficult to evaluate. There is also a distinct possibility that many extreme yet plausible scenarios are not even considered.
+
+Seems that risk models put some joint behaviour on the different scenarios.
+
+For each model we estimate Value-at-Risk (VaR) and expected tail loss (ETL), i.e. the expected loss conditional on exceeding VaR.
+
+Many banks use simple unconditional models to estimate VaR.
+
+importance of volatility clustering and heavy tails in modelling extreme risk.
+
+Risk model is distinct from \var\ model
+
+accurate risk models will capture two key characteristics: volatility clustering and heavy tails.
+
+Having identified our preferred risk models, we then develop and illustrate a model-based stress testing methodology. The methodology includes specification of an initial shock event and analyses the subsequent market response to that shock using simulation. Alternatively analysts can specify hypothetical shock events and use the risk models only to assess its after effects as volatility increases in response to the shock. The methodology can readily be extended to handle multiple assets/risk factors and to incorporate changing liquidity conditions. Market partici- pants may also use this framework to assess their own response to a market crisis, i.e. immediate versus gradual hedging. The methodology is evaluated by comparing it to current stress testing techniques and regulatory requirements.
+
+
+
+\subsection{Risk model}
+
+A risk model consists of an appropriate distribution of returns.   The distribution is  based either on the historical record, a theoretical model calibrated to data, or a mixture of the two.      Extreme events are extreme shock drawn from the appropriate tail of the return distribution.
+
+\subsection{Modelling after-shock}
+
+The consequences of a shock event can include some or all of the following: further large moves in the same market (as volatility clustering predicts), large moves in other markets and higher correlations between markets, increased implied volatility in option markets and reduced market liquidity. In this section we explain a modelling strategy suited to the current application: single currency, linear positions in major currency markets. Bangia et al. (2002) show that market liquidity risk is relatively unimportant for major currencies so we adopt here only a crude adjust- ment for liquidity when modelling the after-shock. That is, the horizon of the stress test is extended beyond a single day to reflect possible delays in closing a position.
+
+Portfolio returns are assessed for $h-1$ days after the initial shock which occurs at time $T$ so that the total stress test, including the initial shock, has a horizon of $h$ days. The ``stress loss" for a long asset is -1 times the lower $\rho$ percentile of the simulated $h$--day returns when ranked from highest to lowest returns.  We propose Monte Carlo simulation to evaluate possible asset price paths subsequent to the shock. Whilst simulation can be criticised for computational intensity we note that stress tests (unlike VaR analysis) need not be conducted on a daily basis. And simulation has many advantages for stress testing including the ability to compare the impact of gradual and immediate hedging strategies on portfolio returns. Note that the maximum loss need not occur at the end of the risk horizon; in fact it often occurs at an interim point. Simulation allows analysts to evaluate a large array of possible paths including those with extreme interim losses, assessing their implications for limits, margin calls and funding liquidity.
+
+We propose Monte Carlo simulation to evaluate possible asset price paths subsequent to the shock. Whilst simulation can be criticised for computa- tional intensity we note that stress tests (unlike VaR anal- ysis) need not be conducted on a daily basis. And simulation has many advantages for stress testing including the ability to compare the impact of gradual and immediate hedging strategies on portfolio returns. Note that the max- imum loss need not occur at the end of the risk horizon; in fact it often occurs at an interim point. Simulation allows analysts to evaluate a large array of possible paths includ- ing those with extreme interim losses, assessing their impli- cations for limits, margin calls and funding liquidity.
+
+\subsection{Multivariate stress testing}
+
+We select an asset/factor which will sustain an initial shock. The initial shock is defined as the a per- centile of the marginal returns distribution, either derived from the empirical marginal or the marginal in a paramet- ric risk model. Depending on the particular model speci- fied, the shock can lead to an increase in volatility in all assets as well as an increase in correlation. The algorithm for modelling the aftershock with two returns is as follows:
+
+\section{Introduction}
+Financial institutions are regulated partly because individual  failure is likely to have major impacts on the financial and real sectors of the economy.    Part of this regulation uses prudential risk margins.   Risk margins are often set using the Value--at--Risk (\var) methodologies where  sufficient reserves are held  against, say, 1 in 100 years' contingencies. 
+
+Financial institutions using internal VaR models to assess capital adequacy use stress testing to  evaluate the potential impact on portfolio values of events or movements in financial variables such as market rates of return. Stress testing explores the tails of loss distribution of lbeyond the threshold used in the \var\ analysis.  Most stress tests use scenarios based on historical or hypothetical events. These methods have been criticised by Berkowitz (2000) and Greenspan (2000) for their lack of rigour. They are typically conducted without a risk model so the probability of each scenario is unknown, making its importance difficult to evaluate. There is also a distinct possibility that many extreme yet plausible scenarios are not even considered.
+
+The \var\ methodology requires a detailed understanding of the loss distribution, drivers of its shape and the manner in which shocks propogate into subsequent losses.   Since the end of 1997 financial institutions using internal VaR models to assess capital adequacy have been required to implement stress testing (see Basel Committee on Banking Supervision, 1996). They provide an input to decisions concerning capital adequacy, hedging, limit setting and portfolio allocations. The Basel 2 Accord recommends more direct links between stress tests and risk capital, i.e. ÔA bank must  
+
+Drivers of the shape of a loss distributions can be categorised into external or internal.   External drivers are those exogenous to the entity while internal drivers depend on factors and policies determined within the organisation.
+
+When aggregating across a group the distinction between external and internal becomes more problematic. 
+
+for instance, regulate them to reduce their risk, and consequently the probability that taxpayers will face this choice.
+
+The definition, however, misses a key feature of systemic risk. Systemic risk should not be described in terms of a financial firmï¿½s failure per se but in the context of a firmï¿½s overall contribution to system?wide failure. The intuition is straightforward. When only an individual financial firmï¿½s capital is low, the firm can no longer financially intermediate. This has minimal consequences though because other financial firms can fill in for the failed firmï¿½s void. When capital is low in the aggregate, however, it is not possible for other financial firms to step into the breach. This breakdown in aggregate financial intermediation is the reason there are severe consequences for the broader economy.
+
+
+\section{Proposed framework for studying contagion and systemic risk}
+
+The proposed research  builds upon recent proposals in \cite{adrian2011covar} (AB) and \cite{brownlees2010volatility} (BE) to quantify contagion effects between institutions and permit contagion effects to be modulated by   other variables.
+  
+AB  proposes a measure, called $\covar$,  to quantify ``How will the $\var_q$ of one institution change if losses in another institution attains its $\var_q$?     Here the threshold level $q$  is given, fixed at say $q=0.99$.    The other institution may be the ``market."  The change is called the $\covar_q$ (or simply $\covar$)  of the institution with respect to the other.   $\covar$ is advocated as a dependence   measure.    Major dependence is  indicative of potential  contagion effects across the financial  system and systemic risk.    Linking $\covar$ to external variables indicates the response of the intra groups dependencies are modified and shaped by external events and variables. 
+
+Given two random loss variables, the AB measure is 
+\be\label{ABcov}
+ \var_q\{x|y=\var_q(y)\} - \var_q\{x|y=\var_{0.5}(y)\}
+\ee
+Thus the $\var_q$ of $x$ is compared between the states when $y$ is at its unconditional $\var_q$ as compared to when $y$ is at its medium.  The aim of the measure is capture the change in the prudential margin of $x$ when $y$ moves from a ``normal" state (i.e. its median value) to its $q$--stressed state.
+
+The AB paper has received much attention in the literature.   Yet the proposed methodology is open to much refinement and improvement.  The $\covar$ measure advocated by AB suffers from a number of shortcomings impeding practical use and development.   The aim of the proposed research is to address these shortcomings and implement impro both theoretically and empirically.   In particular the proposed research deals with the following issues:
+
+\bi
+\i  The $\covar_q$ measure focusses on the change in $\var_q$ of one institution when another institution (or the market) moves from its median state to its $\var_q$ state.    In practice it is more cogent to measure changes contingent upon an institution breaching its $\var_q$.  From a technical point of view, modelling the effect on $x$ of $y$ being stressed appears better done by thinking of $y$ moving from its unconditional expectation to one where it is in breach of its $\var_q$.  Thus \eref{ABcov} becomes
+\be\label{AB2}
+\covar_q(x,y) \equiv \var_q\{x|y>\var_q(y)\} - \var_q(x)
+\ee
+\i  The AB $\covar_q$ measure is directly cast in terms of the scales of used to measure losses or extreme events in each institution.The modified measure \eref{AB2} suffers from the fact that it is a function of both marginal distributional information and the copula connecting the random $x$ and $y$.   Much modern development, both theoretical and empirical, testifies to the fact that  it is desirable to separate marginal modelling from dependence issues.    
+\ei  
+
+The aim of the proposed research is to develop the the research path suggested by the two items above. 
+
+
+\begin{enumerate}
+\item 
+\item  
+\item   
+\end{enumerate}
+
+  
+
+
+
+
+
+ 
+
+
+Note 
+$$
+1-\frac{1}{1-q}\le r_{uv}\le 1
+$$
+with $r_{uv}=1$ if $u=v$, $r_{uv}=0$ if $u$ and $v$ are independent, while the lower limit is attained if $u=-v$ and for positively dependent $u$ and $v$, $0<r_{uv}\le 1$.
+
+\subsection{Stability effect.}
+
+Similar to $u^+$ define  $u^-\equiv\Q(u|v\leq q)$.   Thus $u^-$ is such that
+$$
+ q=\P(u\leq u^-|v<q)= \frac{C(u^-,q)}{q}\cq C(u^-,q)=q^2\ .
+$$
+If $u$ and $v$ are independent then $u^-=q$.  If $u$ and $v$ are perfectly correlated then $u^-=q^2$.  In terms of $u^-$ the stability effect of $v$ on $u$ is defined as
+$$
+s_{uv}\equiv \frac{u^--q}{-q(1-q)} =\frac{\Q(u|v\leq q)-\Q(u)}{\Q(v|v\leq q)-\Q(v)}  \ ,
+$$
+and measures the ``safety" dividend on $u$ knowing $v$ is safe.   The safety dividend is measured relative to the maximum dividend, occurring if $u=v$ and
+$$
+1-\frac{1}{1-q}\le s_{uv}\le 1
+$$
+with $s_{uv}=1$ if $u=v$, $s_{uv}=0$ if $u$ and $v$ are independent, while the lower limit is attained if $u=-v$.
+
+If both the contagion effect and safety dividend are high then $u$ is very $q$--exposed to $v$.    A reasonable measure is to take the average
+$$
+\frac{r_{uv}+s_{uv}}{2} = \frac{\Q(u|v>q)+Q(u|v<q)}{2q(1-q)} = \frac{\Q(u|v>q)+\Q(u|v<q)}{\Q(u|v>q)-\Q(u)\Q(v)}
+$$
+
+\subsection{Comparing contagion and stability effects}
+
+Both $r_{uv}$ and $s_{uv}$ measure the impact on $\var_q$ when knowledge of $q$--distress state of $v$ becomes available:
+
+Hence
+$$
+r_{uv}-s_{uv} = \frac{u^++u^-}{q(1-q)} = \frac{\Q(u|v>q)-\Q(u|v\leq q)}{q(1-q)}
+$$$$
+C(u^+,q) = q^2\cq C(u^-,q) = q(1-q) + u^-
+$$
+Note if $u$ and $v$ are independent then $r_{uv}-s_{uv}=0$.  If $u=v$ this reduces to 
+$$
+1 - \frac{q^2}{q(1-q)} = 1-\frac{q}{1-q}
+$$
+
+The measure $r_{uv}$  quantifies the effect on the $\var_q$ of $u$ if $v$ is in breach of its $\var_q$.   The presentation is somewhat analogous to \cite{adrian2011covar}.   The above definition appears superior on a number of grounds:
+\bi
+\i   $r_{uv}$ is divorced from actual scales (good if you believe joint action is best modelled with copulas).  Hence invariant to any 
+monotonic transformation of  scale.  (This may help in empirical modelling by taking say logs etc).
+\i    Doesn't suffer from $v=q$ conditioning problem.   i.e. $v$ in distress implies $v>q$,  not $v=q$.
+\i    Is $\var_q$ oriented in that it shows the revised $q$-safety demand on $u$, when $v$ becomes $q$--distressed.
+\i  Given $u^+$ it follows
+\be
+r_{uv} = \frac{C(u^+,q)/q-q}{1-q}=\frac{C(u^+,q)-q^2}{q(1-q)}
+\ee\label{ruv}
+Note $C(u^+,q)/q=\P(u \leq u^+|v\leq q)$ and hence
+$$
+r_{uv} = \frac{\E(u\leq u^+|v\leq q)-\E(u\leq q)}{\E(u>q)}\cq q=\E(u\leq u^+|v>q)
+$$
+\i Don't like the 
+fact that $\min(r)$ is not -1.  Can this be ``fixed" or rationalised.
+\ei
+
+
+Below the hazard is modelled as as a function of explanatory variables $z$ using the Cox proportional hazards model.
+The Copula thus stays fixed and 
+$$
+r_{xy}(t) = \frac{r_{uv}}{\lambda_x}\e^{-z_t'\beta}\cq \ln r_{xy}(t) = \ln r_{uv} - \ln \lambda_x -z_t'\beta
+$$
+
+
+
+
+
+\subsection{Alternate approach}
+
+An alternate definition is
+$$
+(1-q) r_{uv} \equiv \frac{u^+-q}{q} \approx \ln u^+-\ln q \cq u^+= q\{1+(1-q)r_{uv}\}\approx q\e^{(1-q)r_{uv}}\ .
+$$
+With this definition
+$$
+(1-q)r_{xy} \approx \frac{(1-q)r_{uv}}{(\ln q)'} \approx \frac{\ln u^+ - \ln q}{(\ln q)'}
+$$
+
+Note the result below:  (not sure if this has any usefulness -- note diff is wrt $q$ not $x$) 
+$$
+\int_a^b\frac{(\ln q)'}{1-q} \de q =\left. \ln \frac{q}{1-q}\right]_a^b \cq \int_a^b\frac{1-q}{(\ln q)'} \de q =\left[\frac{x^2}{2}-\frac{x^3}{3}\right]_a^b
+$$
+
+\subsection{Market}
+
+Empirical papers seem to focus on the ``market".    In this case, say $v$ is the market and $u$ a particular industry.  Then $r_{uv}$ indicates the ``correlation" of the industry with the market and the exposure industry  $u$ has to the market.      
+
+\subsection{Many variables}
+
+In the vector case define matrix $R_u$ with entries  consisting of the pairwise $r_{uv}$.  Write
+$$
+R_x \equiv D^{-1}R_u\ ,
+$$
+where $D$ is a diagonal matrix with entries $(\ln q)'/(1-q)$, the slopes (``scores"?) of $\ln q$ with respect to each of the $\var_q$ corresponding to $x$.  
+ 
+\bi
+\i  In essence $R_u$ captures, in a scale independent fashion, the contagion effects of breaches in each industry on other industries.  These scale independent quantities are ``scaled" using  $D^{-1}$, to arrive at $R_x$.
+\i  Varying $q$ indicates the sensitivity of each institution to other institutions at different $q$.   For example if $q=1/2$ then $R_x$ measures the impact of a ``worse than average year" of one institution on the $\var_{1/2}$ or median of another.    Hence constructing $R_x$ is similar to quantile regression where the explanatory variables are (up to $(1-q)/(\ln q)'$ the contagion effects on the $(u,v)$ scale.
+\i The quantities $(\ln q)'$ can be determined using quantile regression.  i.e. here we are determining the slope of the marginal distribution at quantile $q$.
+\i 
+\i  $R_u=I$ (independence) implies $R_x=D^{-1}$.  Thus $R_x-D^{-1}$ has zero on the diagonal
+\i  Entry $(i,j)$ indicates the impact, up to $1-q$, on the $\var_q$ of $i$ of a breach in $j$.
+\i Row $i$  of $R_x$ indicates (up to $q(1-q)$) of the contagion effects on  $i$ of  breaches elsewhere. 
+\i Column $j$ of $R_x$ indicates (up to $q(1-q)$) contagion effects of a breach in $j$.
+\i  The vector $(R_x - D^-)1$ where $1$ is a (column vector) of 1's, is the total $\var_q$ exposure (up to $q(1-q)$) of each institution of breaches in all other institutions.   
+\i  The vector $(R_x'-D^{-1})1$ where $'$ indicates transposition, is the sum of all $\var_q$ impacts of each institution on all other institutions.
+\i  Systemic risk is measured as $1'(R_x-D^{-1})1$, that is the sum of all off--diagonal entries of $R_x$.  
+\i  Maybe systematic risk should be measured as $1'(R_u-I)1=1'R_u1-p$ where $p$ is the number of industries.
+
+\ei 
+
+Problem with the above is that the development is first order.    Maybe this is all we can hope for.
+\subsection{Joint modelling of many variables}
+
+Suppose $C(u)$ is the copula of a vector $u$ of uniform random variables.   Then 
+$$
+\frac{C(u)}{u_i} = \P(U\leq u|U_i\le u_i) = \P(U^i\leq u^i|U_i\leq u^i)
+$$ 
+is the conditional distribution given $u_i$.   Here $U^i$ and $u^i$ indicate $U$ and $u$ excluding component  $U_i$ and $u_i$, respectively.  Suppose $i=1$ then 
+$$
+\P(U^1\leq u^1|U_1\leq u^1) = \P(U_2\leq u_2|U_1\leq u_1)\P(U_3\leq u_3|U_1\leq u_1,U_2\leq u_2)\cdots
+$$$$
+=C(u_2|u_1)C(u_3|u_1,u_2)\cdots\approx C(u_2|u_1)C(u_3|u_1)\cdots 
+$$
+The so--called prediction error decomposition.
+
+\subsection{Econometric modelling}
+Econometric modelling thus proceeds as follows:
+\bi
+\i  
+\ei
+
+
+
+\section{APRA's Research Interests}
+APRA is providing the following information to assist researchers, research institutions, and funding bodies to better understand its research interests.
+
+\subsection{APRA's role and mission}
+
+APRA's main role is prudential supervision and regulation of Australian banks, building societies, credit unions, life insurers, general insurers, friendly societies, superannuation funds and other relevant entities. In this role, APRA seeks to ensure that, under all reasonable circumstances, regulated institutions meet their financial promises within a stable, efficient and competitive financial system. Through this work, APRA also promotes financial system stability in Australia.
+APRA has two auxiliary missions: it is a national statistical agency for the Australian financial sector and it administers the Financial Claims Schemes in the authorised deposit- taking institution (ADI) and general insurance industries.
+
+\subsection{Specific research interests}
+
+
+
+
+\section{Further stuff}
+
+Stress testing is used in the context of the measurement of bank capital adequacy and reserving for market risk, in conjunction with Value at Risk. Value at Risk is essentially an estimate of the quantile of the distribution of the change in value of a portfolio of financial instruments. In order to do a VaR calculation, you need to specify a joint distribution for the instrements in the portfolio.
+
+Stress testing involves estimating how a portfolio would perform under some ``extreme market movements". It is a form of scenario analysis. It is a way of taking into account extreme events that do occur from time to time but which are virtually impossible according to the probability distributions assumed for the variables that impact on the portfolio value. For example a 5 standard deviation daily move in a market index (e.g. the s\&p 500 stock market index) is one such extreme event. Under the assumption of a normal distribution this would happen about once every 7000 years, but in practice such movements are observed once or twice every 10 years.
+
+\section{Connection to the aims and functions of APRA.}
+
+APRA aims to ensure that, under all reasonable circumstances, regulated institutions (banks, building societies, credit unions, life insurers, general insurers, friendly societies and superannuation funds ) meet their financial obligations.  Through this APRA, aims to  promote financial system stability in Australia.
+
+APRA lists five areas of specific research interests:  Stress Testing, Financial System Stability, Operational Risk,  Insurance Risks,   and Superannuation.  The current proposal deals with the first two:   stress testing and financial system stability.     The proposed research area will have tangential implications for  Insurance Risks insofar as they are captured through stress testing and contagion.    The proposed research will have implications for data gathering  and the statistics APRA should aim to collect.  
+
+Stress tests underpins the capital calculations for APRA's prudential capital requirements in the ADI and insurance industries. 
+ APRA is interested in research on the efficacy of these capital models.   Further development is desired the methodology to  assist  it and industry better define and learn from stress tests. 
+ 
+Specific areas of APRA interest include (taken from the relevant website)
+\begin{itemize}
+\item procedures for developing macroeconomic and industry stress scenarios that provide robust but reasonable stresses;
+\item the mathematics of stress testing (e.g. properly accounting for random variables such as default rates and collateral values);
+\item understanding second-round stress effects (e.g. if the banking sector is stressed, does the resultant credit tightening create second-order stress?);
+\item stress testing insurance portfolios for both catastrophic and gradual changes in loss rates;
+\item stress testing insurance and superannuation portfolios for investment loss; and
+\item stress testing ADIs and superannuation funds for liquidity shocks.
+\end{itemize}
+
+APRA is also interested in research oriented to better characterising the level of systemic risk in the Australian economy and in the ADI, insurance and superannuation industries. APRA is also interested in research that identifies plausible domestic and external shocks to the Australian economy, and potential methods to protect against or remediate these shocks.
+
+\section{Detailed research background and proposals}
+
+The starting point for the proposed research are recent developments  in the international academic literature dealing with systemic risk, contagion effects and exposure of different institutions to the external events (including crises) and external variables.   Articles include:
+
+De Jong References
+
+\cite{choo2009loss}
+\cite{dejong2008glm}
+\cite{de1983claims}
+\cite{dejong:2009}
+\cite{DeJong&Chuchunlin:2003}
+\cite{DeJong&Zehnwirth:83a}
+\cite{DeJong&Boyle:83}
+\cite{DeJong:2004}
+\cite{DeJong&Ferris:2006}
+\cite{DeJong:89}
+\cite{DeJong:91a}
+\cite{DeJong&Shephard:95}
+\cite{DeJong&Penzer:98}
+\cite{choodejong:2010}
+\cite{dejong2006frt}
+\cite{DeJong&Marshall:2007}
+\cite{de2012modeling}

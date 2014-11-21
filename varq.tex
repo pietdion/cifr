@@ -113,7 +113,7 @@ Understanding the impact of external shocks and their propagation through   the 
 \newcommand{\q}{\mathrm{Q}}
 \section{Percentile sensitivity and contagion}\label{perc}
 
-\subsection{Theorem}  Suppose $x$ is a random vector with marginal distributions\footnote{To economise on notation, we write $F_j(x)\equiv F_j(x_j)$ and } 
+\subsection{Theorem}  Suppose $x$ is a random vector with marginal distributions\footnote{To economise on notation, write $F_j(x)\equiv F_j(x_j)\equiv F(x_j)$ and } 
 $$
 F(x)\equiv \{F_1(x),\ldots ,F_p(x)\} \equiv (u_1,\ldots,u_p)\equiv u
 $$ 
@@ -141,26 +141,53 @@ $$
 $$
 The change  is called  stressing $x_j$.
 
+Since $q_{ij}$ is the change, the updated quantile is the fixed point
+$$
+q+q_{ij} =C(q+q_{ij},q)-q^2 
+$$
+
 \subsection{Proof}
 
 By definition
 $$
-\frac{\de\q(u_i)}{\de u_j} \equiv \q(u_i|u_j>q) -q 
+\frac{\de\q(u_i)}{\de u_j} \equiv \q(u_i|u_j>q) -q \equiv q_{ij}
 $$
-Then $q_{ij}\equiv\q(u|u_j>q)$, is such that
+and  $q_{ij}$ is such that
 \be\label{Qdef}
 q =  \frac{\P(u_i\le  q+q_{ij},u_j>q)}{1-q}  = \frac{ q+q_{ij}-C_{ij}(q+q_{ij},q)}{1-q}\ ,
 \ee
 Rearranging yields the second equation in \eref{implicit}.
 Now
- $$
+ \be\label{first}
  \frac{\de\q(x_i)}{\de x_j}\equiv F_i^-(q+q_{ij}) - \q(x_i) \approx (F_i^-)'(q)q_{ij}= \frac{q_{ij}}{f_i} \ ,
- $$
+ \ee
 where $'$ denotes differentiation.  The approximation follows from a first order Taylor expansion and is exact if the quantile is linear in $q$.   Similarly
+ \be\label{second}
+ \frac{\de\q(x_j)}{\de x_j}\equiv  F_j^-\{q+q(1-q)\} - \q(x_j)\approx \frac{q(1-q)}{f_j}\ .
+ \ee
+ Dividing \eref{first} by \eref{second} yields the first equation in  \eref{implicit} and completes the proof.
+ 
+ \subsection{Further remarks}
+ 
+ Note that
  $$
- \frac{\de\q(x_j)}{\de x_j}\equiv  F_j^-\{q+q(1-q)\} - \q(x_j)\approx \frac{q(1-q)}{f_j}\ ,
+ \frac{\de\q(x_i)}{f_j\de x_j} = \frac{\de\q(x_i)}{f\{\q(x_j)\}\de x_j} = \frac{\de\q(x_i)}{\de F\{\q(x_i)\}\de x_j}
  $$
- completing the proof.
+ 
+ Using the usual rules of calculus
+ $$
+ \frac{\de\q(x_i)}{\de \q(x_j)} = \frac{\de \q(x_i)}{\de u_i} \frac{\de u_i}{\de u_j}\frac{\de u_j}{\de\q(u_j)}= \frac{\de \q(x_i)}{\de u_i} \frac{\de u_i}{\de u_j}\frac{1}{q(1-q)}
+ $$
+ Now
+ $$
+ \frac{\de \q(x_i)}{\de u_i} =\frac{F^-(q_i)}{} \cq \frac{u_i}{u_j} = q_{ij} 
+ $$
+ $$
+   \frac{\de\q(x_j)}{\de x_j}= f(x_j)\frac{\de\q(x_j)}{\de u_j}\qquad\Rightarrow \qquad  \frac{\de\q(x_j)}{\de \q(x_i)}
+ $$
+ $$
+  \frac{\de q}{\de u_j} = \frac{\de F\{\q(x_i)\}}{\de u_j} =  f_i\frac{\de\q(x_i)}{\de u_j} \qquad\Rightarrow\qquad 
+ $$
 
 \subsection{Generalisations}
 Can the above be generalised to other risk measures?   Suppose $\q(x)\equiv\E\{x\phi(u)\}$ where $\phi$ is a given function which acts componentwise and $x\phi(u)$ denotes componentwise multiplication.  Then the analogue of \eref{stress} is 

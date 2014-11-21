@@ -3,7 +3,7 @@
 %\usepackage{rotate}
 \usepackage{graphics}
 %\usepackage{amsmath}
-%hello
+\usepackage{comment}
 \bibliographystyle{chicago}
 
 
@@ -101,7 +101,7 @@ and \cite{brownlees2010volatility}.   The proposed research aims to extend and a
 
 $\covar_q$ as proposed in \cite{adrian2011covar} is a basis for proposed measures contagion, exposure and systemic risk.   It  suffers from a number of drawbacks:
 \bi
-\i Couched in terms of $\var_q$ which contains the scale of the original measurements.   It is worthwhile to have measures and techniques robust to scale.
+\i Couched in terms of $\var_q$ containing the scale of the original measurements.   It is worthwhile to have measures and techniques robust to scale.
 \i  Conditioning  on $\var_{0.5}$ is undesirable and relatively intractable.  In our proposal we reference stress with respect  to the unconditional $\var_q$.   This permits a more transparent analysis and estimation. 
 \i  Our proposed approach  separates out scale effects and interdependence effects and aims to  relates these separately to external variables including shocks and drivers of systemic risk.   Thus $\var_q$ movements due to scale are disentangled from movements due to codependence with separate driver responses.
 \ei
@@ -110,60 +110,93 @@ $\covar_q$ as proposed in \cite{adrian2011covar} is a basis for proposed measure
 
 Understanding the impact of external shocks and their propagation through   the financial system is vital for managing and remediating systemic risk. Effective regulation is dependent upon the development of a robust and reliable set of appropriate risk measures.  We propose new measures of systemic risk that relate marginal and joint distributions separately to external drivers. This allows for more cogent and coherent stress testing as it includes the estimation of contagion effects, exposure effects and systemic risk across related entities and different financial sectors. Improved stress testing, estimation of risk effects and transmission of shocks through the financial system will make for more cogent prudential policy, prudential margin setting and better identify sources of risk to the financial system.
 
+\newcommand{\q}{\mathrm{Q}}
 \section{Percentile sensitivity and contagion}\label{perc}
 
-Improved stress testing in the context of  external shocks is based on the following definition
-\be\label{ncovar2}
-q_{yx} \equiv q_{y|x>q_x} - q_y\ ,
-\ee 
-where the $q_y$, $q_x$ and $q_{y|x>q_q}$ are the $q$--quantiles in the distributions of $y$, $x$ and the conditional distribution of $y$ given $x>q_x$, respectively.
-Thus  $q_{yx}$ is the change in the \v\ of $y$ when moving from a situation where $x$ is not known, to where  $x$ is known to be stressed, $x>q_q$. 
-It is shown  that \eref{ncovar2} is a more robust and extensible definition than has been proposed in the literature  and more readily amenable and useful to empirical work. 
+\subsection{Theorem}  Suppose $x$ is a random vector with marginal distributions\footnote{To economise on notation, we write $F_j(x)\equiv F_j(x_j)$ and } 
+$$
+F(x)\equiv \{F_1(x),\ldots ,F_p(x)\} \equiv (u_1,\ldots,u_p)\equiv u
+$$ 
+and  $0\le q\le 1$.  Further suppose $F\{\q(x)\}\equiv\q(u)=q1$ where and hence $\Q(x)$ is the vector of $q$-quantiles of $x$ with components $ \q(x_i)$.  Define the stress vector with respect to $x_j$ as\footnote{In \cite{adrian2011covar}  $\Delta CoVar_q\equiv q_{y|x=q_x}-q_y$.  Variable $y$  is generally the ``financial system" and hence considered is the change in the \v\ of the system when institution $x$ stressed, with stress  interpreted as $x=q_x$.  On page 10 of their paper they incorrectly state ``... $CoVaR$ conditions on the event that [an] institution is at its VaR level, which occurs with probability $q$."} 
+\be\label{stress}
+\frac{\de\q(x)}{\de x_j} \equiv \q(x|u_j>q) - \q(x)\ ,
+\ee
+where $\q(x|u_j>q)$ is the vector of $q$--quantiles of $x$ given $u_j>q$.    Then if $\q(x)$  is linear in $q$ 
+ then
+\be\label{implicit}
+\frac{\de\q(x_i)}{\de\q(x_j)} \equiv \frac{\de\q(x_i)/\de x_j}{\de\q(x_j)/\de x_j} =  
+\frac{f_j}{f_i} 
+ \frac{q_{ij}}{q(1-q)}\cq q_{ij}=C_{ij}(q+q_{ij},q) - q^2\ ,
+\ee
+where $f_i$ and $f_j$ are the densities of $x_i$ and $x_j$ evaluated at the $q$--quantiles and  $C_{ij}$ is the copula of $(u_i,u_j)$.   Further if $s_{ij}\equiv q_{ij}/\{q(1-q)\}$ then  $-1\le s_{ij}\le 1$ with $s_{ij}=\pm 1$ if $x_i$ and $x_j$ are comonotonic and counter monotonic, respectively.  If $x_i$ and $x_j$ are independent then  $s_{ij}=0$. If $u_i$ and $u_j$ are exchangeable  then  $s_{ji}=s_{ij}$.
 
-If $v$ and $u$ are uniform on $[0,1]$ then  
+\subsection{Discussion}  The critical aspect of the result is that sensitivities factor into contributions from the ratios of the marginal densities and quantities calculated from the pairwise copulas.  The via  the implicit  equation for $q_{ij}$ in \eref{implicit}, solved using a  root finding algorithm.
+  The quantities $q_{ij}$ are implicitly defined from the pairwise copulas. In summary 
+$$
+S \equiv \frac{\de Q(x)}{\de Q'(x)}\ ,
+$$
+where $'$ denotes transposition.   The matrix $S$ is called the sensitivity matrix and displays the sensitivity of the $q$--quantile of  each component of $x$ to  stress in the same or other components.  Stress in $x_j$ implies that the distribution of  $x_j$  changes from  $F_j(x)$ to 
+$$
+ \frac{F_j(x)}{1-F_j\{\q(x)\}}\cq x_j>\q_j(x)\ .
+$$
+The change  is called  stressing $x_j$.
+
+\subsection{Proof}
+
+By definition
+$$
+\frac{\de\q(u_i)}{\de u_j} \equiv \q(u_i|u_j>q) -q 
+$$
+Then $q_{ij}\equiv\q(u|u_j>q)$, is such that
 \be\label{Qdef}
-q_u=q_v= q=\P(u\le q_*|v>q) =  \frac{\P(u\le q_*,v>q)}{1-q}  = \frac{q_*-C(q_*,q)}{1-q}
+q =  \frac{\P(u_i\le  q+q_{ij},u_j>q)}{1-q}  = \frac{ q+q_{ij}-C_{ij}(q+q_{ij},q)}{1-q}\ ,
 \ee
-where $q_*=q_{u|v>q}$ and $C(u,v)$ is the joint distribution (copula) of $u$ and $v$.
-Rearranging yields
-\be\label{uplus}
-q_* -C(q,q_*)= q(1-q)\cq q_{uv}=C(q+q_{uv},q)-q^2\ .
-\ee
-This provides an implicit equation for $q_{vu}$, solved by  root finding algorithms given the copula $C(u,v)$.
+Rearranging yields the second equation in \eref{implicit}.
+Now
+ $$
+ \frac{\de\q(x_i)}{\de x_j}\equiv F_i^-(q+q_{ij}) - \q(x_i) \approx (F_i^-)'(q)q_{ij}= \frac{q_{ij}}{f_i} \ ,
+ $$
+where $'$ denotes differentiation.  The approximation follows from a first order Taylor expansion and is exact if the quantile is linear in $q$.   Similarly
+ $$
+ \frac{\de\q(x_j)}{\de x_j}\equiv  F_j^-\{q+q(1-q)\} - \q(x_j)\approx \frac{q(1-q)}{f_j}\ ,
+ $$
+ completing the proof.
 
-If $u$ and $v$ are independent then $C(u,v)=uv$ and  $q_{vu}=0$.   If $u=v$ then $C(u,v)=\min(u,v)$ and  $q_{uv}
-=\min(q+q_{uv},q)-q^2=q(1-q)$.  If $u$ and $v$ are exchangeable, $C(u,v)=C(v,u)$, then 
+\subsection{Generalisations}
+Can the above be generalised to other risk measures?   Suppose $\q(x)\equiv\E\{x\phi(u)\}$ where $\phi$ is a given function which acts componentwise and $x\phi(u)$ denotes componentwise multiplication.  Then the analogue of \eref{stress} is 
+\be\label{stress2}
+\frac{\de\q(x)}{\de x_j} \equiv \q\{x|x_j>\Q_j(x)\} - \q(x)\ ,
+\ee
+where stress is  $x_j>\q_j(x)$.   In this case we assume $\q(x)$ is again linear when we cut the left tail off (how to formalise exactly -- maybe linearity is more appropriate in other risk measures)     
+
+
+
+\begin{comment}
+
+If $\dot q'_{uv}$ is the derivative of $\dot q_u$ with respect to $q$ then
 $$
-q_{vu} = C(q,q+q_{vu})-q^2=C(q+q_{vu},q)-q^2=q_{uv}\ .
-$$
-Finally  if $q'_{uv}$ is the derivative of $q_{uv}$ with respect to $q$ then
-$$
-q'_{uv}= (1+q'_{uv})C_u(q+q_{uv},q)+C_v(q+q_{uv},q)-2q
+\dot q_{uv}= (1+\dot q_{uv})C_u(q+\Delta_v q_u,q)+C_v(q+\Delta_v q_u,q)-2q
 $$
 where $C_u$ and $C_v$ are the partial derivatives of $C$ with respect to $u$ and $v$, respectively.
+\end{comment}
 
-For a given vector of uniform variables define $Q$ as the matrix with entries 
-$$
-\frac{q_{uv}}{q(1-q)}
-$$   
-Each column of $Q$ indicates the change \v\ in each of the row variables when the column variable  is stressed, as a proportion of the change if $u=v$.  The diagonal of $Q$ is 1. 
 
 \section{Financial sensitivity and contagion}
  
- If $F_y$ is the marginal distribution of $y$ then the change in the \v\ of $y$ when $x$ becomes stressed is
- $$
- q_{yx}= F_y^-(q+q_{vu}) - q_y \approx q_{vu}(F_y^-)'(q) = \frac{q_{vu}}{f_y(q_y)} \ .
- $$
-The approximation follows from a first order Taylor expansion.    Thus the change in the quantile of $y$ when $x$ becomes stressed depends only on  $F_y(y)$ and $C(u,v)$:  the marginal $F_x(x)$ is not relevant.  Using the same argument
- $$
- q_{yy}=  F_y^-(2q-q^2) - q_y\approx \frac{q(1-q)}{f_y(q_y)}
- \qquad\Rightarrow\qquad
- \frac{q_{yx}}{q_{xx}} \approx  \frac{q_{vu}}{q(1-q)}=\frac{q_{vu}}{q_{uu}}\ .
- $$
- Thus $Q$  defined in \sref{perc} approximates the contagion matrix of the original variables.
-(Say something about when the approx is good/bad and the scaling on $y$ that may make the approximation better.)
 
-A column of $Q$ contains the \v\ sensitivities of each variable when the  corresponding column variable is stressed.   Each row of $Q$ displays the \v\ sensitivity of the variable corresponding to the row, to all the variables.  Define
+The matrix $S$ of sensitivities can be decomposed with the singular value decomposition
+$$
+S = UDV' = s_1c_1' + s_2c'_2 + \cdots + s_pc_p'\ .
+$$
+Here  $D$ a diagonal matrix of singular values, arranged in decreasing order along the diagonal.  So the best thing is to compare 
+$$
+Q= s_{i1}c_{j1} + \cdots + s_{ip}c_{jp} 
+$$
+
+If $Q=I$ then $S=C=I$.   If $Q=11'$, a matrix of ones, then $S=\sqrt{p}(1,0)$ and $C=(c,0)$ both have rank 1:  here $s$ and $c$ are the leading columns of $S$ and $C$, respectively and 0 a matrix of zeros.
+
+The approximation $Q\approx sc'$ is exact if $Q$ has rank 1 implying $Q=11'$.   The approximation $Q\approx sc'$ is inadequate if $Q=I$.  Inadequacy can be judged from the largest singular value in $D$, as a proportion of $p$, the number of variables or rows in $Q$.
+
 $$
 Q_* \equiv \frac{1}{p-1}(Q-I)=UDV'\cq s\equiv Q_*1\cq c\equiv Q_*'1\ .
 $$$$
@@ -171,14 +204,15 @@ Q=I + s1'+ UDV'\cq s\equiv \frac{1}{p-1}(Q-I)1
 $$
 Then $s$ is the vector of average \v\ sensitivity of each variable to all others.  Further $c$ is the average \v\ impact of each variable on all others.   The matrices $U$, $D$ and $V$ define the singular value (svd) decomposition of $Q_*$, arranged so that diagonal matrix $D$ has the singular values on  the diagonal in descending order.   If $b=d_1u_1$ and $c=v_1$ where $u_1$, $d_1$ and $v_1$ are the first column, top diagonal entry, and first column of $U$, $D$ and $V$ respectively, then  for two variables $y\ne x$ in $Q$,
 $$
-q_{yx} = s_y+ b_yc_x +\eps_{yx}
+\Delta_x q_y = s_y+ b_yc_x +\eps_{yx}
 $$
 This states that percentage sensitivities are, apart from the ``error" $\eps_{yx}$, an average sensitivity plus a scaled response to the contagious effect of the $x$ variable.   The contagious effects contained in $c$ are estimated by maximising the explanation of $Q$.
 
 
 The vector $1'Q$ sums  the changes in \v\ when each of the column variables is stressed, and writes this as a proportion of the change in the variable being stressed.   These proportional sums, subtracting 1 and divided by  $p-1$ where $p$ is the number of variables, measures the average contagion of each variable on all others:  $c'=(p-1)^{-1}1'(Q-I)$ or $c=(p-1)^{-1}(Q-I)'1$
 
-Alternatively the vector $Q1$ sums the changes in \v\ of each row variable when all the column variables are stressed.   Again it is appropriate to remove the effect of a variable on itself and consider the average over the remaining variables:  $s\equiv(p-1)^{-1}(Q-I)1$.  If $Q_*\equiv (p-1)^{-1}(Q-I)$ then $s=Q_*1$ and $c=Q'_*1$ are the vectors of sensitivities and contagions, respectively.  If $Q=I$ then $s=c=0$.   If $Q=11'$ then $s=c=1$.
+Alternatively the vector $Q1$ sums the changes in \v\ of each row variable when all the column variables are stressed.   Again it is appropriate to remove the effect of a variable on itself and consider the average over the remaining variables:  $s\equiv(p-1)^{-1}(Q-I)1$.  If $Q_*\equiv (p-1)^{-1}(Q-I)$ then $s=Q_*1$ and $c=\dot q_*1$ are the vectors of sensitivities and contagions, respectively.  If $Q=I$ then $s=c=0$.   If $Q=11'$ then $s=c=1$.
+
 
 
  
@@ -209,7 +243,9 @@ u^- \equiv \var_q(v|u\le q)
 $
 measuring the impact of a non distressed state in $v$.  For brevity we do not dwell on these constructs in this writeup although the ramifications and potential uses of these constructs will be  investigated in the research.
 
+\section{Literature}
 
+We propose a measure for systemic risk: CoVaR, the value at risk (VaR) of financial institutions conditional on other institutions being in distress. We define an institution?s (marginal) contribution to systemic risk as the difference between CoVaR and the financial system?s VaR. From our estimates of CoVaR for characteristic-sorted portfolios of publicly traded financial institutions, we quantify the extent to which characteristics such as leverage, size, and maturity mismatch predict systemic risk contribution. We argue for macro-prudential regulation based on the degree to which such characteristics forecast systemic risk contribution.
 
 \section{Econometric implementation}
 

@@ -189,19 +189,19 @@ Here $\hat\E$ computes the empirical mean over the cases $k=1,\ldots,n$ and $p_{
 
 \subsection{Generalisations}
 \renewcommand{\r}{\mathrm{R}}
-The above development is generalisable to other risk measures.   Suppose $\r(x)\equiv\E\{xr(u)\}$ where $r$ is a given function which acts componentwise and $xr(u)$ denotes componentwise multiplication.  For example if $r(u)=mu_i^{m-1}$ then the risk measure is  $\r(x)=\E\{\max(x^1,\ldots,x^m)\}$ where  $x^1,\ldots,x^m$ are $m$ independent copies of $x$.  Hence in this case the risk measure is the worst outcome in $m$ independent trials.
+Similar results apply when $\Q(x)$ is replaced by  other risk measures such as $\r(x)\equiv\E\{xr(u)\}$ where $r$ is a given function which acts componentwise and $xr(u)$ denotes componentwise multiplication.  For example if $r(u)=mu^{m-1}$ then  $\r(x)=\E\{\max(x^1,\ldots,x^m)\}$ where  $x^1,\ldots,x^m$ are $m$ independent copies of $x$.  In this case the risk measure is the expected worst outcome in $m$ independent trials.
 
-With the $\r(x)$ risk measure the analogue of \eref{stress} is 
+With $\r(x)$ the analogue of \eref{stress} is 
 \be\label{stress2}
-\frac{\de\r(x)}{\de x_j} \equiv \r\{x|x_j>\r(x_j)\} - \r(x_j)\ .
+\frac{\de\r(x)}{\de x_j} \equiv \r(x|u_j>r_j) - \r(x_j)\cq r_j\equiv\p\{x_j\le\r(x_j)\} \ .
 \ee
-This differs from \eref{stress}  in that  $(u_j>q)=\{x_j>\q(x_j)\}$ is replaced by $(u_j>r_j)$ where $r_j\equiv\p\{x_j\le\r(x_j)\}$.   Assuming $\r(x)$ is linear in $r_i$,
+This differs from \eref{stress}  in that  $r_j$ replaces $q=\p\{x_j\le\q(x_j)\}$.   If  the components of $\r(x)$ are linear in the $r_i$ then
 \be\label{implicit2}
 \frac{\de\r(x_i)}{\de\r(x_j)} =  
 \frac{f_j}{f_i} 
  \frac{q_{ij}}{q(1-q)}\cq q_{ij}=C_{ij}(r_i+q_{ij},r_j) - r_ir_j\ ,
 \ee
-where $f_i$ and $f_j$ are the densities at the $r_i$ and $r_i$ quantiles of $x_i$ and $x_j$, respectively. 
+where $f_i$ and $f_j$ are the $x_i$ and $x_j$ densities at the $r_i$ and $r_i$ quantiles, respectively. 
 
 
 \section{Financial sensitivity and contagion}
@@ -278,7 +278,7 @@ The above development sets out our proposed  broad  framework for linking bivari
 We will employ publicly available data as published by APRA and other regulators.
 
 \section*{References}
-\bibliography{/Applications/Tex/piet2}
+\bibliography{piet2}
 
 
 \end{document}

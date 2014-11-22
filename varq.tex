@@ -115,9 +115,14 @@ Understanding the impact of external shocks and their propagation through   the 
 
 \subsection{Theorem}  Suppose $x$ is a random vector with marginal distributions\footnote{To economise on notation, write $F_j(x)\equiv F_j(x_j)\equiv F(x_j)$ and } 
 $$
-F(x)\equiv \{F_1(x),\ldots ,F_p(x)\} \equiv (u_1,\ldots,u_p)\equiv u
+F(x)\equiv \{F(x_1),\ldots ,F(x_p)\} \equiv (u_1,\ldots,u_p)\equiv u\ .
 $$ 
-and  $0\le q\le 1$.  Further suppose $F\{\q(x)\}\equiv\q(u)=q1$ where and hence $\Q(x)$ is the vector of $q$-quantiles of $x$ with components $ \q(x_i)$.  Define the stress vector with respect to $x_j$ as\footnote{In \cite{adrian2011covar}  $\Delta CoVar_q\equiv q_{y|x=q_x}-q_y$.  Variable $y$  is generally the ``financial system" and hence considered is the change in the \v\ of the system when institution $x$ stressed, with stress  interpreted as $x=q_x$.  On page 10 of their paper they incorrectly state ``... $CoVaR$ conditions on the event that [an] institution is at its VaR level, which occurs with probability $q$."} 
+Further suppose $0\le q\le 1$ is given and  $\q(x)$ is the vector of $q$--quantiles
+$$
+F\{\q(x)\}=q1=\q(u)\ ,
+$$
+where $1$ is a vector of $p$ ones. 
+Define the stress vector with respect to $x_j$ as\footnote{In \cite{adrian2011covar}  $\Delta CoVar_q\equiv q_{y|x=q_x}-q_y$.  Variable $y$  is generally the ``financial system" and hence considered is the change in the \v\ of the system when institution $x$ stressed, with stress  interpreted as $x=q_x$.  On page 10 of their paper they incorrectly state ``... $CoVaR$ conditions on the event that [an] institution is at its VaR level, which occurs with probability $q$."} 
 \be\label{stress}
 \frac{\de\q(x)}{\de x_j} \equiv \q(x|u_j>q) - \q(x)\ ,
 \ee
@@ -128,24 +133,51 @@ where $\q(x|u_j>q)$ is the vector of $q$--quantiles of $x$ given $u_j>q$.    The
 \frac{f_j}{f_i} 
  \frac{q_{ij}}{q(1-q)}\cq q_{ij}=C_{ij}(q+q_{ij},q) - q^2\ ,
 \ee
-where $f_i$ and $f_j$ are the densities of $x_i$ and $x_j$ evaluated at the $q$--quantiles and  $C_{ij}$ is the copula of $(u_i,u_j)$.   Further if $s_{ij}\equiv q_{ij}/\{q(1-q)\}$ then  $-1\le s_{ij}\le 1$ with $s_{ij}=\pm 1$ if $x_i$ and $x_j$ are comonotonic and counter monotonic, respectively.  If $x_i$ and $x_j$ are independent then  $s_{ij}=0$. If $u_i$ and $u_j$ are exchangeable  then  $s_{ji}=s_{ij}$.
+where $f_i$ and $f_j$ are the densities of $x_i$ and $x_j$ evaluated at their $q$--quantiles and  $C_{ij}$ is the copula of $(u_i,u_j)$.   
+Further if 
+$$
+s_{ij}\equiv \frac{q_{ij}}{q(1-q)}\ ,
+$$ then  $-1\le s_{ij}\le 1$ with $s_{ij}=\pm 1$ if $x_i$ and $x_j$ are comonotonic and counter monotonic, respectively.  If $x_i$ and $x_j$ are independent then  $s_{ij}=0$. If $u_i$ and $u_j$ are exchangeable  then  $s_{ji}=s_{ij}$.
+
+\subsection{Implementation}
+
+\fref{fig1} displays the empirical copulas calculated from four weekly closing stock prices labelled anz, cba, mcq and  wbc for $n=761$ weeks from 2000 April 12 through to 2014 October 29.  The empirical copulas are calculated by converting each observation to an empirical percentile and plotting the same against each of the other series percentiles.  
+
+\begin{figure}
+  \begin{center}
+    \includegraphics{fig1.pdf}
+    \caption{Pairwise copulas of bank stocks  cba, anz, mqg, wbc, and the overall bank index.  Red lines plot sensitivity $s_{ij}$ as a function of $q$.}\label{fig1}
+   \end{center}
+\end{figure}
+
+To estimate  $q_{ij}$  at a particular $q$, the second equation in \eref{implicit} is iterated\footnote{The second equation in \eref{implicit} is a contraction mapping and hence has a fixed point.} starting from $q_{ij}=0$ where copulas are estimated as 
+$$
+\hat C_{ij}(u_i,u_j) \equiv \hat\E\{(p_{ik}\le u_i)(p_{jk}\le u_j)\}\ .
+$$
+Here $\hat\E$ computes the empirical mean over the cases $k=1,\ldots,n$ and $p_{ik}$ and $p_{jk}$ are the empirical percentiles  of case $k$ of $x_i$ and $x_j$, respectively.
 
 \subsection{Discussion}  The critical aspect of the result is that sensitivities factor into contributions from the ratios of the marginal densities and quantities calculated from the pairwise copulas.  The via  the implicit  equation for $q_{ij}$ in \eref{implicit}, solved using a  root finding algorithm.
   The quantities $q_{ij}$ are implicitly defined from the pairwise copulas. In summary 
 $$
 S \equiv \frac{\de Q(x)}{\de Q'(x)}\ ,
 $$
-where $'$ denotes transposition.   The matrix $S$ is called the sensitivity matrix and displays the sensitivity of the $q$--quantile of  each component of $x$ to  stress in the same or other components.  Stress in $x_j$ implies that the distribution of  $x_j$  changes from  $F_j(x)$ to 
-$$
- \frac{F_j(x)}{1-F_j\{\q(x)\}}\cq x_j>\q_j(x)\ .
-$$
-The change  is called  stressing $x_j$.
+where $'$ denotes transposition.   The matrix $S$ is called the sensitivity matrix and displays the sensitivity of the $q$--quantile of  each component of $x$ to  stress in the same or other components.  Stress in $x_j$ implies that the density of  $x_j$  changes from  $f(x_j)$ to 
+$f(x_j)/(1-q)$ where $x_j>\q(x_j)$, called  $q$--stressing $x_j$.  
 
-Since $q_{ij}$ is the change, the updated quantile is the fixed point
+The ratio of the densities can be written as the ratio of hazards:
 $$
-q+q_{ij} =C(q+q_{ij},q)-q^2 
+\frac{f_j}{f_i} = \frac{\mu_j}{\mu_i}\ ,
 $$
+since both are evaluated at their respective $q$--quantiles.  This result is useful since the hazard may be better behaved, or easier to model, than the density.
 
+Note that the new density evaluated at $\q(x_j)$ is the hazard at $\q(x_j)$:
+$$
+\mu_j\equiv \frac{f_j}{1-q}
+$$
+Hence
+$$
+\frac{\de\q(x_i)/\mu_i}{\de\q(x_j)/\mu_j}  =  \frac{q_{ij}}{q(1-q)}
+$$
 \subsection{Proof}
 
 By definition
@@ -171,7 +203,7 @@ where $'$ denotes differentiation.  The approximation follows from a first order
  
  Note that
  $$
- \frac{\de\q(x_i)}{f_j\de x_j} = \frac{\de\q(x_i)}{f\{\q(x_j)\}\de x_j} = \frac{\de\q(x_i)}{\de F\{\q(x_i)\}\de x_j}
+ \frac{\de\q(x_i)}{f_j\de x_j} = \frac{\de\q(x_i)}{f\{\q(x_j)\}\de x_j} = \frac{\de\q(x_i)\de\q(x_j)}{\de F\{\q(x_j)\}\de x_j}=\frac{\de\q(x_i)/\de x_j}{\de F\{\q(x_j)\}/\de\q(x_j)}
  $$
  
  Using the usual rules of calculus

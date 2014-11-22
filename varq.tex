@@ -133,51 +133,12 @@ where $\q(x|u_j>q)$ is the vector of $q$--quantiles of $x$ given $u_j>q$.    The
 \frac{f_j}{f_i} 
  \frac{q_{ij}}{q(1-q)}\cq q_{ij}=C_{ij}(q+q_{ij},q) - q^2\ ,
 \ee
-where $f_i$ and $f_j$ are the densities of $x_i$ and $x_j$ evaluated at their $q$--quantiles and  $C_{ij}$ is the copula of $(u_i,u_j)$.   
+where $f_i$ and $f_j$ are the densities of $x_i$ and $x_j$ evaluated at $\q(x_i)$ and $\q(x_j)$ and  $C_{ij}$ is the copula of $(u_i,u_j)$.   
 Further if 
 $$
 s_{ij}\equiv \frac{q_{ij}}{q(1-q)}\ ,
 $$ then  $-1\le s_{ij}\le 1$ with $s_{ij}=\pm 1$ if $x_i$ and $x_j$ are comonotonic and counter monotonic, respectively.  If $x_i$ and $x_j$ are independent then  $s_{ij}=0$. If $u_i$ and $u_j$ are exchangeable  then  $s_{ji}=s_{ij}$.
 
-\subsection{Implementation}
-
-\fref{fig1} displays the empirical copulas calculated from four weekly closing stock prices labelled anz, cba, mcq and  wbc for $n=761$ weeks from 2000 April 12 through to 2014 October 29.  The empirical copulas are calculated by converting each observation to an empirical percentile and plotting the same against each of the other series percentiles.  
-
-\begin{figure}
-  \begin{center}
-    \includegraphics{fig1.pdf}
-    \caption{Pairwise copulas of bank stocks  cba, anz, mqg, wbc, and the overall bank index.  Red lines plot sensitivity $s_{ij}$ as a function of $q$.}\label{fig1}
-   \end{center}
-\end{figure}
-
-To estimate  $q_{ij}$  at a particular $q$, the second equation in \eref{implicit} is iterated\footnote{The second equation in \eref{implicit} is a contraction mapping and hence has a fixed point.} starting from $q_{ij}=0$ where copulas are estimated as 
-$$
-\hat C_{ij}(u_i,u_j) \equiv \hat\E\{(p_{ik}\le u_i)(p_{jk}\le u_j)\}\ .
-$$
-Here $\hat\E$ computes the empirical mean over the cases $k=1,\ldots,n$ and $p_{ik}$ and $p_{jk}$ are the empirical percentiles  of case $k$ of $x_i$ and $x_j$, respectively.
-
-\subsection{Discussion}  The critical aspect of the result is that sensitivities factor into contributions from the ratios of the marginal densities and quantities calculated from the pairwise copulas.  The via  the implicit  equation for $q_{ij}$ in \eref{implicit}, solved using a  root finding algorithm.
-  The quantities $q_{ij}$ are implicitly defined from the pairwise copulas. In summary 
-$$
-S \equiv \frac{\de Q(x)}{\de Q'(x)}\ ,
-$$
-where $'$ denotes transposition.   The matrix $S$ is called the sensitivity matrix and displays the sensitivity of the $q$--quantile of  each component of $x$ to  stress in the same or other components.  Stress in $x_j$ implies that the density of  $x_j$  changes from  $f(x_j)$ to 
-$f(x_j)/(1-q)$ where $x_j>\q(x_j)$, called  $q$--stressing $x_j$.  
-
-The ratio of the densities can be written as the ratio of hazards:
-$$
-\frac{f_j}{f_i} = \frac{\mu_j}{\mu_i}\ ,
-$$
-since both are evaluated at their respective $q$--quantiles.  This result is useful since the hazard may be better behaved, or easier to model, than the density.
-
-Note that the new density evaluated at $\q(x_j)$ is the hazard at $\q(x_j)$:
-$$
-\mu_j\equiv \frac{f_j}{1-q}
-$$
-Hence
-$$
-\frac{\de\q(x_i)/\mu_i}{\de\q(x_j)/\mu_j}  =  \frac{q_{ij}}{q(1-q)}
-$$
 \subsection{Proof}
 
 By definition
@@ -198,56 +159,58 @@ where $'$ denotes differentiation.  The approximation follows from a first order
  \frac{\de\q(x_j)}{\de x_j}\equiv  F_j^-\{q+q(1-q)\} - \q(x_j)\approx \frac{q(1-q)}{f_j}\ .
  \ee
  Dividing \eref{first} by \eref{second} yields the first equation in  \eref{implicit} and completes the proof.
- 
- \subsection{Further remarks}
- 
- Note that
- $$
- \frac{\de\q(x_i)}{f_j\de x_j} = \frac{\de\q(x_i)}{f\{\q(x_j)\}\de x_j} = \frac{\de\q(x_i)\de\q(x_j)}{\de F\{\q(x_j)\}\de x_j}=\frac{\de\q(x_i)/\de x_j}{\de F\{\q(x_j)\}/\de\q(x_j)}
- $$
- 
- Using the usual rules of calculus
- $$
- \frac{\de\q(x_i)}{\de \q(x_j)} = \frac{\de \q(x_i)}{\de u_i} \frac{\de u_i}{\de u_j}\frac{\de u_j}{\de\q(u_j)}= \frac{\de \q(x_i)}{\de u_i} \frac{\de u_i}{\de u_j}\frac{1}{q(1-q)}
- $$
- Now
- $$
- \frac{\de \q(x_i)}{\de u_i} =\frac{F^-(q_i)}{} \cq \frac{u_i}{u_j} = q_{ij} 
- $$
- $$
-   \frac{\de\q(x_j)}{\de x_j}= f(x_j)\frac{\de\q(x_j)}{\de u_j}\qquad\Rightarrow \qquad  \frac{\de\q(x_j)}{\de \q(x_i)}
- $$
- $$
-  \frac{\de q}{\de u_j} = \frac{\de F\{\q(x_i)\}}{\de u_j} =  f_i\frac{\de\q(x_i)}{\de u_j} \qquad\Rightarrow\qquad 
- $$
+
+\subsection{Discussion}  The critical  result is that sensitivities factor into contributions from the ratios of the marginal densities and quantities calculated from the pairwise copulas.  The via  the implicit  equation for $q_{ij}$ in \eref{implicit}, solved using a  root finding algorithm.
+  The quantities $q_{ij}$ are implicitly defined from the pairwise copulas. In summary the ``sensitivity" matrix 
+$$
+S \equiv \frac{\de Q(x)}{\de Q'(x)}\ ,
+$$
+where $'$ denotes transposition has ones on the diagonal quantities between $\pm 1$ off the diagonal.   The matrix $S$ is called the sensitivity matrix and displays the sensitivity of the $q$--quantile of  each component of $x$ to  stress in the same or other components.  
+
+Since $f_i$ and $f_j$ are  the densities evaluated at $\q(x_i)$ and $\q(x_j)$  it follows that the ratio $f_i/f_j$ can be replaced by the ratio of the hazards.   This is  useful in cases were it is practical to model the hazard rather than the density.
+
+
+\subsection{Implementation}
+
+\fref{fig1} displays the empirical copulas calculated from four weekly closing stock prices labelled anz, cba, mcq and  wbc for $n=761$ weeks from 2000 April 12 through to 2014 October 29.  The empirical copulas are calculated by converting each observation to an empirical percentile and plotting the same against each of the other series percentiles.  
+
+\begin{figure}
+  \begin{center}
+    \includegraphics{fig1.pdf}
+    \caption{Pairwise copulas of bank stocks  cba, anz, mqg, wbc, and the overall bank index.  Red lines plot sensitivity $s_{ij}$ as a function of $q$.}\label{fig1}
+   \end{center}
+\end{figure}
+
+To estimate  $q_{ij}$  at a particular $q$, the second equation in \eref{implicit} is iterated\footnote{The second equation in \eref{implicit} is a contraction mapping and hence has a fixed point.} starting from $q_{ij}=0$ where copulas are estimated as 
+$$
+\hat C_{ij}(u_i,u_j) \equiv \hat\E\{(p_{ik}\le u_i)(p_{jk}\le u_j)\}\ .
+$$
+Here $\hat\E$ computes the empirical mean over the cases $k=1,\ldots,n$ and $p_{ik}$ and $p_{jk}$ are the empirical percentiles  of case $k$ of $x_i$ and $x_j$, respectively.
 
 \subsection{Generalisations}
-Can the above be generalised to other risk measures?   Suppose $\q(x)\equiv\E\{x\phi(u)\}$ where $\phi$ is a given function which acts componentwise and $x\phi(u)$ denotes componentwise multiplication.  Then the analogue of \eref{stress} is 
+\renewcommand{\r}{\mathrm{R}}
+The above development is generalisable to other risk measures.   Suppose $\r(x)\equiv\E\{xr(u)\}$ where $r$ is a given function which acts componentwise and $xr(u)$ denotes componentwise multiplication.  For example if $r(u)=mu_i^{m-1}$ then the risk measure is  $\r(x)=\E\{\max(x^1,\ldots,x^m)\}$ where  $x^1,\ldots,x^m$ are $m$ independent copies of $x$.  Hence in this case the risk measure is the worst outcome in $m$ independent trials.
+
+With the $\r(x)$ risk measure the analogue of \eref{stress} is 
 \be\label{stress2}
-\frac{\de\q(x)}{\de x_j} \equiv \q\{x|x_j>\Q_j(x)\} - \q(x)\ ,
+\frac{\de\r(x)}{\de x_j} \equiv \r\{x|x_j>\r(x_j)\} - \r(x_j)\ .
 \ee
-where stress is  $x_j>\q_j(x)$.   In this case we assume $\q(x)$ is again linear when we cut the left tail off (how to formalise exactly -- maybe linearity is more appropriate in other risk measures)     
-
-
-
-\begin{comment}
-
-If $\dot q'_{uv}$ is the derivative of $\dot q_u$ with respect to $q$ then
-$$
-\dot q_{uv}= (1+\dot q_{uv})C_u(q+\Delta_v q_u,q)+C_v(q+\Delta_v q_u,q)-2q
-$$
-where $C_u$ and $C_v$ are the partial derivatives of $C$ with respect to $u$ and $v$, respectively.
-\end{comment}
+This differs from \eref{stress}  in that  $(u_j>q)=\{x_j>\q(x_j)\}$ is replaced by $(u_j>r_j)$ where $r_j\equiv\p\{x_j\le\r(x_j)\}$.   Assuming $\r(x)$ is linear in $r_i$,
+\be\label{implicit2}
+\frac{\de\r(x_i)}{\de\r(x_j)} =  
+\frac{f_j}{f_i} 
+ \frac{q_{ij}}{q(1-q)}\cq q_{ij}=C_{ij}(r_i+q_{ij},r_j) - r_ir_j\ ,
+\ee
+where $f_i$ and $f_j$ are the densities at the $r_i$ and $r_i$ quantiles of $x_i$ and $x_j$, respectively. 
 
 
 \section{Financial sensitivity and contagion}
  
 
-The matrix $S$ of sensitivities can be decomposed with the singular value decomposition
-$$
-S = UDV' = s_1c_1' + s_2c'_2 + \cdots + s_pc_p'\ .
-$$
-Here  $D$ a diagonal matrix of singular values, arranged in decreasing order along the diagonal.  So the best thing is to compare 
+Suppose the singular value decomposition of the  matrix $S$ of sensitivities at a particular $q$ is 
+$S= UDV'$.  Here  $D$ a diagonal matrix of singular values, arranged in decreasing order along the diagonal and $U$ and $V$ are orthonormal:  $U'U=V'V=I$.  If the series are independent then $U=D=V=I$.   If the series are comonotonic then $U=V=(1,0)$ while $D=\diag(1,0,\ldots,0)$.  Hence in the comonotonic case $S=11'$.
+
+So the best thing is to compare 
 $$
 Q= s_{i1}c_{j1} + \cdots + s_{ip}c_{jp} 
 $$

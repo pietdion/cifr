@@ -32,8 +32,7 @@
 
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
-\newcommand{\be}{\begin{equation}}
-\newcommand{\ee}{\end{equation}}
+
 \renewcommand{\i}{\item}
 \newcommand{\sr}{\ensuremath{\mathrm{SRISK}}}
 \newcommand{\cs}{\ensuremath{\mathrm{CS}}}
@@ -60,6 +59,10 @@
 \newcommand{\cq}{\ , \qquad}
 \renewcommand{\P}{\mathrm{P}}
 \newcommand{\Q}{\mathrm{Q}}
+
+\newcommand{\Vx}{{\cal V}}
+\newcommand{\be}[1]{\begin{equation}\label{#1}}
+\newcommand{\ee}{\end{equation}}
 
 
 
@@ -123,12 +126,12 @@ F\{\q(x)\}=q1=\q(u)\ ,
 $$
 where $1$ is a vector of $p$ ones. 
 Define the stress vector with respect to $x_j$ as\footnote{In \cite{adrian2011covar}  $\Delta CoVar_q\equiv q_{y|x=q_x}-q_y$.  Variable $y$  is generally the ``financial system" and hence considered is the change in the \v\ of the system when institution $x$ stressed, with stress  interpreted as $x=q_x$.  On page 10 of their paper they incorrectly state ``... $CoVaR$ conditions on the event that [an] institution is at its VaR level, which occurs with probability $q$."} 
-\be\label{stress}
+\be{stress}
 \frac{\de\q(x)}{\de x_j} \equiv \q(x|u_j>q) - \q(x)\ ,
 \ee
 where $\q(x|u_j>q)$ is the vector of $q$--quantiles of $x$ given $u_j>q$.    Then if $\q(x)$  is linear in $q$ 
  then
-\be\label{implicit}
+\be{implicit}
 \frac{\de\q(x_i)}{\de\q(x_j)} \equiv \frac{\de\q(x_i)/\de x_j}{\de\q(x_j)/\de x_j} =  
 \frac{f_j}{f_i} 
  \frac{q_{ij}}{q(1-q)}\cq q_{ij}=C_{ij}(q+q_{ij},q) - q^2\ ,
@@ -143,20 +146,20 @@ $$ then  $-1\le s_{ij}\le 1$ with $s_{ij}=\pm 1$ if $x_i$ and $x_j$ are comonoto
 
 By definition
 $$
-\frac{\de\q(u_i)}{\de u_j} \equiv \q(u_i|u_j>q) -q \equiv q_{ij}
+\frac{\de\q(u_i)}{\de u_j} \equiv \q(u_i|u_j>q) -q \equiv q_{ij}\ ,
 $$
-and  $q_{ij}$ is such that
-\be\label{Qdef}
+where  $q_{ij}$ is such that
+\be{Qdef}
 q =  \frac{\P(u_i\le  q+q_{ij},u_j>q)}{1-q}  = \frac{ q+q_{ij}-C_{ij}(q+q_{ij},q)}{1-q}\ ,
 \ee
 Rearranging yields the second equation in \eref{implicit}.
 Now
- \be\label{first}
- \frac{\de\q(x_i)}{\de x_j}\equiv F_i^-(q+q_{ij}) - \q(x_i) \approx (F_i^-)'(q)q_{ij}= \frac{q_{ij}}{f_i} \ ,
+ \be{first}
+ \frac{\de\q(x_i)}{\de x_j}\equiv \q_{q+q_{ij}}(x_i) - \q(x_i) \approx \q'(x_i)q_{ij}= \frac{q_{ij}}{f_i} \ ,
  \ee
-where $'$ denotes differentiation.  The approximation follows from a first order Taylor expansion and is exact if the quantile is linear in $q$.   Similarly
- \be\label{second}
- \frac{\de\q(x_j)}{\de x_j}\equiv  F_j^-\{q+q(1-q)\} - \q(x_j)\approx \frac{q(1-q)}{f_j}\ .
+where $'$ denotes differentiation with respect to $q$ and the subscript on $\q$ indicates the revised $q$ for the quantile calculation.  The approximation follows from a first order Taylor expansion and is exact if the quantile is linear in $q$.   Similarly
+ \be{second}
+ \frac{\de\q(x_j)}{\de x_j}\equiv  \q_{q+q(1-q)}(x_j) - \q(x_j)\approx \frac{q(1-q)}{f_j}\ .
  \ee
  Dividing \eref{first} by \eref{second} yields the first equation in  \eref{implicit} and completes the proof.
 
@@ -189,19 +192,232 @@ Here $\hat\E$ computes the empirical mean over the cases $k=1,\ldots,n$ and $p_{
 
 \subsection{Generalisations}
 \renewcommand{\r}{\mathrm{R}}
-Similar results apply when $\Q(x)$ is replaced by  other risk measures such as $\r(x)\equiv\E\{xr(u)\}$ where $r$ is a given function which acts componentwise and $xr(u)$ denotes componentwise multiplication.  For example if $r(u)=mu^{m-1}$ then  $\r(x)=\E\{\max(x^1,\ldots,x^m)\}$ where  $x^1,\ldots,x^m$ are $m$ independent copies of $x$.  In this case the risk measure is the expected worst outcome in $m$ independent trials.
+Similar results apply when $\Q(x)$ is replaced by  other risk measures such as $\r(x)\equiv\E\{xr(u)\}$ where $r$ is a given function which acts componentwise and $xr(u)$ denotes componentwise multiplication.  For example if $r(u)=mu^{m-1}$ then  $\r(x)=\E\{\max(x^1,\ldots,x^m)\}$ where  $x^1,\ldots,x^m$ are $m$ independent copies of $x$ and the risk measure is the expected worst outcome in $m$ independent trials.
 
-With $\r(x)$ the analogue of \eref{stress} is 
-\be\label{stress2}
+With $\r(x)$, the analogue of \eref{stress} is 
+\be{stress2}
 \frac{\de\r(x)}{\de x_j} \equiv \r(x|u_j>r_j) - \r(x_j)\cq r_j\equiv\p\{x_j\le\r(x_j)\} \ .
 \ee
-This differs from \eref{stress}  in that  $r_j$ replaces $q=\p\{x_j\le\q(x_j)\}$.   If  the components of $\r(x)$ are linear in the $r_i$ then
-\be\label{implicit2}
+This differs from \eref{stress}  in that a different risk measure is used and  $r_j$ replaces $q$.   If  the components of $\r(x)$ are linear in the $r_i$ then
+\be{implicit2}
 \frac{\de\r(x_i)}{\de\r(x_j)} =  
 \frac{f_j}{f_i} 
  \frac{q_{ij}}{q(1-q)}\cq q_{ij}=C_{ij}(r_i+q_{ij},r_j) - r_ir_j\ ,
 \ee
 where $f_i$ and $f_j$ are the $x_i$ and $x_j$ densities at the $r_i$ and $r_i$ quantiles, respectively. 
+
+\section{Conditionally Gaussian copula}
+
+Suppose $(u,v)=F_*(x,y)$ and $z=\Phi^-(v)$ where $x$ and $y$ are scalar random variables.    Further write  $t=1,\ldots,n$  where the $u_t$ are the ordered values of $u$ and $q_t=\Phi^-(u_t)$.  The correspondingly ordered values of $v$ and $z$ are denoted $v_t$ and $z_t$, $t=1,\ldots,n$.   
+
+Smoothing methods are here proposed to smooth and simulate $z_t$  using  a cubic spline.   Of particular concern are simulated $\hat z_t$ for $t$ near $1$ or $n$ corresponding to  $x$ extremes.    Given simulated $\hat z_t$ for $t=1,\ldots,n$, $\hat v_t=\Phi(\hat z_t)$ and $(x_t,\hat y_t)=F^-_*(u_t,\hat v_t)$, a draw from the joint.   The $u_t$ are uniform while the $\hat v_t$  are approximately uniform.   The simulation singles out independent and dependent variables.   Which should be which? 
+If $x$ and $y$ are actual time series the simulation $(x_t,\hat y_t)$ is ordered back into the original time series order.
+
+The conditionally Gaussian  model for $z_t\equiv \Phi^-(v_t)$ given $q_t\equiv\Phi^-(u_t)$,  $t=1,\ldots,n$, is
+\be{cusp}
+z_t = \alpha_t+\beta q_t+ s\eps_t\cq \alpha_{t+1}=\alpha_t +\delta_t+\frac{\eta_t}{3-\sqrt 3}\cq \delta_{t+1}=\delta_t+\eta_t\ ,
+\ee 
+where $\eps_t$ and $\eta_t$ are zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component,  $\alpha_t$ a nonparametric deviation, and $\eps_t$ noise.  
+
+The second and third equations in \eref{cusp} dictate $\alpha_t$ is  cubic spline with knots at $t=1,\ldots,n$ with  increasing smoothness as $\sigma^2\rightarrow 0$.  In the limit $\alpha_t$  is  a straight line.   Thus   $z_t-\beta q_t$ is, apart from  noise  $s\eps_t$,  smooth with the degree of smoothness controlled by $\sigma$.   The cubic spline model for the copula is the usual Gaussian copula if $\alpha_t\equiv 0$, is readily  fit to percentile data, and provides a practical platform for copula simulation.  Hence \eref{cusp} provides a flexible yet easily implemented and useable extension of the Gaussian copula.  Similar extensions  can be imposed on say student--$t$ quantiles as discussed in \sref{xx}.
+
+
+The  parameters of \eref{cusp} are $s$, $\beta$,  $\sigma$ and starting conditions $\alpha_0$ and $\delta_0$.  The parameters $\delta_0$ often plays a minor  role and often appropriately set to zero.  The term $\alpha_t+\beta q_t$ is the signal and $\eps_t$, noise.    The signal is relatively smooth and contains Gaussian component $q_t$ if $\beta\ne 0$.   Departures of $z_t$ from the Gaussian component  are the sum of a persistent component $\alpha_t$ and  transient component, $s\eps_t$.  Since  $\eps_t$ and  the driver of persistence $\eta_t$  share $\sigma$, the smoothing parameter $s$ measures relative importance of transience as opposed to persistence.   The scale parameter $\sigma$ relates to the degree of roughness since it is the variance of the changes in the local slope of $\alpha_t$.
+
+
+Model \eref{cusp} provides an analysis of variance  type decomposition for $z_t$:
+\be{anova}
+\Vx(z_t) =\Vx(\alpha_t) + \beta^2\Vx(q_t)  + s^2\Vx(\eps_t)\cq 1= \Vx(\alpha_t) + \beta^2 + (s\sigma)^2\ ,
+\ee
+where $\Vx$, analogous to $\Ex$, computes the variance supposing $t$ is uniform on $1,\ldots,n$.  Decomposition \eref{anova} splits the total variance  $\Vx(z_t)=1$ into that due to the nonparametric component $\alpha_t$,  Gaussian component $\beta^2$ and residual noise, $(s\sigma)^2$.
+
+The local correlation is the partial correlation between $z_t$ and the Gaussian component $q_t$,  after removing the effect of the nonparametric component $\alpha_t$: 
+\be{rho}
+\rho_s\equiv\cor(z_t-\alpha_t,q_t) = \frac{\beta}{\sqrt{\cov(z_t-\alpha_t)}} = \pm\left\{1+\left(\frac{s\sigma}{\beta}\right)^2\right\}^{-1/2}\ ,
+\ee
+where the sign is that of $\beta$.    Using \eref{anova},  $\rho_s^2$ equals the proportion of  residual variance $\Vx(z_t)-\Vx(\alpha_t)=\beta^2+(s\sigma)^2$ explained by  the Gaussian component $q_t$.  
+\begin{comment}
+$$
+\cov(z_t-\alpha_t) = \cov(\beta q_t+s\eps_t) = \beta^2 +s^2\sigma^2\ .
+$$
+\end{comment}
+
+The overall or global correlation is 
+$$
+\rho_v\equiv\cor (z_t,\alpha_t+\beta q_t)\ ,
+$$
+reducing to \eref{rho} except that $s$ is replaced by
+$$
+v\equiv \Ex\left(\sum_{j=1}^{t-1}w_j^2\right) = xxx \cq \alpha_t=\sum_{j=1}^{t-1} w_j\eta_{t-j}
+$$
+The derivation of $v=xxx$ is shown  appendix.  Equivalently $\rho_v^{2}$ is the proportion of $\Vx(z_t)$ explained by the nonparametric and Gaussian component.
+
+From \eref{rho} 
+\be{OR}
+\left(\frac{v}{s}\right)^2=\frac{\rho_s^2/(1-\rho^2_s)}{\rho_v^2/(1-\rho_v^2)} \equiv \mathrm{OR} \ ,
+\ee
+the odds ratio of local to global correlation.  In general $v>s$ implying $\mathrm{OR}>xx$.    
+
+\begin{comment} 
+$$
+\rho = \cor(z_t,q_t) =\frac{\beta}{\sqrt{\beta^2+\cov(\alpha_t)}}=\pm\left\{1+\left(\frac{v\sigma}{\beta}\right)^2\right\}^{-1/2}\ .
+$$
+The expressions follow from a detailed calculation
+$$
+\cov(z_t,q_t) = \E\{(\alpha_t+\beta q_t)q_t\} = \beta
+\cq
+\cov(z_t) =\cov(\alpha_t)+\beta^2\cq \cov(q_t)=1
+$$
+where .   A detailed calculation shows
+\end{comment}
+
+\tref{pp} sets out possible choices for $s$ and $\beta$.   These combinations are discussed in the further subsections.
+
+\begin{table}[htdp]
+\caption{Special cases of the semi Gaussian copula}\label{pp}
+\begin{center}
+\begin{tabular}{l|cccccc}
+\hline
+model&$s$& $\alpha_0$&$\beta$&OR\\
+\hline
+empirical & 0 &  & &$\infty$ &\\
+conormal & $>0$ & & $\pm 1$\\
+conditionally Gaussian & $>0$ & & $\ne 0$ & $>1$ \\
+linear probit & $\infty$ &  &0\\
+Gaussian & $\infty$& 0\\
+independence &  $\infty$& 0&0\\
+co/counter monotonic & $\infty$ &0 &$\pm 1$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}%
+
+\subsection{Empirical copula}
+
+The empirical copula results in \eref{cusp} when $s=0$ or the odds ratio \eref{OR} is infinite.  In this case   $z_t=\alpha_t+\beta q_t$.    The deviation of $z_t-(\alpha_t+\beta q_t)$ can be made zero by selecting appropriate $\eta_t$.  Hence $s=0$ implies the fitted copula is the empirical copula.  Note $\E(\alpha_t)=0$ and $1=\cov(z_t)=\cov(\alpha_t)+\beta^2$.
+
+\subsection{Large local variation}
+
+The other  extreme  $s\rightarrow\infty$ is displayed  bottom rows of \tref{pp}.  Large $s$ forces negligible $\sigma$  and straight line behaviour for $\alpha_t$ yielding
+$$
+z_t= \alpha_0+\delta_0 t + \beta q_t + s\eps_t\cq t=1,\ldots, n\ ,
+$$
+where $s\eps_t$ has finite variance $(s\sigma)^2$.    Since $\E(q_t)=\E(z_t)=0$ any fitted relation is such that
+$$
+\delta_0=\frac{-2\alpha_0}{n+1}\cq z_t=  \alpha_0(1-2u_t)+\beta q_t + s\eps_t \ .
+$$
+Additionally $\cov(q_t)=\cov(z_t)=1$ implying
+\be{constraint}
+ 1= \frac{\alpha_0^2}{3}-2\alpha_0\beta c+\beta^2+(s\sigma)^2\cq c\equiv\cov(u_t,q_t)\approx 2.82\ ,
+\ee
+and hence at most two of $\alpha_0$, $\beta$ and $s\sigma$ can be chosen freely.  
+
+\subsubsection{Gaussian copula}
+If $s\rightarrow\infty$ and  $\alpha_0=0$ then $(q_t,z_t)$ is bivariate   Gaussian with unit variances and correlation $\beta$ and \eref{cusp} reduces to a Gaussian copula with correlation $\beta$ and the odds ration \eref{OR} is 1, that is local and ordinary correlation coincide and \eref{constraint} reduces to $\beta=\pm\sqrt{1-(s\sigma)^2}$. 
+
+\subsubsection{Probit copula}
+
+
+ If $s\rightarrow\infty$ and  $\beta=0$ then \eref{cusp} defines a probit copula.   From \eref{constraint}, $\alpha_0=\pm\sqrt{ 3\{1-(s\sigma)^2\}}$. 
+ 
+ \subsubsection{Independence}
+ If $s\rightarrow\infty$ and  $\alpha_0=\beta=0$ then the variables are independence.   The situation is achieved either letting $\beta\rightarrow 0$ with a Gaussian copula or letting $\alpha_0\rightarrow 0$ with a Probit copula.  Under independence $s\sigma=1$.  
+ 
+ \subsection{Conditionally Gaussian copula}  
+
+This is the intermediate situation where  $0<s<\infty$.  Testing $\alpha_0=1/s=0$ is a test for a Gaussian copula.   Goodness of fit is measured with 
+\be{R2}
+R^2= 1-(s\hat\sigma)^2=1-\frac{1}{n}\sum_{t=1}^n(z_t-\hat z_t)^2\ ,
+\ee
+where  $\hat z_t$ is the estimate of $z_t$ based on \eref{cusp} using estimates of $\alpha_0$, $\delta_0$, $\beta$ and $s\sigma$.  
+Values of $R^2$ lie between 0 and 1 and have the usual interpretation:    near 1 indicates the percentiles of $u$ well explain $z$ values of $v$.   
+Note $R\rightarrow\beta$  if $\alpha_0=0$ and $s\rightarrow \infty$.
+
+From \eref{R2}
+$$
+\sum_{t=1}^n\left(\frac{z_{t}-\hat z_{t}}{s\hat\sigma}\right)^2=n
+$$
+suggesting  the comparison of standardised residuals  to $\pm 2$ and perhaps plotting the percentile rank of the standardised residuals against $u_t$ to identify  lack of fit.  Note $R^2$ differs from the correlation coefficient $\beta$ since.
+$$
+\frac{R}{\beta}=\pm \sqrt{1-(s\hat\sigma)^2}\left\{1+\left(\frac{s\sigma}{\beta}\right)^2\right\}
+$$
+This emphasises the difference between $R^2$ and $\beta$.   The former measures the goodness of fit of a semiparametric function of $u$ to explain $z$ while $\beta$ measures the ability of a straight line in $q$ to explain $z$.  If $\beta\ne 0$ then $q$ forms part of the semiparametric specification and hence if $\beta\ne 0$,  $R^2>\beta^2$.  
+
+   The implied correlation between $z_t$ and $q_t$ is  
+$$
+\beta=\frac{\beta}{\sqrt{\beta^2+(s\sigma)^2}} = \pm\left\{1+\left(\frac{s\sigma}{\beta}\right)^2\right\}^{-1/2}\ .
+$$
+The term $\beta/(s\sigma)$ is the signal to noise ratio.  If $z_t, q_t\sim (0,1)$ then $\beta^2+(s\sigma)^2=1$ and  
+$$
+\beta=\pm\sqrt{1-(s\sigma)^2}=R=\beta \cq \frac{\beta}{s\sigma} = \frac{\pm\sqrt{1-(s\sigma)^2}}{s\sigma} = \frac{\beta}{\sqrt{1-\beta^2}} 
+$$.
+
+
+ Thus the empirical correlation between $z_t$ and $q_t$ is
+$$
+\sum_{t=1}^n z_tq_t = \beta+\delta_0\sum_{t=1}^n tq_t 
+$$
+
+
+
+
+By construction both $z_t$ and $q_t$ have mean zero and variance 1 implying
+the correlation between $z_t$ and $q_t$ is
+
+
+If  $\beta=0$ then 
+$$
+z_t=\alpha_0 + n\delta_0 u_t+\beta \Phi^-(u_t) +s\eps_t\ ,
+$$
+    Testing $\delta_0=0$ amounts to testing for independence.  If $\beta=\pm 1$ then 
+$z_t-(\pm q_t)=\alpha_0+t\delta_0$ implying $\alpha_0=n\delta_0=0$ and  $z_t=\pm q_t$, that is the variables are co or counter monotonic.   Finally if $\beta\ne 0,\pm 1$ then $z_t=\alpha_0+t\delta_0+\beta q_t+s\eps_t$  since  $\alpha_0=\delta_0=0$, implied by the fact that    Since both $z_t$ and $q_t$ are, by construction, standard normal, this  amounts to prescribing  a Gaussian copula with correlation indicated in \tref{pp}.
+The ratio $\beta/(s\sigma)$ is the  signal to noise ratio.
+
+The middle column of the body of \tref{pp} displays alternatives for finite $s\ne 0$.   If $\beta=0$  the implied copula is nonparametric with $\alpha_t$ evolving smoothly as a function of $t$ with the actual degree of smoothness increasing with $s$.  A constraint is $\alpha_0=\alpha_n=\sum_t\delta_t=0$ and hence $\alpha_t$ forms a bridge.  If $\beta=\pm 1$ then the signed difference $z_t-(\pm q_t)$ is modelled as a smooth. In a fit, the  bridge structure is expected to be enforced by the data.
+
+The scale  $\sigma$ quantifies roughness in the signal $\alpha_t$ but its size is determined by $s$ with $s\sigma\le 1$ implied by the standard normality of $z_t$.   
+In fitting, $s$ is either chosen a--priori, or estimated together with the other parameters. Given $s$, estimates of  $\beta$, $\alpha_0$, $\delta_0$ and $\sigma$ are closed form generalised least squares calculations.    Thus $s$ can be estimated  using a one dimensional search.   Given the values of the parameters,  standard diagnostics are used to assess the fit and reveal areas of inadequate fit.  These techniques are used and explained in the applications.
+
+
+
+Use of $q_t$ permits  a partially Gaussian explanation of the copula with  Gaussianity increasing with $s$.   In the limit the enforced Gaussian copula has correlation $R$ signed according to $\hat\beta$.  Co or  countermonotoniticity implies $R=\pm 1$ with the sign indicating the direction of the relationship.  Setting $\beta=0$  excludes the Gaussian copula  component.
+
+
+
+\begin{table}[htdp]
+\caption{Predicted $z_t$ with conormal copula model}\label{ppp}
+\begin{center}
+\begin{tabular}{c||c|c|c}
+\hline
+&$s=0$& $0<s<\infty$ &$s\rightarrow\infty$\\
+\hline\hline
+$\beta=0$&& $\alpha_t$&$\alpha_0(1-2u_t)$ \\
+& & non parametric& linear probit\\
+& & probit & independence: $\alpha_0=0$ \\
+\cline{1-1}\cline{3-4}
+$\beta\ne 0,\pm 1$  & $z_t$ & $\alpha_t+\beta q_t$ &$\alpha_0(1-2u_t)+\beta q_t$\\
+&empirical & conormal & Gaussian if $\alpha_0=0$\\
+\cline{1-1}\cline{3-4}
+$\beta=\pm 1$& & $\alpha_t\pm q_t$& $\alpha_0(1-2u_t)\pm q_t$ \\
+& & cointegrated & co/counter monotonic \\
+& & departure & if $\alpha_0=0$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}%
+
+
+The fitted values $\hat z_t$ stacked in  vector $\hat z$  provide a basis for simulating all percentiles including extreme percentiles.   In particular suppose $z\sim N(\hat z, \Sigma)$ where $\Sigma$ is the covariance matrix implied by the model.   Then $v\sim\Phi_*(z)$ is a simulation of the the $v_t$.   Bringing $v$ into the original order yields $(u_t,v_t)$, a simulation from the copula.  Simulated percentiles are  mapped back into the original scale as   $F_*^-(u_t,v_t)$ to provide simulated $(x_t,y_t)$ outcomes.  
+
+\section{Copula forcing}
+
+Even if data suggests a strict Gaussian copula it  may be desirable to force stronger dependence, especially in the tails. This forcing is achieved with 
+
+\section{Application to copula fitting}
+
+The following example illustrates the copula fitting technique.
+
+
 
 
 \section{Financial sensitivity and contagion}
@@ -265,6 +481,12 @@ u^- \equiv \var_q(v|u\le q)
 $
 measuring the impact of a non distressed state in $v$.  For brevity we do not dwell on these constructs in this writeup although the ramifications and potential uses of these constructs will be  investigated in the research.
 
+\section{Generalising Sklar's Theorem}
+
+Skalr's Theorem states that if $F(x)$ is a a joint then there exists a $C$ such that
+$
+F=C\circ F_*
+$ where $C_F=F$
 \section{Literature}
 
 We propose a measure for systemic risk: CoVaR, the value at risk (VaR) of financial institutions conditional on other institutions being in distress. We define an institution?s (marginal) contribution to systemic risk as the difference between CoVaR and the financial system?s VaR. From our estimates of CoVaR for characteristic-sorted portfolios of publicly traded financial institutions, we quantify the extent to which characteristics such as leverage, size, and maturity mismatch predict systemic risk contribution. We argue for macro-prudential regulation based on the degree to which such characteristics forecast systemic risk contribution.

@@ -34,7 +34,7 @@ sim=: 3 : 0   NB.  draw randomly from empirical copula
    
 cuspm=:3 : 0  NB. cubic spline model
    'y x s'=.y
-   y_0=.(_;_ _) [ D_0=.(0 1 1,h=.%(-%:)3),:0 0 1 1
+   y_0=.(_;_ _) [ D_0=.(0 1 1,h=.(-%:)3),:0 0 1 1
    D_t=.(0 1 0,s,0),(0 1 1 0,h),:0 0 1 0 1
    D=:(y_0;D_0),y;"0 2 x (<0 0)}"0 2 D_t
 )

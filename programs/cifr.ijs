@@ -1,6 +1,8 @@
 
 load 'csv dates tables/tara'
 
+XL=:readxlworkbook
+
 fdir=:'/users/pietdejong/documents/research/cifr/'
 load fdir,'programs/kfs.ijs'
 dir=:'~/documents/research/cifr/'
@@ -20,6 +22,34 @@ dplot=: 'dot;pensize 3'&plot
 pcop=:dplot@(P L:0)  NB. Plot copula
 pncop=:dplot@(qnorm@:P L:0)
 
+cuspm=:3 : 0  NB. cubic spline model
+   'y x s'=.y
+   h=.3-%:3[g=.+:%>:#y
+   y_0=.(_;_) [ D_0=.(0,(1-g),h),:0,(-g),1
+   D_t=.(1 1 0,s,0),(0 1 1 0,h),:0 0 1 0 1
+   D=:(y_0;D_0),y;"0 2 x (<0 0)}"0 2 D_t
+)
+
+R=:Phi^:_1@P
+
+fig1=: 3 : 0
+  'a b'=.y
+  q=.Phi^:_1 u=./:~ P runif n=.1000
+  ssig=.%:1-(3%~*:a)+*:b
+  z=.(Ez=.(a*1-+:u)+(b*q))+ssig*rnorm#q
+  wrs b,{:{.cor z,.q
+  pd 'reset;sub 3 4;pensize 1'
+  pd L:_2 ('type dot';(<q;z));('type line';(<q;Ez))
+  pd L:_2 'new';('type line';(<u;Ez));('type dot';(<u;z))
+  pd L:_1 'new;type dot';(<u;v=.Phi z)
+  pd L:_1 'new;type dot';(<(P z); v)
+  pd 'show'
+)
+
+NB.fig1 0 0.8
+NB. stop
+
+
 sim=: 3 : 0   NB.  draw randomly from empirical copula
   n=.1000
   u=.pnorm ({., {.+ 20*{:)"1 rnorm n,2
@@ -28,59 +58,41 @@ sim=: 3 : 0   NB.  draw randomly from empirical copula
   dplot ;/|:pnorm chi*<:+:u
 )
 
-
-
-
-   
-cuspm=:3 : 0  NB. cubic spline model
-   'y x s'=.y
-   y_0=.(_;_ _) [ D_0=.(0 1 1,h=.(-%:)3),:0 0 1 1
-   D_t=.(0 1 0,s,0),(0 1 1 0,h),:0 0 1 0 1
-   D=:(y_0;D_0),y;"0 2 x (<0 0)}"0 2 D_t
-)
-
 muest=:,@:>@:{:@:|:@:(]ESM KF)  NB.  'eps coveps vareps covvareps mu'=.|:(]ESM KF) D
 
 
-figure=: 3 : 0
+figx=: 3 : 0
   pd 'reset;sub ',":p,p['p n'=.$u=.P"1>y
   pd 'show'[res=:panel"1/~u 
-  res,~<'   beta    alpha0   delta0   R',:'     t        t       t    ssig'
+  res,~<'   beta    alpha0  ssig    rho',:'  t-stat   t-stat  test    rhoq'
 )
 
+rmse=:mean&:*:
+
 panel=: 4 : 0
-  'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
-  pd 'new;pensize 1;type dot;color black'
+  'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x [ s=.^5
+  pd 'new;pensize 1;type dot;color black; yticpos -3 -1.5 0 1.5 3'
   pd (u;z)
-  pd 'type line;color red' NB.; key R2=',6j2": (1-*:r*sig_KFR),*:sig_KFR  
-  pd u;zhat=.muest cuspm z;q;s=.^12
-  'beta alpha0 delta0'=.ba['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
-  tstat=.ba%sig*c[R=.%:1-*:ssig=.s*sig
-  results=.(ba,:tstat),.R,ssig
+  zhat=.muest cuspm z;q;s
+  'beta alpha0'=.ba['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
+  tstat=.ba%sig*c[rhoq=.(*beta)*%%:>:*:ssig%beta[R2=.1-mean*:z-zhat[ssig=.s*sig
+  results=.(ba,:tstat),.(ssig,beta%%:1-*:s*sig),.(rho=.(*beta)*%:1-*:ssig),rhoq
+  n=.({.|:>{."1 SMI cuspm z;q;s)[g=.q*beta
+  pd L:_1 'color green;pensize 1';<u;g
+  pd L:_1 'color blue';<u;zhat-g
+  pd L:_1 'color black';<u;zhat
+NB. pd u;zhat=.muest cuspm z;q;s=.^4
 NB.  pd 'type line;color green'
 NB.  pd 2&(mean\)"1 L:0 u;1,:*:(z-zhat)%ssig
-  'u vhat'=.|:(u,.Phi zhat)/:/:x  NB. return to original order 
+NB. 'u vhat'=.|:(u,.Phi zhat)/:/:x  NB. return to original order 
   <8j4":L:0 results
 )
 
-try=: 3 : 0
-  'a b'=.y
-  c=.0.283
-  q=.Phi^:_1 u=./:~ P runif n=.1000
-  ssig=.%:1-(3%~*:a)+(*:b)-+:a*b*c
-  z=.(Ez=.(a*(1-+:u))+(b*q))+ssig*rnorm#q
-  wrs b,{:{.cor z,.q
-  pd 'reset;sub 2 2;pensize 1'
-  pd L:_2 ('type dot';(<u;z));('type line';(<u;Ez))
-  pd L:_2 'new';('type dot';(<q;z));('type line';(<q;Ez))
-  pd L:_1 'new;type dot';(<u;v=.Phi z)
-  pd L:_1 'new;type dot';(<(P z);v)
-  pd 'show'
-)
-
-try 0.5 0.99
+figx anz;cba;wbc
 
 stop
+
+
 
 finds=: 4 : 0
   'q z'=.Phi^:_1 'u v'=.(P"1 x,:y)/:"1 x
@@ -89,9 +101,7 @@ finds=: 4 : 0
    
 NB. cba finds anz 
 
- figure anz;cba;wbc
 
-stop
 
 fitpair=: 4 : 0
   'q z'=.qnorm 'u v'=.|:(|:/:{.) P"1 x,:y

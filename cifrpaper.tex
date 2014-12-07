@@ -220,58 +220,66 @@ The conditionally Gaussian  (CG) copula for $(u,v)$ is stated in terms of  $q\eq
 \be{cusp}
 z_t = \alpha_t+\beta q_t+ s\eps_t\cq \alpha_{t+1}=\alpha_t +\delta_t+1.268\eta_t\cq \delta_{t+1}=\delta_t+\eta_t\ .
 \ee
-Here the $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.  If $\alpha_t$ is identically zero then  $(z_t,q_t)$  is bivariate normal  with correlation $\rho=\pm\sqrt{1-(s\sigma)^2}=\beta$ .
+Here the $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.  If $\alpha_t$ is identically zero then  $(z_t,q_t)$  is bivariate normal  with correlation $\rho=\pm\sqrt{1-(s\sigma)^2}=\beta$.  
 
-The second and third equations in \eref{cusp} spell out the model for the nonparametric deviation  $\alpha_t$  with $\alpha_0$ and $\delta_0$ assumed unknown parameters.  If $\sigma\rightarrow 0$  then the first equation in \eref{cusp} becomes
-$$
-z_t = \alpha_0+\delta_0 t + \beta q_t + s\eps_t\ .
-$$
-With this linear formulation for $\alpha_t$,  $\beta=\rho$ if $\alpha_0=\delta_0=0$.  If $\beta=0$, there is a probit relationship between $v_t$ and $u_t$.
+The second and third equations in \eref{cusp} spell out the model for the nonparametric deviation  $\alpha_t$  with $\alpha_0$ and $\delta_0$ assumed unknown parameters.  If $\sigma\rightarrow 0$, equivalent to $s\rightarrow\infty$,  the first equation in \eref{cusp} is
+$
+z_t = \alpha_0+\delta_0 t + \beta q_t + s\eps_t
+$\ .
+With this linear formulation for $\alpha_t$,  $\beta=\rho$ if $\alpha_0=\delta_0=0$.    Model \eref{cusp} with  $\beta=0$ is the called the ``unforced" model since $z_t$ is varies smoothly with $t$, unrelated to $q_t$.  If $\beta=0$ and $\sigma\rightarrow 0$ there is a probit relationship between $z_t$ and $u_t$.  Finally $s=0$ implies $a(t)+\beta q_t=z_t$ for any $\beta$. 
 
-The zero and linear formulation for $\alpha_t$ is generalised using function $a(t)$ minimising
+The $\alpha_t=0$ and $\alpha_t=\alpha_0+\delta_0 t$ specifications are generalised using function $a(t)$ minimising
 \be{spline}
-\sum_{t=1}^n\{z_t-a(t)-\beta q_t\}^2 + s^2\int_{-\infty}^{\infty} \left\{a''(t)\right\}^2\de t\ .
+ \sum_{t=1}^n\{z_t-a(t)-\beta q_t\}^2 + s^2\int_{-\infty}^{\infty} \left\{a''(t)\right\}^2\de t\ .
 \ee
 \begin{comment}
 $$
  \sum_{t=1}^n \left[z_t-\{a(t)+\beta q_t\}\right]^2 + s^2\int_{-\infty}^{\infty} \left\{a''(t)\right\}^2\de t\ .
 $$
 \end{comment}
-The interpolates of  $a(t)$ equal $\E(\alpha_t|z_1,\ldots,z_n)$ computed with \eref{cusp} where the $\eps_t$ and $\eta_t$ are assumed normal and $q_t$ is regarded as fixed.
+The interpolates of  $a(t)$ equal $\E(\alpha_t|z_1,\ldots,z_n)$ computed with \eref{cusp} where the $\eps_t$ and $\eta_t$ are assumed normal and $q_t$ fixed.
 From \eref{spline},  $a(t)$ is piecewise twice differentiable passing closest, in a mean square error sense, to $z_t-\beta q_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative $a''(t)$.  Using observed percentile data $(u_t,v_t)$, $t=1,\ldots,n$, the aim is to estimate $a(t)$ and $\beta$ and associated confidence bounds and assess goodness of fit.   The interpolates of the function $a(t)$ are
- $\E(\alpha_t|z_1,\ldots,z_n)$.  If   $s\rightarrow\infty$ in \eref{spline} then $a(t)$ converges to straight line, while $s=0$ implies $a(t)+\beta q_t=z_t$ for any $\beta$.
+ $\E(\alpha_t|z_1,\ldots,z_n)$.   If $s<\infty$ then $a(t)\ne 0$ is thought of as an intercept function. 
  
- If $s<\infty$ then $a(t)\ne 0$ is thought of as an intercept function.   The partial correlation between $z_t$ and $q_t$ after allowing for $a(t)$ is
+ \section{Correlational properties of the CG copula}
+ 
+ This section considers alternative correlations.   If $s\rightarrow\infty$ and $\alpha_0=\delta_0=0$ then $a(t)=0$ and $\eref{cusp}$ reduces to $z_t=\beta q_t+s\eps_t$ where $s\eps_t$ has mean zero and variance $0\le (s\sigma)^2\le 1$ and $\rho=\pm\sqrt{1-(s\sigma)^2}=\beta$ is the correlation, called the overall correlation.  The overall correlation is used when using a Gaussian copula.
+As many authors have pointed out Gaussian copula modelling can be misleading especially when considering correlations in the tails.
+Use of model \eref{cusp} permits a more nuanced view of correlation without completely abandoning the Gaussian setup.
+
+\subsection{Partial correlation after allowing for semiparametric component}
+  The partial correlation between $z_t$ and $q_t$ after allowing for $a(t)$ is
 \be{rho}
 \rho_q\equiv\frac{\cov(z_t-\alpha_t,q_t,)}{\sqrt{\cov(z_t-\alpha_t)\cov(q_t)}} = \frac{\beta}{\sqrt{\beta^2+(s\sigma)^2}}=\pm\left\{1+\left(\frac{s\sigma}{\beta}\right)^2\right\}^{-1/2}\ ,
 \ee
-where the sign is that of $\beta$.  In other words
-$$
-\O(\rho_q) =\frac{\beta}{s\sigma} \cq \O(x) \equiv \pm\sqrt{\frac{x^2}{1-x^2}}
-$$ 
-As $a(t)\rightarrow 0$,  $\rho_q\rightarrow\rho$.  
+where the sign is that of $\beta$.  Equation \eref{rho} is equivalent to  
+$
+\O(\rho_q) =\beta/(s\sigma)
+$
+where $\O(x) \equiv \pm\sqrt{x^2/(1-x^2)}$.  If $s\rightarrow 0$ then $\rho_q\rightarrow 1$.
+If $a(t)\rightarrow 0$ then  $\rho_q\rightarrow\rho$.  
 
+\subsection{Local correlation}
 The local correlation between $z_t$ and $q_t$ is 
 $$
 \rho_t\equiv\cor(\Delta z_t,\Delta q_t|t) =  \frac{\beta\cov(\Delta q_t)}{\sqrt{\cov(\Delta z_t|t)\cov(\Delta q_t)}}=\pm\left\{\frac{\cov(\Delta z_t|t)}{\beta^2\cov(\Delta q_t)}\right\}^{-1/2} 
 $$
-where
+where ``$|t$"" indicates conditioning on information up to and including time $t$.   A calculation shows writing $c=4-\sqrt 3$,
 $$
-\cov(\Delta z_t|t) = \cov(\delta_{t}|t)+(2+3-\sqrt 3)\sigma^2+ \beta^2\cov(\Delta q_t) = c\sigma^2+\beta^2\cov(\Delta q_t)\ ,
+\cov(\Delta z_t|t)  = (2s^2+c)\sigma^2+\beta^2\cov(\Delta q_t)\cq \cov(\Delta q_t) \approx (q'_t)^2\cov(u_t)= \frac{\sigma^2\pi\e^{q_t^2}}{6}
+\ .
 $$
-with $c=6-\sqrt 3$ and 
+Hence
 $$
-\cov(\Delta q_t) \approx (q'_t)^2\cov(u_t)= \frac{\pi\e^{q_t^2}}{6}\ , 
-$$
-and
-$$
-\frac{\cov(\Delta z_t)}{\beta^2\cov(\Delta q_t)} =1+ \left(\frac{\sigma s_t}{\beta}\right)^2
-\cq
 \O(\rho_t) = \frac{\beta}{s_t\sigma }
 \cq 
-s_t = \sqrt{\frac{6c}{\pi}}\e^{-|q_t|}\ .
+s_t = \sqrt{\frac{6(2s^2+c)}{\pi}}\e^{-q_t^2/2}\ .
 $$
-Divisor $s_t$ is small if $|q_t|$ is large indicating the model posits higher tail correlation than normal if $\beta\ne 0$.
+Divisor $s_t$ is small if $|q_t|$ is large indicating the model posits higher tail correlation than normal if $\beta\ne 0$.  The ratio
+$$
+\frac{\O(\rho_t)}{\O(\rho)} =\frac{s}{s_t}= \sqrt{\frac{\pi}{6(2+c/s^2)}}\ \e^{q_t^2/2}\rightarrow \frac{\sqrt{2\pi}\ \e^{q_t^2/2}}{\sqrt{24}}\ ,
+$$
+compares local  to overall correlation.  If $s\rightarrow\infty$ local correlation in the tails  will far exceed overall  correlation.  This is obvious given $s\rightarrow\infty$ implies the model will exactly reproduce the data.  If $s\rightarrow0$
 
 In \eref{cusp},  a large $|\beta|$ suggests more extreme tail behaviour than in the Gaussian copula.  To see this note  
  \be{change}

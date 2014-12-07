@@ -1,0 +1,136 @@
+\documentclass[authoryear]{elsarticle}
+\usepackage{latexsym}
+%\usepackage{rotate}
+\usepackage{graphics}
+%\usepackage{amsmath}
+\usepackage{comment}
+\bibliographystyle{chicago}
+
+
+
+\newcommand{\logit}{\mathrm{logit}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\p}{\mathrm{P}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\vecm}{\mathrm{vec}}
+\newcommand{\kp}{\otimes}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\eps}{\epsilon}
+\newcommand{\ep}{\varepsilon}
+\newcommand{\obdots}{\ddots}    % change this later
+\newcommand{\Ex}{{\cal E}}
+\newcommand{\rat}{{\frac{c_{ij}}{c_{i,j-1}}}}
+\newcommand{\rmu}{m}
+\newcommand{\rsig}{\nu}
+\newcommand{\fd}{\mu}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\cor}{\mathrm{cor}}
+\newcommand{\bx}[1]{\ensuremath{\overline{#1}|}}
+\newcommand{\an}[1]{\ensuremath{a_{\bx{#1}}}}
+
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+
+\renewcommand{\i}{\item}
+\newcommand{\sr}{\ensuremath{\mathrm{SRISK}}}
+\newcommand{\cs}{\ensuremath{\mathrm{CS}}}
+\newcommand{\cri}{\ensuremath{\mathrm{Crisis}}}
+\newcommand{\var}{\ensuremath{\mathrm{VaR}}}
+\newcommand{\covar}{\ensuremath{\mathrm{CoVaR}}}
+\newcommand{\med}{\ensuremath{\mathrm{m}}}
+\newcommand{\de}{\mathrm{d}}
+\renewcommand{\v}{\ensuremath{\mathrm{v}_q}}
+\newcommand{\m}{\ensuremath{\mathrm{m}}}
+\newcommand{\tvar}{\ensuremath{\mathrm{TVaR}}}
+
+
+
+\newcommand{\eref}[1]{(\ref{#1})}
+\newcommand{\fref}[1]{Figure \ref{#1}}
+\newcommand{\sref}[1]{\S\ref{#1}}
+\newcommand{\tref}[1]{Table \ref{#1}}
+\newcommand{\aref}[1]{Appendix \ref{#1}}
+
+
+
+
+\newcommand{\cq}{\ , \qquad}
+\renewcommand{\P}{\mathrm{P}}
+\newcommand{\Q}{\mathrm{Q}}
+
+\newcommand{\Vx}{{\cal V}}
+\newcommand{\be}[1]{\begin{equation}\label{#1}}
+\newcommand{\ee}{\end{equation}}
+
+
+
+
+
+\begin{document}
+
+\section{Regression dependence model}
+
+The regression dependence model is
+$$
+z_t=\alpha_t+\beta q_t + s\eps_t \;.
+$$
+Then
+$$
+z_t-z_{t-1}=(\alpha_t-\alpha_{t-1})+\beta (q_t-q_{t-1}) + s(\eps_t-\eps_{t-1}) \;,
+$$
+yielding the variance breakdown at $[t,t+1]$:
+$$
+V_t^z=V_t^r+V_t^\eps 
+$$
+where $V_t^z$, $V_t^r$ and $V_t^\eps$ are total, regression and error sum of squares at $[t,t+1]$, defined as
+$$
+V_t^z \equiv \E\left\{(z_t-z_{t-1})^2\right\} \cq V_t^\eps \equiv \E\left\{(\eps_t-\eps_{t-1})\right\}^2 \;,
+$$
+$$ 
+V_t^r \equiv \E\left\{(\alpha_t-\alpha_{t-1})^2\right\}+\beta^2 (q_t-q_{t-1})^2
++2\beta (q_t-q_{t-1}) \E(\alpha_t-\alpha_{t-1}) \;.
+$$
+A measure of ``local dependence" at $[t,t+1]$ is the proportion of total variation explained by regression as opposed to error:
+$$
+\rho_t \equiv \frac{V_t^r}{V_t^z} \;,
+$$
+which is higher if $\alpha_t$ and $q_t$ ``move faster" and ``together" relative to $\eps_t$.
+
+Questions:
+\bi
+\i Does specifying $\rho_t$ for all $t$ lead to a specification of $\alpha_t$?
+
+\i Should $s$ vary with $t$? Otherwise how do we model the case of say weak lower tail dependence, since $s$ will need to be large for small $t$? 
+
+\i Is it possible to fit $z_t=\alpha_t+\beta q_t + s_t\eps_t$ where $s_t$ is unknown and varies smoothly, similar to $\alpha_t$? Maybe $s_t$ varies inversely with $\alpha_t$.
+
+\i Maybe should try fitting the model to data with asymmetric dependence and see if it fits properly.
+\ei
+
+
+\section{Factor copula model}
+
+A factor copula model is
+$$
+z_t=\phi(q_t)+s\eps_t
+$$
+where $\phi$ is a transformation and $\phi(q_t)$ corresponds to $\alpha_t+\beta q_t$ in the regression above.
+
+The first order difference is
+$$
+z_t-z_{t-1}=\phi(q_t)-\phi(q_{t-1})+(\eps_t-\eps_{t-1})
+\sim \phi'(q_t)(q_t-q_{t-1}) +(\eps_t-\eps_{t-1}) \;.
+$$
+hence the variance decomposition at $[t,t+1]$ is
+$$
+\E\left\{(z_t-z_{t-1})^2\right\} = \{\phi(q_t)-\phi(q_{t-1})\}^2  + \E\left\{(\eps_t-\eps_{t-1})\right\}^2 \;.
+$$
+The issue here is that the marginal distribution of $z_t$ is going to be ``out of control." Maybe $s$ also needs to vary with $t$?
+
+\section*{References}
+\bibliography{piet2}
+
+
+\end{document}

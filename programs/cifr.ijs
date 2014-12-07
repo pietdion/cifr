@@ -22,12 +22,20 @@ dplot=: 'dot;pensize 3'&plot
 pcop=:dplot@(P L:0)  NB. Plot copula
 pncop=:dplot@(qnorm@:P L:0)
 
-cuspm=:3 : 0  NB. cubic spline model
+cusp=:3 : 0  NB. cubic spline model
    'y x s'=.y
-   h=.3-%:3[g=.+:%>:#y
-   y_0=.(_;_) [ D_0=.(0,(1-g),h),:0,(-g),1
+   h=.3-%:3
+   y_0=.(_;_ _) [ D_0=.(0 1 1,h),:0 0 1 1
    D_t=.(1 1 0,s,0),(0 1 1 0,h),:0 0 1 0 1
    D=:(y_0;D_0),y;"0 2 x (<0 0)}"0 2 D_t
+)
+
+cuspr=:3 : 0  NB. cubic spline model
+   'z q s'=.y
+   h=.3-%:3
+   y_0=.('';_ _) [ D_0=.(1 1,h),:0 1 1
+   D_t=.(1 0,s,0),(1 1 0,h),:0 1 0 1
+   D=:(y_0;D_0),z;"0 2 q (<0 0)}"0 2 D_t
 )
 
 R=:Phi^:_1@P
@@ -64,31 +72,31 @@ muest=:,@:>@:{:@:|:@:(]ESM KF)  NB.  'eps coveps vareps covvareps mu'=.|:(]ESM K
 figx=: 3 : 0
   pd 'reset;sub ',":p,p['p n'=.$u=.P"1>y
   pd 'show'[res=:panel"1/~u 
-  res,~<'   beta    alpha0  ssig    rho',:'  t-stat   t-stat  test    rhoq'
+  header,res
 )
 
 rmse=:mean&:*:
+pdl=:(pd L:_1)@:(<@:(2&{.) ;~ {:)
 
 panel=: 4 : 0
-  'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x [ s=.^5
-  pd 'new;pensize 1;type dot;color black; yticpos -3 -1.5 0 1.5 3'
-  pd (u;z)
-  zhat=.muest cuspm z;q;s
-  'beta alpha0'=.ba['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
-  tstat=.ba%sig*c[rhoq=.(*beta)*%%:>:*:ssig%beta[R2=.1-mean*:z-zhat[ssig=.s*sig
-  results=.(ba,:tstat),.(ssig,beta%%:1-*:s*sig),.(rho=.(*beta)*%:1-*:ssig),rhoq
-  n=.({.|:>{."1 SMI cuspm z;q;s)[g=.q*beta
-  pd L:_1 'color green;pensize 1';<u;g
-  pd L:_1 'color blue';<u;zhat-g
-  pd L:_1 'color black';<u;zhat
-NB. pd u;zhat=.muest cuspm z;q;s=.^4
-NB.  pd 'type line;color green'
-NB.  pd 2&(mean\)"1 L:0 u;1,:*:(z-zhat)%ssig
-NB. 'u vhat'=.|:(u,.Phi zhat)/:/:x  NB. return to original order 
+  rho=.mean */ zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
+  R2=.1-mean*:z-zhat=.muest cusp z;q;s=.^9
+  ssig=.s*sig[tstat=.ba%sig*c['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
+  'beta alpha0 delta0'=.ba
+  rhoq=.(*beta)*%%:>:*:ssig%beta
+  gtest=.|beta%%:1-*:ssig
+  results=.(ba,:tstat),.(ssig,gtest),.rho,rhoq
+  pd 'new;pensize 1;yticpos -3 -1.5 0 1.5 3'
+  pd L:_1 (<u;z);~'type dot;color black'
+  pd L:_1 (<u;g=.q*beta);~'color green'
+  pd L:_1 (<u;zhat-g);~'color red'
+  pd L:_1 (<u;zhat);~'color black'
+  header=:<'   beta   alpha0  delta0   ssig    rho',:'  t-stat  t-stat  t-stat  g-test   rhoq'
   <8j4":L:0 results
 )
 
-figx anz;cba;wbc
+
+figx anz;cba;wbc;mqg
 
 stop
 

@@ -220,16 +220,15 @@ The conditionally Gaussian  (CG) copula for $(u,v)$ is stated in terms of  $q\eq
 \be{cusp}
 z_t = \alpha_t+\beta q_t+ s\eps_t\cq \alpha_{t+1}=\alpha_t +\delta_t+1.268\eta_t\cq \delta_{t+1}=\delta_t+\eta_t\ .
 \ee
-Here the $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.  If $\alpha_t$ is identically zero then the $(z_t,q_t)$  are bivariate normal random variables with correlation $\beta=\pm\sqrt{1-(s\sigma)^2}\equiv\rho$.   Constraint $\alpha_t\equiv 0$ is enforced by simultaneously letting  $s\rightarrow\infty$ and $\sigma\rightarrow 0$ while keeping $s\sigma$ finite. 
+Here the $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.  If $\alpha_t$ is identically zero then  $(z_t,q_t)$  is bivariate normal  with correlation $\rho=\pm\sqrt{1-(s\sigma)^2}=\beta$ .
 
-The second two equations in \eref{cusp} spell out the model for the nonparametric deviation  $\alpha_t$  with $\alpha_0$ and $\delta_0$ assumed unknown parameters.  If $\sigma\rightarrow 0$  then the first equation in \eref{cusp} becomes
+The second and third equations in \eref{cusp} spell out the model for the nonparametric deviation  $\alpha_t$  with $\alpha_0$ and $\delta_0$ assumed unknown parameters.  If $\sigma\rightarrow 0$  then the first equation in \eref{cusp} becomes
 $$
-z_t = \alpha_0+\delta_0 t + \beta q_t + s\eps_t \cq t=1,\ldots,n
+z_t = \alpha_0+\delta_0 t + \beta q_t + s\eps_t\ .
 $$
-Averaging both sides over $t=1,\ldots,n$ suggests  $\delta_0=-2\alpha_0/(n+1)$ yielding $
-z_t=\alpha_0(1-2u_t) + \beta q_t + s\eps_t$.  In this linear formulation for $\alpha_t$,  $\beta$ is the Gaussian copula correlation only if $\alpha_0=0$.
+With this linear formulation for $\alpha_t$,  $\beta=\rho$ if $\alpha_0=\delta_0=0$.  If $\beta=0$, there is a probit relationship between $v_t$ and $u_t$.
 
-The zero and linear formulation for $\alpha_t$ is generalised by considering the function $a(t)$ minimising
+The zero and linear formulation for $\alpha_t$ is generalised using function $a(t)$ minimising
 \be{spline}
 \sum_{t=1}^n\{z_t-a(t)-\beta q_t\}^2 + s^2\int_{-\infty}^{\infty} \left\{a''(t)\right\}^2\de t\ .
 \ee
@@ -238,22 +237,48 @@ $$
  \sum_{t=1}^n \left[z_t-\{a(t)+\beta q_t\}\right]^2 + s^2\int_{-\infty}^{\infty} \left\{a''(t)\right\}^2\de t\ .
 $$
 \end{comment}
-The interpolates of the minimising  function $a(t)$ equal $\E(\alpha_t|z_1,\ldots,z_n)$ for \eref{cusp} where the $\eps_t$ and $\eta_t$ are assumed normal and $q_t$ is regarded as fixed.
-Note  $a(t)$ is piecewise twice differentiable passing closest, in a mean square error sense, to $z_t-\beta q_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative $a''(t)$.  Using observed percentile data $(u_t,v_t)$, $t=1,\ldots,n$, the aim is to estimate $a(t)$ and $\beta$ and associated confidence bounds and assess goodness of fit.   The interpolates of the function $a(t)$ are
- $\E(\alpha_t|z_1,\ldots,n)$.
+The interpolates of  $a(t)$ equal $\E(\alpha_t|z_1,\ldots,z_n)$ computed with \eref{cusp} where the $\eps_t$ and $\eta_t$ are assumed normal and $q_t$ is regarded as fixed.
+From \eref{spline},  $a(t)$ is piecewise twice differentiable passing closest, in a mean square error sense, to $z_t-\beta q_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative $a''(t)$.  Using observed percentile data $(u_t,v_t)$, $t=1,\ldots,n$, the aim is to estimate $a(t)$ and $\beta$ and associated confidence bounds and assess goodness of fit.   The interpolates of the function $a(t)$ are
+ $\E(\alpha_t|z_1,\ldots,z_n)$.  If   $s\rightarrow\infty$ in \eref{spline} then $a(t)$ converges to straight line, while $s=0$ implies $a(t)+\beta q_t=z_t$ for any $\beta$.
  
- As the roughness penalty $s^2$ increases, $a(t)$ approaches $0$ for all $t$.   In this limiting case $\beta=\pm\sqrt{1-(s\sigma)^2}\equiv \rho$,  the Gaussian copula correlation, since both $z_t$ and $q_t$ are standard normal.  If $s<\infty$ then $a(t)\ne 0$ is thought of as an intercept function.   The partial correlation between $z_t$ and $q_t$ after allowing for $a(t)$ is
+ If $s<\infty$ then $a(t)\ne 0$ is thought of as an intercept function.   The partial correlation between $z_t$ and $q_t$ after allowing for $a(t)$ is
 \be{rho}
 \rho_q\equiv\frac{\cov(z_t-\alpha_t,q_t,)}{\sqrt{\cov(z_t-\alpha_t)\cov(q_t)}} = \frac{\beta}{\sqrt{\beta^2+(s\sigma)^2}}=\pm\left\{1+\left(\frac{s\sigma}{\beta}\right)^2\right\}^{-1/2}\ ,
 \ee
-where the sign is that of $\beta$.  As $s\rightarrow\infty$, $(s\sigma)^2\rightarrow 1-\beta^2$ and $\rho_q\rightarrow\rho$.   
+where the sign is that of $\beta$.  In other words
+$$
+\O(\rho_q) =\frac{\beta}{s\sigma} \cq \O(x) \equiv \pm\sqrt{\frac{x^2}{1-x^2}}
+$$ 
+As $a(t)\rightarrow 0$,  $\rho_q\rightarrow\rho$.  
+
+The local correlation between $z_t$ and $q_t$ is 
+$$
+\rho_t\equiv\cor(\Delta z_t,\Delta q_t|t) =  \frac{\beta\cov(\Delta q_t)}{\sqrt{\cov(\Delta z_t|t)\cov(\Delta q_t)}}=\pm\left\{\frac{\cov(\Delta z_t|t)}{\beta^2\cov(\Delta q_t)}\right\}^{-1/2} 
+$$
+where
+$$
+\cov(\Delta z_t|t) = \cov(\delta_{t}|t)+(2+3-\sqrt 3)\sigma^2+ \beta^2\cov(\Delta q_t) = c\sigma^2+\beta^2\cov(\Delta q_t)\ ,
+$$
+with $c=6-\sqrt 3$ and 
+$$
+\cov(\Delta q_t) \approx (q'_t)^2\cov(u_t)= \frac{\pi\e^{q_t^2}}{6}\ , 
+$$
+and
+$$
+\frac{\cov(\Delta z_t)}{\beta^2\cov(\Delta q_t)} =1+ \left(\frac{\sigma s_t}{\beta}\right)^2
+\cq
+\O(\rho_t) = \frac{\beta}{s_t\sigma }
+\cq 
+s_t = \sqrt{\frac{6c}{\pi}}\e^{-|q_t|}\ .
+$$
+Divisor $s_t$ is small if $|q_t|$ is large indicating the model posits higher tail correlation than normal if $\beta\ne 0$.
 
 In \eref{cusp},  a large $|\beta|$ suggests more extreme tail behaviour than in the Gaussian copula.  To see this note  
  \be{change}
-\Delta \E( \alpha_t + \beta q_t)  \approx \frac{-2\alpha_0}{n+1} + \frac{\beta}{(n+1)\Phi'(q_t)}= c\beta\e^{q_t^2/2}\ ,
+\Delta \E( \alpha_t + \beta q_t)  \approx \frac{-2\delta_0}{n+1} + \frac{\beta}{(n+1)\Phi'(q_t)}= \frac{\sqrt{2\pi}\beta\e^{q_t^2/2}-2\delta_0}{n+1}\ ,
  \ee
- where $\Delta$ denotes change with respect to $t$ and $c$ is a constant.
-Change \eref{change} is relatively large if $q_t$ is in one of the tails and higher than normal tail dependence implies $|\beta|$ large.  For a Gaussian copula, $\beta=\pm\sqrt{1-(s\sigma)^2}$ and comparing the ratio of estimates of the two sides to 1 is a test for Gaussianity.
+ where $\Delta$ denotes change with respect to $t$.
+Change \eref{change} is relatively large if $q_t^2$ is large, that is $t$ is near 1 or $n$. Higher than normal tail dependence implies $|\beta|$ large.  For a Gaussian copula, $\beta=\pm\sqrt{1-(s\sigma)^2}$ and comparing the ratio of estimates of the two sides to 1 is a test for Gaussianity.
 
 The  correlation between $z_t$ and $a(t)$ after allowing for $q_t$ is
 \be{rho2}

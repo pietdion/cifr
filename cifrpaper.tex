@@ -206,7 +206,7 @@ This differs from \eref{stress}  in that a different risk measure is used and  $
 \ee
 where $f_i$ and $f_j$ are the $x_i$ and $x_j$ densities at the $r_i$ and $r_i$ quantiles, respectively. 
 
-\section{Conditionally Gaussian copulas}
+\section{Partially Gaussian copulas}
 
 Suppose $(u,v)=F_*(x,y)$  where $x$ and $y$ are scalar random variables.    Suppose $u_1<\cdots<u_n$  are   ordered observed values of $u$ and $q_t=\Phi^-(u_t)$, $t=1,\ldots,n$.  The correspondingly ordered values of $v$ and $z=\Phi^-(v)$ are denoted $v_t$ and $z_t$.  Note $\Ex(z_t)=\Ex(q_t)=0$ and $\Vx(z_t)=\Vx(q_t)=1$ where $\Ex$ and $\Vx$ evaluate the mean and variance assuming $t$ is uniform on the integers $1,\ldots,n$. 
 
@@ -216,7 +216,7 @@ Smoothing methods are here proposed to smooth and simulate $y$ values  using a c
    The simulation singles out independent and dependent variables.   Which should be which?  If $x$ and $y$ are actual time series the simulation $(x_t,\hat y_t)$ is ordered back into the original time series order.
 \end{comment}
 
-The conditionally Gaussian  (CG) copula for $(u,v)$ is stated in terms of  $q\equiv\Phi^-(u)$ and $z\equiv\Phi^-(v)$ on an arbitrarily fine $u$ grid $0<u_1<\cdots<u_n<1$:  
+The partially Gaussian  (PG) copula for $(u,v)$ is stated in terms of  $q\equiv\Phi^-(u)$ and $z\equiv\Phi^-(v)$ on an arbitrarily fine $u$ grid $0<u_1<\cdots<u_n<1$:  
 \be{cusp}
 z_t = \alpha_t+\beta q_t+ s\eps_t\cq \alpha_{t+1}=\alpha_t +\delta_t+1.268\eta_t\cq \delta_{t+1}=\delta_t+\eta_t\ .
 \ee
@@ -226,7 +226,7 @@ The second and third equations in \eref{cusp} spell out the model for the nonpar
 $
 z_t = \alpha_0+\delta_0 t + \beta q_t + s\eps_t
 $\ .
-With this linear formulation for $\alpha_t$,  $\beta=\rho$ if $\alpha_0=\delta_0=0$.    Model \eref{cusp} with  $\beta=0$ is the called the ``unforced" model since $z_t$ is varies smoothly with $t$, unrelated to $q_t$.  If $\beta=0$ and $\sigma\rightarrow 0$ there is a probit relationship between $z_t$ and $u_t$.  Finally $s=0$ implies $a(t)+\beta q_t=z_t$ for any $\beta$. 
+With this linear formulation for $\alpha_t$,  $\beta=\rho$ if $\alpha_0=\delta_0=0$.    Model \eref{cusp} with  $\beta=0$ is the  nonparametric model since $z_t$ is varies smoothly with $t$, unrelated to $q_t$.  If $\beta=0$ and $\sigma\rightarrow 0$ there is a probit relationship between $z_t$ and $u_t$.  Finally $s=0$ implies $a(t)+\beta q_t=z_t$ for any $\beta$.   The full range of possibilities is set out in \tref{pg} discussed in more detail below.
 
 The $\alpha_t=0$ and $\alpha_t=\alpha_0+\delta_0 t$ specifications are generalised using function $a(t)$ minimising
 \be{spline}
@@ -238,10 +238,52 @@ $$
 $$
 \end{comment}
 The interpolates of  $a(t)$ equal $\E(\alpha_t|z_1,\ldots,z_n)$ computed with \eref{cusp} where the $\eps_t$ and $\eta_t$ are assumed normal and $q_t$ fixed.
-From \eref{spline},  $a(t)$ is piecewise twice differentiable passing closest, in a mean square error sense, to $z_t-\beta q_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative $a''(t)$.  Using observed percentile data $(u_t,v_t)$, $t=1,\ldots,n$, the aim is to estimate $a(t)$ and $\beta$ and associated confidence bounds and assess goodness of fit.   The interpolates of the function $a(t)$ are
- $\E(\alpha_t|z_1,\ldots,z_n)$.   If $s<\infty$ then $a(t)\ne 0$ is thought of as an intercept function. 
+From \eref{spline},  $a(t)$ is piecewise twice differentiable passing closest, in a mean square error sense, to $z_t-\beta q_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative $a''(t)$.  Using observed percentile data $(u_t,v_t)$, $t=1,\ldots,n$, the aim is to estimate $a(t)$ and $\beta$ and associated confidence bounds and assess goodness of fit.   The function $a(t)$ is thought of as an intercept function.
+
+\section{Special cases of the PG model}  
+
+Special cases of the general setup \eref{cusp} or \eref{spline} are set out in \tref{pg}.   In this table, the notation $s\rightarrow\infty$ means $s$ becomes large and $\sigma$ small in such a way that $s\sigma$, the measurement noise in the first equation in \eref{cusp},  stays finite.  In fact $s\sigma\le 1$ since the variance of $z_t$ is 1.  Thus $s\rightarrow\infty$ implies $\sigma\rightarrow 0$ and states that the noise to signal ratio is becoming arbitrarily large. 
+With the model the squared correlation between $z_t$ and the signal $\alpha_t+\beta q_t$ is, since the variance of $z_t$ is 1:
+ $$
+ \rho^2=1-(s\sigma)^2 = 1- \sum_{t=1}^n\{z_t-a(t)-\beta q_t\}^2
+ $$
+
+The first row in \tref{pg} is the standard Gaussian copula setup.  Here there is no $\alpha_t$ signal or component.  The additional restriction $\beta=0$ yields independence.  Co (or counter) monotonicity results in the Gaussian framework if $\rho=\pm 1$ as displayed in the third row.
+If $s= 0$ then there is no measurement noise and the combined signal $\alpha_t+\beta q_t$ must pass through the points $z_t$ resulting in a perfect fit.   In terms of \eref{spline}, $s=0$ implies there is no roughness penalty and hence the minimisation is solely focussed on minimising the first, squared error, term, achieved  by setting $\alpha_t+\beta q_t=z_t$. 
  
- \section{Correlational properties of the CG copula}
+ \begin{table}[htdp]
+\caption{Special cases of the PG copula; in all cases $\rho=\pm\sqrt{1-(s\sigma)^2}$}\label{pg}
+\begin{center}
+\begin{tabular}{l|c|ccccc|c|l}
+\hline
+case& $a(t)$ & $\beta$ &$s$ & $\sigma$ & $\alpha_0$&$\delta_0$ & $\rho_q$ & other\\
+\hline
+Gaussian & 0 &  & $\infty$ & $0$&  0&0 &$\rho$&$\rho=\beta$\\
+independence &  0 & 0 & $\infty$&0 & 0 & 0&0 &$\rho=0$\\
+$\pm$comonotonic  & 0 &$\pm 1$ &0 & 0 &0 & 0 &$\pm1$ &$z_t=\pm q_t$  \\
+empirical  & $z_t$ &  & $0$  &  &   &  &0 &$\rho=1$ \\ 
+linear probit &$\alpha_0(1-2u_t)$&  0 &  $\infty$ &0& & $\frac{-2\alpha_0}{n+1}$& 0 &indep. if $\alpha_0=0$\\
+nonparametric & smooth  & 0 & & & & & 0 & non Gaussian \\
+PG & smooth & & & & & &\eref{rhoq}&  \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}%
+
+The linear probit copula specification in \tref{pg}  eliminates the Gaussian component $q_t$ by setting $\beta=0$, and giving maximum penalty for roughness.   The resulting prediction  is a straight line $\hat z_t=\alpha_0+\delta_0 t$.  However the mean of the $z_t$ and hence $\hat z_t$ is zero implying $0=\alpha_0 + \delta_0(n+1)/2$.   Solving for $\delta_0$ gives the $\delta_0$ constraint displayed in \tref{pg} and the resulting straight line signal $a(t)$.
+
+The bottom row of \tref{pg} displays the general partial Gaussian specification absent  any constraints on the parameters.  Eliminating the Gaussian component from the signal by setting $\beta=0$ leads to the nonparametric, non Gaussian specification in the second last row of \tref{pg}.
+
+\section{Fitting PG copulas}
+ The PG is readily  fit to percentile data, and provides a practical platform for copula simulation.  This is discussed, implemented, and used in subsequent sections.  The  parameters defining PG are $s$, $\beta$,  $\sigma$ and starting conditions $\alpha_0$ and $\delta_0$.  Given $s$, the other parameters have  closed form, readily `computable expressions calculated with the Kalman filter.
+ 
+ The parameter $s$ can be estimated by minimising least squares,  closely related to maximum likelihood.    In particular suppose the $\eps_t$ and $\eta_t$ are normal.  
+ 
+
+ 
+ \section{Correlational properties of the PG copula}
+ 
+ The column headed $\rho_q$ in \tref{pg} is the partial correlation between $z_t$ and $\alpha_t$ after removing the effect of the Gaussian component $q_t$.  If $\beta=0$, there is no Gaussian component and $\rho_q=\rho$.
  
  This section considers alternative correlations.   If $s\rightarrow\infty$ and $\alpha_0=\delta_0=0$ then $a(t)=0$ and $\eref{cusp}$ reduces to $z_t=\beta q_t+s\eps_t$ where $s\eps_t$ has mean zero and variance $0\le (s\sigma)^2\le 1$ and $\rho=\pm\sqrt{1-(s\sigma)^2}=\beta$ is the correlation, called the overall correlation.  The overall correlation is used when using a Gaussian copula.
 As many authors have pointed out Gaussian copula modelling can be misleading especially when considering correlations in the tails.
@@ -249,10 +291,10 @@ Use of model \eref{cusp} permits a more nuanced view of correlation without comp
 
 \subsection{Partial correlation after allowing for semiparametric component}
   The partial correlation between $z_t$ and $q_t$ after allowing for $a(t)$ is
-\be{rho}
+\be{rhoq}
 \rho_q\equiv\frac{\cov(z_t-\alpha_t,q_t,)}{\sqrt{\cov(z_t-\alpha_t)\cov(q_t)}} = \frac{\beta}{\sqrt{\beta^2+(s\sigma)^2}}=\pm\left\{1+\left(\frac{s\sigma}{\beta}\right)^2\right\}^{-1/2}\ ,
 \ee
-where the sign is that of $\beta$.  Equation \eref{rho} is equivalent to  
+where the sign is that of $\beta$.  Equation \eref{rhoq} is equivalent to  
 $
 \O(\rho_q) =\beta/(s\sigma)
 $
@@ -281,6 +323,7 @@ $$
 $$
 compares local  to overall correlation.  If $s\rightarrow\infty$ local correlation in the tails  will far exceed overall  correlation.  This is obvious given $s\rightarrow\infty$ implies the model will exactly reproduce the data.  If $s\rightarrow0$
 
+\subsection{Alternative view of local correlation}
 In \eref{cusp},  a large $|\beta|$ suggests more extreme tail behaviour than in the Gaussian copula.  To see this note  
  \be{change}
 \Delta \E( \alpha_t + \beta q_t)  \approx \frac{-2\delta_0}{n+1} + \frac{\beta}{(n+1)\Phi'(q_t)}= \frac{\sqrt{2\pi}\beta\e^{q_t^2/2}-2\delta_0}{n+1}\ ,
@@ -288,18 +331,20 @@ In \eref{cusp},  a large $|\beta|$ suggests more extreme tail behaviour than in 
  where $\Delta$ denotes change with respect to $t$.
 Change \eref{change} is relatively large if $q_t^2$ is large, that is $t$ is near 1 or $n$. Higher than normal tail dependence implies $|\beta|$ large.  For a Gaussian copula, $\beta=\pm\sqrt{1-(s\sigma)^2}$ and comparing the ratio of estimates of the two sides to 1 is a test for Gaussianity.
 
+\subsection{Correlation between $z_t$ and $a(t)$}
 The  correlation between $z_t$ and $a(t)$ after allowing for $q_t$ is
 \be{rho2}
-\rho_a\equiv\frac{\cov(z_t-\beta q_t,\alpha_t)}{\sqrt{\cov(z_t-\beta q_t)\cov(\alpha_t)}} = \left\{1-\frac{(s\sigma)^2}{1-\beta^2}\right\}^{1/2}=\left\{\frac{\beta^2/(1-\beta^2)}{\rho_q^2/(1-\rho_q^2)}\right\}^{1/2}\ .
+\rho_a\equiv\frac{\cov(z_t-\beta q_t,\alpha_t)}{\sqrt{\cov(z_t-\beta q_t)\cov(\alpha_t)}} = \left\{1+\frac{(s\sigma)^2}{\cov(\alpha_t)}\right\}^{1/2}\ .
 \ee
-This compares to the overall correlation between $z_t$ and $a(t)$ of
+This is BS -- has to be done properly --.  The  overall correlation between $z_t$ and $a(t)$ of
 $$
 \frac{\cov(z_t,\alpha_t)}{\sqrt{\cov(z_t)\cov(\alpha_t)}} = \frac{\cov(z_t-\beta q_t,\alpha_t)}{\sqrt{1-\beta^2-(s\sigma)^2}} =\sqrt{1-\beta^2-(s\sigma)^2}
 $$
 while the nonparametric correlation is the correlation between the nonparametric component $\alpha_t$ and  $z_t$ after removing the the effect of the Gaussian component:
 
-
- The CG is readily  fit to percentile data, and provides a practical platform for copula simulation.  This is discussed, implemented, and used in subsequent sections.  The  parameters defining CG are $s$, $\beta$,  $\sigma$ and starting conditions $\alpha_0$ and $\delta_0$.
+ 
+ 
+ 
  
  The term $\alpha_t+\beta q_t$ is the signal and $\eps_t$, noise.    The signal is relatively smooth and contains both a nonparametric and Gaussian component $q_t$.   Departures of $z_t$ from the Gaussian component  are the sum of a persistent component $\alpha_t$ and  transient component, $s\eps_t$.  Since  $\eps_t$ and  the driver of persistence $\eta_t$  share $\sigma$, the smoothing parameter $s$ measures relative importance of transience as opposed to persistence.   The scale parameter $\sigma$ relates to the degree of roughness since it is the variance of the changes in the  slope of $\alpha_t$.
  
@@ -315,7 +360,7 @@ Further $\Vx(q_t)=\Vx(z_t)=1$ implies an analysis of variance type decomposition
 \ee
 Decomposition \eref{anova} splits the total variance  of 1 into that due to the nonparametric component $\alpha_t$,  Gaussian component $\beta^2$ and residual noise, $(s\sigma)^2$.  Alternatively \eref{anova} states the variance of the nonparametric component is $1-\beta^2-(s\sigma)^2$.
 
-An example CG copula with $s\sigma=xx$, $\sigma=0$, $\beta=xx$ and $\alpha_0=xx$  is displayed in \fref{xx}.  
+An example PG copula with $s\sigma=xx$, $\sigma=0$, $\beta=xx$ and $\alpha_0=xx$  is displayed in \fref{xx}.  
  \begin{comment}
  relation is such that
 $$
@@ -332,7 +377,7 @@ and hence at most two of $\alpha_0$, $\beta$ and $s\sigma$ can be chosen freely.
 
 
 
-\section{Correlations with the CG copula}
+\section{Correlations with the PG copula}
 With \eref{cusp}  and $t$ uniform on $1,\ldots,n$ 
 $$
 \Vx\left(\begin{array}{c} z_t\\ \alpha_t\\ q_t\\ \end{array}\right)
@@ -401,28 +446,11 @@ where .   A detailed calculation shows
 
 
 
-\section{Special cases of the CG copula}
+\section{Special cases of the PG copula}
 
 \tref{pp} sets out possible choices for $s$ and $\beta$.   These combinations are discussed in the further subsections.  Note that $s=0$ does not imply $s\sigma=0$ as $s\rightarrow 0$ may imply $s\sigma$ converges to a positive number.
 
-\begin{table}[htdp]
-\caption{Special cases of the CG copula}\label{pp}
-\begin{center}
-\begin{tabular}{l|cccccc}
-\hline
-case&$s$& $\alpha_0$&$\beta$&$s\sigma$\\
-\hline
-empirical & 0 &  & &$\infty$ &\\
-conormal & $>0$ & & $\pm 1$\\
-conditionally Gaussian & $>0$ & & $\ne 0$ & $>1$ \\
-linear probit & $\infty$ &  &0\\
-Gaussian & $\infty$& 0 &$\beta$ & $\sqrt{1-\beta^2}$\\
-independence &  $\infty$& 0&0& 1\\
-co/counter monotonic & $\infty$ &0 &$\pm 1$& 0 \\
-\hline
-\end{tabular}
-\end{center}
-\end{table}%
+
 
 \subsection{Empirical copula}
 
@@ -457,7 +485,7 @@ where  $\hat z_t$ is the estimate of $z_t$ based on \eref{cusp} using estimates 
 Values of $\hat\rho^2$ lie between 0 and 1 and have the usual interpretation:    near 1 indicates the percentiles of $u$ well explain $z$ values of $v$.   
 Note $R\rightarrow\beta$  if $\alpha_0=0$ and $s\rightarrow \infty$.
 
-\section{Estimation of the CG model}
+\section{Estimation of the PG model}
 
 A convenient feature of the GC model is the straightforward estimation.   The unknown parameters are $\alpha_0$, $\beta$, $\sigma$, and $s$.  Given $s$, estimates of the other parameters are in closed form -- generalised least squares (GLS) estimators of $\alpha_0$ and $\beta$, while $\sigma$ is estimated from the fitted  residuals.   GLS estimates are derived using the Kalman filter (KF).   The KF  and the associated Smoothing filter (SF) also deliver diagnostics for assessing goodness of fit and estimates of  sampling error.  In these calculations $s$ is either given or alternatively is iterated over to produce a quasi maximum likelihood estimate.
 

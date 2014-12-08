@@ -40,43 +40,32 @@ muest=:,@:>@:{:@:|:@:(]ESM KF)  NB.  'eps coveps vareps covvareps mu'=.|:(]ESM K
 
 figx=: 3 : 0
   pd 'reset;sub ',":p,p['p n'=.$u=.P"1>y
-  pd 'show'[res=:panelf"1/~u 
+  pd 'show'[res=:panel"1/~u 
   header,res
 )
 
-panelunf=: 4 : 0
+panel=: 4 : 0
   rho=.mean*/zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
-  R2=.1-mean*:z-zhat=.muest cusp z;s=.^15
-  ssig=.s*sig[tstat=.ba%sig*c['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
-  'alpha0 delta0'=.ba
-  results=.(ba,:tstat),.(ssig,R2) NB.,.rho,rhoq
-  pd 'new;pensize 1;yticpos -3 -1.5 0 1.5 3'
-  pd L:_1 (<u;z);~'type dot;color black'
-  pd L:_1 (<u;zhat);~'color black'
-  header=:<'   alpha0  delta0   ssig',:'  t-stat  t-stat   R2'
-  <8j4":L:0 results
-)
-
-panelf=: 4 : 0
-  rho=.mean*/zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
-  R2=.1-mean*:z-zhat=.muest cuspf z;q;s=.^15
+  zhat=.muest cuspf z;q;s=.0.0001
+wrs >./|z-zhat
   ssig=.s*sig[tstat=.ba%sig*c['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
   'beta alpha0 delta0'=.ba
+  rho=.(*beta)*%:1-*:ssig
   rhoq=.(*beta)*%%:>:*:ssig%beta
-  gtest=.|beta%%:1-*:ssig
-  results=.(ba,:tstat),.(ssig,R2),.rho,gtest
+  gtest=.beta%%:1-*:ssig
+  results=.(ba,:tstat),.(ssig,gtest),.rho,rhoq
   pd 'new;pensize 1;yticpos -3 -1.5 0 1.5 3'
   pd L:_1 (<u;z);~'type dot;color black'
   pd L:_1 (<u;g=.q*beta);~'color green'
   pd L:_1 (<u;zhat-g);~'color red'
   pd L:_1 (<u;zhat);~'color black'
-  header=:<'   beta   alpha0  delta0   ssig    rho',:'  t-stat  t-stat  t-stat    R2   g-test'
+  header=:<'   beta   alpha0  delta0   ssig    rho',:'  t-stat  t-stat  t-stat  g-test  rho_q'
   <8j4":L:0 results
 )
 
 
 
-figx anz;cba;wbc;mqg
+figx anz;cba;mqg
 
 stop
 

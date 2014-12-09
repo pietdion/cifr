@@ -46,8 +46,7 @@ figx=: 3 : 0
 
 panel=: 4 : 0
   rho=.mean*/zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
-  zhat=.muest cuspf z;q;s=.0.0001
-wrs >./|z-zhat
+  zhat=.muest cuspf z;q;s=.^8
   ssig=.s*sig[tstat=.ba%sig*c['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
   'beta alpha0 delta0'=.ba
   rho=.(*beta)*%:1-*:ssig

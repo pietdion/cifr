@@ -242,11 +242,9 @@ From \eref{spline},  $a(t)$ is piecewise twice differentiable passing closest, i
 
 \section{Special cases of the PG model}  
 
-Special cases of the general setup \eref{cusp} or \eref{spline} are set out in \tref{pg}.   In this table, the notation $s\rightarrow\infty$ means $s$ becomes large and $\sigma$ small in such a way that $s\sigma$, the measurement noise in the first equation in \eref{cusp},  stays finite.  In fact $s\sigma\le 1$ since the variance of $z_t$ is 1.  Thus $s\rightarrow\infty$ implies $\sigma\rightarrow 0$ and states that the noise to signal ratio is becoming arbitrarily large. 
-With the model the squared correlation between $z_t$ and the signal $\alpha_t+\beta q_t$ is, since the variance of $z_t$ is 1:
- $$
- \rho^2=1-(s\sigma)^2 = 1- \sum_{t=1}^n\{z_t-a(t)-\beta q_t\}^2
- $$
+Special cases of  \eref{cusp} or \eref{spline} are displayed in \tref{pg}.   The notation $s\rightarrow\infty$ signifies $s$ becomes large and $\sigma$ small in such a way that $s\sigma$, the variance of $s\eps_t$ in \eref{cusp},  stays finite.    Thus $s\rightarrow\infty$  implies the noise to signal ratio becomes large. 
+
+
 
 The first row in \tref{pg} is the standard Gaussian copula setup.  Here there is no $\alpha_t$ signal or component.  The additional restriction $\beta=0$ yields independence.  Co (or counter) monotonicity results in the Gaussian framework if $\rho=\pm 1$ as displayed in the third row.
 If $s= 0$ then there is no measurement noise and the combined signal $\alpha_t+\beta q_t$ must pass through the points $z_t$ resulting in a perfect fit.   In terms of \eref{spline}, $s=0$ implies there is no roughness penalty and hence the minimisation is solely focussed on minimising the first, squared error, term, achieved  by setting $\alpha_t+\beta q_t=z_t$. 
@@ -279,7 +277,17 @@ The bottom row of \tref{pg} displays the general partial Gaussian specification 
  
  The parameter $s$ can be estimated by minimising least squares,  closely related to maximum likelihood.    In particular suppose the $\eps_t$ and $\eta_t$ are normal.  
  
+\section{Uniform on $t$ discussion}
 
+With \eref{cusp} the squared correlation between $z_t$ and the signal $\alpha_t+\beta q_t$ is, since the variance of $z_t$ is 1:
+ $$
+ \rho^2=1-(s\sigma)^2 = 1- \Ex\{(z_t-\hat z_t)^2\}\cq \hat z_t\equiv\alpha_t+\beta q_t\ .
+ $$
+ where $\Ex$ denotes averaging over $t=1,\ldots,n$.  Since $\Ex(z_t)=\Ex(q_t)=0$ and $\Ex(z_t^2)=\Ex(q_t^2)=1$ implying
+ $\Ex(\alpha_t)=0$.  Further
+ $$
+ 1=\Vx(z_t) = \Vx(\alpha_t+\beta q_t + s\eps_t) = \beta^2 + \Vx(\alpha_t+s\eps_t) + 2\beta\Vx(q_t,\alpha_t+s\eps_t)\ .
+ $$
  
  \section{Correlational properties of the PG copula}
  

@@ -44,28 +44,75 @@ figx=: 3 : 0
   header,res
 )
 
+odds=: %(1:-]) 
+O=:%:@odds@*:
+
 panel=: 4 : 0
-  rho=.mean*/zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
-  zhat=.muest cuspf z;q;s=.^8
+  rhoG=.mean*/zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
+  zhat=.muest cuspf z;q;s=.^4
   ssig=.s*sig[tstat=.ba%sig*c['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
   'beta alpha0 delta0'=.ba
-  rho=.(*beta)*%:1-*:ssig
+  wrs rhoG,rho=.(*beta)*%:1-*:ssig
   rhoq=.(*beta)*%%:>:*:ssig%beta
   gtest=.beta%%:1-*:ssig
   results=.(ba,:tstat),.(ssig,gtest),.rho,rhoq
   pd 'new;pensize 1;yticpos -3 -1.5 0 1.5 3'
-  pd L:_1 (<u;z);~'type dot;color black'
-  pd L:_1 (<u;g=.q*beta);~'color green'
-  pd L:_1 (<u;zhat-g);~'color red'
-  pd L:_1 (<u;zhat);~'color black'
+NB.  pd L:_1 (<u;z);~'type dot;color black'
+NB.  pd L:_1 (<u;g=.q*beta);~'color green'
+NB.  pd L:_1 (<u;zhat-g);~'color red'
+NB.  seps=.z-zhat
+NB.  rho2t=.1-(*:seps)%+/*:seps,:beta*q
+  resid=.(z-rhoG*q)%ssig
+  'rsm usm esm esm2'=. |:10 mean\resid,.u,.(*:z-zhat),.*:z-rhoG*q
+NB.  pd L:_1 (<usm;rho2tsm);~'color purple;type line'
+  pd L:_1 (<u;resid);~'color red;type line'
+  pd L:_1 (<usm;rsm);~'color purple;type line'
   header=:<'   beta   alpha0  delta0   ssig    rho',:'  t-stat  t-stat  t-stat  g-test  rho_q'
   <8j4":L:0 results
 )
 
+simnorm=: 3 : 0
+  'n rho'=.y
+  (chol 2 2 $ 1,rho,rho,1) mp rnorm 2,n
+)
+
+fcop=: 3 : 0
+  chisq=.+/*:rnorm 'df n'=.y
+  chisq,:eps=.chisq+1.5*rnorm n
+)
+
+figx <"1 fcop 1 1000
+stop
+
+sreg=: 3 : 0
+  rho=.{:{.cor|:'q z'=.|: y
+  'muq muz sdq sdz'=.(mean,sd) y
+  CoV=.sdq%muq
+  b=.rho*sdz%sdq
+  a=.muz-b*muq
+  a,b,rho,CoV
+)
 
 
-figx anz;cba;mqg
+treg=: 3 : 0
+ 'x y'=.P"1 y
+ 'q z'=.(-@-:@# {. ])"1 Phi^:_1 'u v'=.(x,:y)/:"1 x
+  'a b rho CoV'=.|:sreg\.q,.z
+   plot   _40}."1 rho,a,:b*q
+)
 
+simnorm=: 3 : 0
+  'n rho'=.y
+  (chol 2 2 $ 1,rho,rho,1) mp rnorm 2,n
+)
+
+
+
+
+treg fcop 1 1000
+  
+NB. treg fcop 1 1000
+  
 stop
 
 

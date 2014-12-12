@@ -220,7 +220,7 @@ The partially Gaussian  (PG) copula for $(u,v)$ is stated in terms of  $q\equiv\
 \be{cusp}
 z_t = \alpha_t+\beta q_t+ s\eps_t\cq \alpha_{t+1}=\alpha_t +\delta_t+1.268\eta_t\cq \delta_{t+1}=\delta_t+\eta_t\ .
 \ee
-Here the $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.  If $\alpha_t$ is identically zero then  $(z_t,q_t)$  is bivariate normal  with correlation $\rho=\pm\sqrt{1-(s\sigma)^2}=\beta$.  
+Here the $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.  If $\alpha_t$ is identically zero then  $(z_t,q_t)$ with $t$ uniform on $1,\ldots,n$  is bivariate normal  with correlation $\beta=\pm\sqrt{1-(s\sigma)^2}\equiv\rho$.  
 
 The second and third equations in \eref{cusp} spell out the model for the nonparametric deviation  $\alpha_t$  with $\alpha_0$ and $\delta_0$ assumed unknown parameters.  If $\sigma\rightarrow 0$, equivalent to $s\rightarrow\infty$,  the first equation in \eref{cusp} is
 $
@@ -242,41 +242,134 @@ From \eref{spline},  $a(t)$ is piecewise twice differentiable passing closest, i
 
 \section{Special cases of the PG model}  
 
-Special cases of  \eref{cusp} or \eref{spline} are displayed in \tref{pg}.   The notation $s\rightarrow\infty$ signifies $s$ becomes large and $\sigma$ small in such a way that $s\sigma$, the variance of $s\eps_t$ in \eref{cusp},  stays finite.    Thus $s\rightarrow\infty$  implies the noise to signal ratio becomes large. 
+Special cases of  \eref{cusp}  are displayed in \tref{pg}.   In \eref{cusp}, if $s\rightarrow\infty$ then $\sigma\rightarrow 0$   since the variance of $z_t$ is finite.    Thus $s\rightarrow\infty$  implies the noise to signal ratio becomes large where noise refers to   $s\eps_t$ and signal to $\eta_t$, the error term driving  the smooth component $\alpha_t$.   As the noise to signal ratio $s$ increases, less of the variation in $z_t$ is explained by $\alpha_t$.  In the limit $\sigma$ is zero implying $\alpha_t=\alpha_0+\delta_0 t$, as straight line.   The further restriction $\alpha_0=\delta_0=0$ forces $\alpha_t$ identically zero.
 
 
 
-The first row in \tref{pg} is the standard Gaussian copula setup.  Here there is no $\alpha_t$ signal or component.  The additional restriction $\beta=0$ yields independence.  Co (or counter) monotonicity results in the Gaussian framework if $\rho=\pm 1$ as displayed in the third row.
+The first row in \tref{pg} is the  Gaussian copula.  In this setup $\alpha_t$ is identically zero: there is no  signal component.  The additional restriction $\beta=0$ eliminates the Gaussian component $q_t$.  Co (or counter) monotonicity results in the Gaussian framework if $\rho=\pm 1$ as displayed in the third row.
 If $s= 0$ then there is no measurement noise and the combined signal $\alpha_t+\beta q_t$ must pass through the points $z_t$ resulting in a perfect fit.   In terms of \eref{spline}, $s=0$ implies there is no roughness penalty and hence the minimisation is solely focussed on minimising the first, squared error, term, achieved  by setting $\alpha_t+\beta q_t=z_t$. 
  
  \begin{table}[htdp]
-\caption{Special cases of the PG copula; in all cases $\rho=\pm\sqrt{1-(s\sigma)^2}$}\label{pg}
+\caption{Special cases of the PG copula; in all cases $\rho\equiv\pm\sqrt{1-(s\sigma)^2}$}\label{pg}
 \begin{center}
-\begin{tabular}{l|c|ccccc|c|l}
+\begin{tabular}{l|c|ccccc|l}
 \hline
-case& $a(t)$ & $\beta$ &$s$ & $\sigma$ & $\alpha_0$&$\delta_0$ & $\rho_q$ & other\\
+case& $a(t)$ & $\beta$ &$s$ & $\sigma$ & $\alpha_0$&$\delta_0$  & other\\
 \hline
-Gaussian & 0 &  & $\infty$ & $0$&  0&0 &$\rho$&$\rho=\beta$\\
-independence &  0 & 0 & $\infty$&0 & 0 & 0&0 &$\rho=0$\\
-$\pm$comonotonic  & 0 &$\pm 1$ &0 & 0 &0 & 0 &$\pm1$ &$z_t=\pm q_t$  \\
-empirical  & $z_t$ &  & $0$  &  &   &  &0 &$\rho=1$ \\ 
-linear probit &$\alpha_0(1-2u_t)$&  0 &  $\infty$ &0& & $\frac{-2\alpha_0}{n+1}$& 0 &indep. if $\alpha_0=0$\\
-nonparametric & smooth  & 0 & & & & & 0 & non Gaussian \\
-PG & smooth & & & & & &\eref{rhoq}&  \\
+Gaussian & 0 &  & $\infty$ & $0$&  0&0 &$\rho=\beta$\\
+independence &  0 & 0 & $\infty$&0 & 0 &0 &$\rho=0$\\
+$\pm$comonotonic  & 0 &$\pm 1$ &0 & 0 &0 & 0 &$z_t=\pm q_t$  \\
+empirical  & $z_t$ &  & $0$  &  &   &  &$\rho=1$ \\ 
+linear probit &$\alpha_0(1-2u_t)$&  0 &  $\infty$ &0& & $\frac{-2\alpha_0}{n+1}$ &indep. if $\alpha_0=0$\\
+nonparametric & $\E(z_t|u_t)$  & 0 & & & &  & non Gaussian \\
+PG & $\E(z_t-\beta q_t|u_t)$ & & & & & &  \\
 \hline
 \end{tabular}
 \end{center}
 \end{table}%
 
-The linear probit copula specification in \tref{pg}  eliminates the Gaussian component $q_t$ by setting $\beta=0$, and giving maximum penalty for roughness.   The resulting prediction  is a straight line $\hat z_t=\alpha_0+\delta_0 t$.  However the mean of the $z_t$ and hence $\hat z_t$ is zero implying $0=\alpha_0 + \delta_0(n+1)/2$.   Solving for $\delta_0$ gives the $\delta_0$ constraint displayed in \tref{pg} and the resulting straight line signal $a(t)$.
+The linear probit row in \tref{pg}  eliminates the Gaussian component $q_t$ by setting $\beta=0$, and giving maximum penalty for rougness.   The resulting prediction  is a straight line $\hat z_t=\alpha_0+\delta_0 t$.  However the mean of the $z_t$ and hence $\hat z_t$ is zero implying $0=\alpha_0 + \delta_0(n+1)/2$.   Solving for $\delta_0$ gives the $\delta_0$ constraint displayed in \tref{pg} and the resulting straight line signal $a(t)$.
 
 The bottom row of \tref{pg} displays the general partial Gaussian specification absent  any constraints on the parameters.  Eliminating the Gaussian component from the signal by setting $\beta=0$ leads to the nonparametric, non Gaussian specification in the second last row of \tref{pg}.
 
+\section{Correlation}
+
+The Gaussian model is the PG model with $a(t)\equiv 0$ enforced by letting $s\rightarrow\infty$ and setting $\alpha_0=\delta_0=0$.   In this case the correlation between $z_t$ and $q_t$ is $\rho_g=\beta=\pm\sqrt{1-(s\sigma)^2}$.    Note 
+$$
+\Ex(z_t)=\Ex(q_t)=0\cq \Ex(z_t^2)=\Ex(q_t^2)=1\ ,
+$$
+where $\Ex$ denotes averaging over $t$ and 
+\be{ess}
+ \hat\rho_g =\Ex(z_tq_t) =\pm\sqrt{1-\Ex\{(z_t-\tilde z_t)^2\}}\cq \tilde z_t\equiv\hat\rho_gq_t\ .
+\ee
+
+For the general PG model  $\rho^2\equiv 1-(s\sigma)^2$.   The correlation in this case  is estimated as 
+$$
+\hat\rho = \sqrt{1- \Ex\{(z_t-\hat z_t)^2\}}\ge \hat\rho_g
+$$
+where the $\hat z_t$ are the predictions  with the PG model as outlined below.   A test for PG is  computing  the percentage drop in  average squared error when moving from the Gaussian model to the PG model: 
+$$
+1-\frac{\Ex\{(z_t-\hat z_t)^2\}}{\Ex\{(z_t-\tilde z_t)^2\}} = \frac{\hat \rho^2-\hat \rho^2_g}{1-\hat\rho^2_g}\ .
+$$
+This drop tests whether the nonparametric component $\alpha_t$ adds  explanatory power over and beyond the Gaussian component.
+
+Testing whether the  Gaussian component adds explanatory power over and above the nonparametric component is achieved with a test of  $\beta=0$.   The parameter $\beta$ is estimated using the techniques described below but is essentially a generalised least squares estimate with a standard error provided by the calculations.    
+
+
+
+  Conversely if $\alpha_t\equiv 0$ then all correlation is due to the Gaussian component and $\rho=\rho_g$.  In the general PG case, both components are present and $\beta$ can exceed 1 in modulus. 
+The partial correlation between $z_t$ and $q_t$ after allowing for $a(t)$ is
+\be{rhoq}
+\rho_q\equiv\frac{\cov(z_t-\alpha_t,q_t,)}{\sqrt{\cov(z_t-\alpha_t)\cov(q_t)}} = \frac{\beta}{\sqrt{\beta^2+(s\sigma)^2}}=\pm\left(1+\frac{1-\rho^2}{\beta^2}\right)^{-1/2}\ ,
+\ee
+where the sign is that of $\beta$.  Here $q_t$ is treated as random even though in \eref{cusp} it is a fixed forcing function.  If $s\sigma\rightarrow 0$ then $\rho_q\rightarrow 1$ while $\beta=0$ implies $\rho_q=0$   
+and $a(t)=0$  implies  $\rho_q=\rho$.  In all cases $\rho_q\ge \rho_g$ where $\rho_g$ is the correlation between $z_t$ and $q_t$ assuming $\alpha_t\equiv 0$.  
+
+Conversely the partial correlation between $z_t$ and $\alpha_t$ after allowing for $q_t$ is The  correlation between $z_t$ and $a(t)$ after allowing for $q_t$ is
+\be{rho2}
+\rho_a\equiv\frac{\cov(z_t-\beta q_t,\alpha_t)}{\sqrt{\cov(z_t-\beta q_t)\cov(\alpha_t)}} = \left\{1+\frac{(s\sigma)^2}{\cov(\alpha_t)}\right\}^{1/2}\ .
+\ee
+This is BS -- has to be done properly --.  The  overall correlation between $z_t$ and $a(t)$ of
+$$
+\frac{\cov(z_t,\alpha_t)}{\sqrt{\cov(z_t)\cov(\alpha_t)}} = \frac{\cov(z_t-\beta q_t,\alpha_t)}{\sqrt{1-\beta^2-(s\sigma)^2}} =\sqrt{1-\beta^2-(s\sigma)^2}
+$$
+while the nonparametric correlation is the correlation between the nonparametric component $\alpha_t$ and  $z_t$ after removing the the effect of the Gaussian component:
+
+\begin{table}[htdp]
+\caption{Correlations in PG model}\label{default}
+\begin{center}
+\begin{tabular}{c|ccc}
+&&\\
+Gaussian& $a(t)\equiv 0$& $\rho=\pm\sqrt{1-\beta^2}$\\
+nonparametric & $\beta=0$\\
+\end{tabular}
+\end{center}
+\end{table}%
+ 
+
+   If $\beta\ne 0$ then the correlation $\rho$ is due to both the the Gaussian and nonparametric components,  $q_t$ and $\alpha_t$.
+
+With the PG model  Gaussianity is tested by setting $s$ arbitrarily large and comparing to the situation where $s$ is optimised.
+
+Given $a(t)$ and $\beta$, the local  correlation at $t$ is such that
+\be{rhot2}
+\rho_t^2=1-\frac{\Ex\{(z_t-\alpha_t-\beta q_t)^2\}}{\Ex\{(z_t-\rho q_t)^2\}} \approx 1-\frac{(s\sigma)^2}{\Ex\{(z_t-\rho q_t)^2\}}
+\ee
+Here $\Ex$ averages over $t$ values in the neighbourhood of $t$.  The numerator average squared error measures the local deviation after fitting the PG model.  The denominator average squared error measures the local deviation after fitting the Gaussian model.   Since the Gaussian model is nested within the PG model the numerator is expected to be less than the denominator and $0\le\rho_t^2\le1$.   The PG model improves on the Gaussian copula if $\rho_t^2$ is near 1.
+
+Gaussianity is indicated if $s\sigma/\sqrt{1-\rho^2}\approx 1$ i and areas where the Gaussian inadequacy are indicated by $(z_t-\rho q_t)/(s\sigma)$.  If averaging is across all $t$ then
+$$
+\Ex\left(\frac{z_t-\rho q_t}{s\sigma}\right) = 0\cq \Ex\left\{\left(\frac{z_t-\rho q_t}{s\sigma}\right)^2\right\} = \frac{1-\rho^2}{(s\sigma)^2}
+$$
+The standardised Gauss residual is then
+$$
+\frac{z_t-\rho q_t}{\sqrt{1-\rho^2}}
+$$
+
+
+
+
+   The extend of goodness of fit depends 
+
+
+This measures the contribution of the Gaussian component $q_t$ to the explanation of $z_t$ after allowing for the nonparametric component $\alpha_t$.    The local nonparametric correlation is similarly defined as the contribution of the nonparametric component $\alpha_t$ after allowing for the Gaussian component $q_t$.
+$$
+\rho_t^2=1-\frac{\Ex\{(y_t-\alpha_t-\beta q_t)^2\}}{\Ex\{(y_t-\beta q_t)^2\}} =  1-\frac{\Ex\{(s\eps_t)^2\}}{\Ex\{(\alpha_t+s\eps_t)^2\}} = \left\{1+\left(\frac{s\sigma}{\beta q_t}\right)^2\right\}^{-1}
+$$
+
+Given $a(t)$ and $\beta$, the local  correlation at $t$ is such that
+$$
+\rho_t^2=1-\frac{\Ex\{(z_t-\alpha_t-\beta q_t)^2\}}{\Ex\{(z_t-\alpha_t)^2\}} =  1-\frac{\Ex\{(s\eps_t)^2\}}{\Ex\{(\beta q_t+s\eps_t)^2\}} = \left\{1+\left(\frac{s\sigma}{\beta q_t}\right)^2\right\}^{-1}
+$$
+This measures the contribution of the Gaussian component $q_t$ to the explanation of $z_t$ after allowing for the nonparametric component $\alpha_t$.    The local nonparametric correlation is similarly defined as the contribution of the nonparametric component $\alpha_t$ after allowing for the Gaussian component $q_t$.
+$$
+\rho_t^2=1-\frac{\Ex\{(y_t-\alpha_t-\beta q_t)^2\}}{\Ex\{(y_t-\beta q_t)^2\}} =  1-\frac{\Ex\{(s\eps_t)^2\}}{\Ex\{(\alpha_t+s\eps_t)^2\}} = \left\{1+\left(\frac{s\sigma}{\beta q_t}\right)^2\right\}^{-1}
+$$
+
+
 \section{Fitting PG copulas}
- The PG is readily  fit to percentile data, and provides a practical platform for copula simulation.  This is discussed, implemented, and used in subsequent sections.  The  parameters defining PG are $s$, $\beta$,  $\sigma$ and starting conditions $\alpha_0$ and $\delta_0$.  Given $s$, the other parameters have  closed form, readily `computable expressions calculated with the Kalman filter.
- 
- The parameter $s$ can be estimated by minimising least squares,  closely related to maximum likelihood.    In particular suppose the $\eps_t$ and $\eta_t$ are normal.  
- 
+ The PG is readily  fit to percentile data, and provides a practical platform for copula simulation.  This is discussed, implemented, and used in subsequent sections.  The  parameters defining a PG copula are $s$, $\beta$,  $\sigma$ and starting conditions $\alpha_0$ and $\delta_0$.  Given $s$, the other parameters have  closed form expressions calculated with the Kalman filter.  A best estimate of $s$ is derived by iterating over $s$ so as to minimise  an appropriate objective function such as least squares. 
+
 \section{Uniform on $t$ discussion}
 
 With \eref{cusp} the squared correlation between $z_t$ and the signal $\alpha_t+\beta q_t$ is, since the variance of $z_t$ is 1:
@@ -291,6 +384,12 @@ With \eref{cusp} the squared correlation between $z_t$ and the signal $\alpha_t+
  
  \section{Correlational properties of the PG copula}
  
+ Equation \eref{rhoq} is equivalent to  
+$
+\O(\rho_q) =\beta/(s\sigma)
+$
+where $\O(x) \equiv \pm\sqrt{x^2/(1-x^2)}$.
+ 
  The column headed $\rho_q$ in \tref{pg} is the partial correlation between $z_t$ and $\alpha_t$ after removing the effect of the Gaussian component $q_t$.  If $\beta=0$, there is no Gaussian component and $\rho_q=\rho$.
  
  This section considers alternative correlations.   If $s\rightarrow\infty$ and $\alpha_0=\delta_0=0$ then $a(t)=0$ and $\eref{cusp}$ reduces to $z_t=\beta q_t+s\eps_t$ where $s\eps_t$ has mean zero and variance $0\le (s\sigma)^2\le 1$ and $\rho=\pm\sqrt{1-(s\sigma)^2}=\beta$ is the correlation, called the overall correlation.  The overall correlation is used when using a Gaussian copula.
@@ -298,23 +397,56 @@ As many authors have pointed out Gaussian copula modelling can be misleading esp
 Use of model \eref{cusp} permits a more nuanced view of correlation without completely abandoning the Gaussian setup.
 
 \subsection{Partial correlation after allowing for semiparametric component}
-  The partial correlation between $z_t$ and $q_t$ after allowing for $a(t)$ is
-\be{rhoq}
-\rho_q\equiv\frac{\cov(z_t-\alpha_t,q_t,)}{\sqrt{\cov(z_t-\alpha_t)\cov(q_t)}} = \frac{\beta}{\sqrt{\beta^2+(s\sigma)^2}}=\pm\left\{1+\left(\frac{s\sigma}{\beta}\right)^2\right\}^{-1/2}\ ,
-\ee
-where the sign is that of $\beta$.  Equation \eref{rhoq} is equivalent to  
-$
-\O(\rho_q) =\beta/(s\sigma)
-$
-where $\O(x) \equiv \pm\sqrt{x^2/(1-x^2)}$.  If $s\rightarrow 0$ then $\rho_q\rightarrow 1$.
-If $a(t)\rightarrow 0$ then  $\rho_q\rightarrow\rho$.  
+ 
 
 \subsection{Local correlation}
+
+Write  $\mu_t$ and  $\sigma_t$ as the mean and standard deviation of $z_t$ for $r>t$.   Then $\mu_0=0$ and $\sigma_0=1$.   The correlation between $z_r$ and $q_r$ for $r>t$ is
+$$
+\rho_t= \varrho_t \frac{\mu_t-a_t}{\sigma_t}= \varrho_t \frac{1-a_t/\mu_t}{\sigma_t/\mu_t}\ ,
+$$
+where $a_t$ is the intercept of the least squares relation and  $\varrho_t$ is the  known coefficient of variation of $q_r$ given $r>t$.   The intercept is 0 for all $t$ if $z_t=\pm q_t$ since in this case  $\rho_t=\pm 1$, $\varrho_t=\pm \sigma_t/\mu_t$.  If $z_t$ and $q_t$ are uncorrelated then 
+
+
+
+  As $a_t$ varies, so does $\rho_t$ with $\rho_t=0$ if $\mu_t=a_t$ and $\rho_t=\pm 1$ if  
+$$
+\mu_t= a_t \pm \frac{\sigma_t}{\varrho_t} \ .
+$$
+
+With the Gaussian copula $a_t=\beta q_t$
+
+Consider the correlation between $z_t$ and $q_t$ given $q_t>q$.   This is
+$$
+\cov(z_t,q_t|q_t>q) = \beta\cov(q_t|q_t>q)\cq \cov(q_t|q_t>q)
+$$
+
+
+To compute local correlation, write $\Delta z_t\equiv z_{t+1}-z_t$ and similarly for other quantities.    Assume $t$ is given and note that 
+$$
+\Delta z_t =\delta_t +c\eta_t + s(\eps_{t+1}-\eps_t)+\beta\Delta q_t  \cq \Delta q_t\approx \frac{q'_t}{n+1} = \frac{\sqrt{2\pi}\e^{q_t^2/2}}{n+1}
+$$
+Hence
+$$
+\E(\Delta z_t) \approx \E(\delta_t) + \sqrt{2\pi}\e^{q_t^2/2}\E(u_t) 
+$$
+  Then $q_t$ is a random variable and 
+$$
+\cov(\Delta z_t,\Delta q_t|t) = \beta^2\cov(\Delta q_t|t)\approx (\beta q'_t)^2\cov(u_t)= \frac{(\beta\sigma)^2\pi\e^{q_t^2}}{6} 
+$$$$
+\cov(\Delta z_t|t) = (1+c^2 + 2s^2)\sigma^2 + \beta^2\cov(\Delta q_t|t) 
+$$
+This final expression assumes $\cov(\delta_t)=(n+1)\sigma^2/2$:  a random $t$ is chosen to observe the random walk. 
+Hence the local correlation is 
+$$
+\frac{\cov(\Delta z_t,\Delta q_t)}{\sqrt{\cov(\Delta z_t)\cov(\Delta q_t)}} = \left\{1+\frac{A}{\beta^2\cov(\Delta q_t)}\right\}^{-1/2}
+$$ 
+
 The local correlation between $z_t$ and $q_t$ is 
 $$
 \rho_t\equiv\cor(\Delta z_t,\Delta q_t|t) =  \frac{\beta\cov(\Delta q_t)}{\sqrt{\cov(\Delta z_t|t)\cov(\Delta q_t)}}=\pm\left\{\frac{\cov(\Delta z_t|t)}{\beta^2\cov(\Delta q_t)}\right\}^{-1/2} 
 $$
-where ``$|t$"" indicates conditioning on information up to and including time $t$.   A calculation shows writing $c=4-\sqrt 3$,
+where ``$|t$" indicates conditioning on information up to and including time $t$.   A calculation shows writing $c=4-\sqrt 3$,
 $$
 \cov(\Delta z_t|t)  = (2s^2+c)\sigma^2+\beta^2\cov(\Delta q_t)\cq \cov(\Delta q_t) \approx (q'_t)^2\cov(u_t)= \frac{\sigma^2\pi\e^{q_t^2}}{6}
 \ .
@@ -340,15 +472,7 @@ In \eref{cusp},  a large $|\beta|$ suggests more extreme tail behaviour than in 
 Change \eref{change} is relatively large if $q_t^2$ is large, that is $t$ is near 1 or $n$. Higher than normal tail dependence implies $|\beta|$ large.  For a Gaussian copula, $\beta=\pm\sqrt{1-(s\sigma)^2}$ and comparing the ratio of estimates of the two sides to 1 is a test for Gaussianity.
 
 \subsection{Correlation between $z_t$ and $a(t)$}
-The  correlation between $z_t$ and $a(t)$ after allowing for $q_t$ is
-\be{rho2}
-\rho_a\equiv\frac{\cov(z_t-\beta q_t,\alpha_t)}{\sqrt{\cov(z_t-\beta q_t)\cov(\alpha_t)}} = \left\{1+\frac{(s\sigma)^2}{\cov(\alpha_t)}\right\}^{1/2}\ .
-\ee
-This is BS -- has to be done properly --.  The  overall correlation between $z_t$ and $a(t)$ of
-$$
-\frac{\cov(z_t,\alpha_t)}{\sqrt{\cov(z_t)\cov(\alpha_t)}} = \frac{\cov(z_t-\beta q_t,\alpha_t)}{\sqrt{1-\beta^2-(s\sigma)^2}} =\sqrt{1-\beta^2-(s\sigma)^2}
-$$
-while the nonparametric correlation is the correlation between the nonparametric component $\alpha_t$ and  $z_t$ after removing the the effect of the Gaussian component:
+
 
  
  

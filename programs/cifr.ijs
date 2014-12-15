@@ -10,13 +10,61 @@ dir=:'~/documents/research/cifr/'
 Phi=:pnorm :. qnorm
 
 rddat=: 3 : 0
-  dat=:readcsv dir,'/data/cifrdat.csv'
+  dat=:readcsv dir,'/data/cifrdatdaily.csv'
   ({.dat)=:|:x=.>".L:0  '-_'&charsub L:0 }.dat
   date=:1&todayno date
   {.dat
 )
 
 NB. rddat''
+
+phi=:(%&(%:&o.2))@^@-@-:@*:     NB.  standard normal density
+rhot=:%@%:@>:@%@*:              NB.  
+
+cusph=:3 : 0  NB. cubic spline model with forcing x
+   c=.3-%:3['z q s'=.y
+   h=:(%mean) 1: P q
+   start=.(_;_ _);(0 1 1,c),:0 0 1 1
+   D_t=.(1 1 0 0 0),(0 1 1 0,c),:0 0 1 0 1
+   D=:start,z;"0 2 (q,.s*h) (0 0;0 3)}"1 2 D_t
+)
+
+figx=: 3 : 0
+  pd 'reset;sub ',":p,p['p n'=.$u=.P"1>y
+  pd 'show'[res=:panel"1/~u 
+  header=:<'    b      a0      d0      rho ',:' t-stat  t-stat  t-stat %:1-*:ssig'
+  header,res
+)
+
+panel=: 4 : 0
+  pd 'new;pensize 1;yticpos -3 -2 -1 0 1 2 3;xticpos -3 -2 -1 0 1 2 3'
+  if. x-:y do. <'' return. end. 
+  rho=.mean*/zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
+  'a d'=.|:ad['ad covad int covint'=.|:SMI cusph z;q;s=.^9
+  'b a0 d0'=.bad[tstat=.bad%sig*c['bad sig c'=.beta_KFR;sig_KFR;|getd C_KFR
+  pd L:_1 (<q;z);~'type dot;color black;'
+  pd L:_1 (<q;rho*q);~'type line;color red'
+  pd L:_1 (<q;b*q);~'type line;color green'
+  pd L:_1 (<q;a+b*q);~'type line;color black'
+  rho_t=.rhot (psi=.b+(#d)*(phi q)*d)%s*sig*h
+  pd L:_1 (<q;rho_t);~'type line;color purple'
+NB.  rho_t=.rhot s*sig*h%tau=.b+((*#)d)*phi q
+  <8j4":L:0 (bad,:tstat),.rho,%:1-*:s*sig
+)
+
+
+figx anz;cba;nab;wbc
+stop
+
+simnorm=: 3 : 0
+  'n rho'=.y
+  (chol 2 2 $ 1,rho,rho,1) mp rnorm 2,n
+)
+
+fcop=: 3 : 0
+  chisq=.+/*:rnorm 'df n'=.y
+  chisq,:eps=.chisq+1.5*rnorm n
+)
 
 dplot=: 'dot;pensize 3'&plot
 pcop=:dplot@(P L:0)  NB. Plot copula
@@ -35,54 +83,6 @@ cusp=:3 : 0  NB. cubic spline model
    D_t=.(1 0,s,0),(1 1 0,h),:0 1 0 1
    D=:start,y;"0 2 D_t
 )
-
-muest=:,@:>@:{:@:|:@:(]ESM KF)  NB.  'eps coveps vareps covvareps mu'=.|:(]ESM KF) D
-
-figx=: 3 : 0
-  pd 'reset;sub ',":p,p['p n'=.$u=.P"1>y
-  pd 'show'[res=:panel"1/~u 
-  header,res
-)
-
-odds=: %(1:-]) 
-O=:%:@odds@*:
-
-panel=: 4 : 0
-  rhoG=.mean*/zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
-  zhat=.muest cuspf z;q;s=.^4
-  ssig=.s*sig[tstat=.ba%sig*c['ba sig c'=.beta_KFR;sig_KFR;|getd C_KFR
-  'beta alpha0 delta0'=.ba
-  wrs rhoG,rho=.(*beta)*%:1-*:ssig
-  rhoq=.(*beta)*%%:>:*:ssig%beta
-  gtest=.beta%%:1-*:ssig
-  results=.(ba,:tstat),.(ssig,gtest),.rho,rhoq
-  pd 'new;pensize 1;yticpos -3 -1.5 0 1.5 3'
-NB.  pd L:_1 (<u;z);~'type dot;color black'
-NB.  pd L:_1 (<u;g=.q*beta);~'color green'
-NB.  pd L:_1 (<u;zhat-g);~'color red'
-NB.  seps=.z-zhat
-NB.  rho2t=.1-(*:seps)%+/*:seps,:beta*q
-  resid=.(z-rhoG*q)%ssig
-  'rsm usm esm esm2'=. |:10 mean\resid,.u,.(*:z-zhat),.*:z-rhoG*q
-NB.  pd L:_1 (<usm;rho2tsm);~'color purple;type line'
-  pd L:_1 (<u;resid);~'color red;type line'
-  pd L:_1 (<usm;rsm);~'color purple;type line'
-  header=:<'   beta   alpha0  delta0   ssig    rho',:'  t-stat  t-stat  t-stat  g-test  rho_q'
-  <8j4":L:0 results
-)
-
-simnorm=: 3 : 0
-  'n rho'=.y
-  (chol 2 2 $ 1,rho,rho,1) mp rnorm 2,n
-)
-
-fcop=: 3 : 0
-  chisq=.+/*:rnorm 'df n'=.y
-  chisq,:eps=.chisq+1.5*rnorm n
-)
-
-figx <"1 fcop 1 1000
-stop
 
 sreg=: 3 : 0
   rho=.{:{.cor|:'q z'=.|: y

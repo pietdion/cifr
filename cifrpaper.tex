@@ -217,26 +217,30 @@ Smoothing methods are here proposed to smooth and simulate $y$ values  using a c
    The simulation singles out independent and dependent variables.   Which should be which?  If $x$ and $y$ are actual time series the simulation $(x_t,\hat y_t)$ is ordered back into the original time series order.
 \end{comment}
 
-The partially Gaussian  (PG) copula for $(u,v)$ is stated in terms of  $q\equiv\Phi^-(u)$ and $z\equiv\Phi^-(v)$ on the grid  $0<u_1<\cdots<u_n<1$ where $u_t=t/(n+1)$ and 
+The partially Gaussian  (PG) copula for $(u,v)$ is stated in terms of  $q\equiv\Phi^-(u)$ and $z\equiv\Phi^-(v)$ on the grid   $u_t=t/(n+1)$, $t=1,\ldots,n$ with 
 \be{cusp}
 z_t = \alpha_t+\beta q_t+ sh_t\eps_t\cq \alpha_{t+1}=\alpha_t +\delta_t+1.268\eta_t\cq \delta_{t+1}=\delta_t+\eta_t\ .
 \ee
-Here the $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.  If $\alpha_t$ and $h_t$ are  identically 0 and  1, respectively, then  $(z_t,q_t)$ with $t$ uniform on $1,\ldots,n$  is bivariate normal  with correlation $\beta=\pm\sqrt{1-(s\sigma)^2}\equiv\rho$.  Comparability between models and fits is facilitated by normalising $h_t$ such that the average weight is 1.
+Here $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$.  The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.   
 
-The role of $h_t>0$ in the first equation in \eref{cusp} is to control the smoothness of the fit at different $t$.   If $h_t\approx 0$ then the signal $\alpha_t+\beta q_t$ is close to $z_t$.   If $h_t$ is large then little notice is taken of $z_t$ and the fitted signal at $t$ is relatively smooth.  The $h_t$ are normalised on a  mean of 1.
+The parameter $s$ controls overall smoothness while  $h_t\ge 0$,  controlling the variability at different $t$ determines local smoothness.
+In particular if $s=0$ then the signal $\alpha_t+\beta q_t$ is forced to reproduce every  $z_t$ while $h_t=0$ implies reproduction at the particular $t$.     If $h_t$ is large then little notice is taken of $z_t$ and the fitted signal at $t$ is relatively smooth.  Thus $s$ controls overall smoothness of the signal and  $h_t$ the smoothness at a particular $t$.  Comparability between models and fits is facilitated by normalising $h_t>0$ such that the average  is 1.  
 
-The second and third equations in \eref{cusp} spell out the model for the nonparametric deviation  $\alpha_t$  with $\alpha_0$ and $\delta_0$ assumed unknown parameters.  If $\sigma\rightarrow 0$, equivalent to $s\rightarrow\infty$,  the first equation in \eref{cusp} is
+
+The Gaussian copula is where $\alpha_t$ and $h_t$ are  identically 0 and  1, respectively, implying  $(z_t,q_t)$ with $t$ uniform on $1,\ldots,n$  is bivariate normal  with correlation $\beta=\pm\sqrt{1-(s\sigma)^2}\equiv\rho$.    
+
+Thus $\alpha_t$ provides for a nonparametric extension of the Gaussian copula.   The nature of the extension is spelt out in the  second and third equations in \eref{cusp} where $\alpha_0$ and $\delta_0$ are assumed unknown.  If $\sigma\rightarrow 0$, equivalent to $s\rightarrow\infty$,  the first equation in \eref{cusp} is
 $
 z_t = \alpha_0+\delta_0 t + \beta q_t + s\eps_t
-$\ .
+$.
 With this linear formulation for $\alpha_t$,  $\beta=\rho$ if $\alpha_0=\delta_0=0$.    Model \eref{cusp} with  $\beta=0$ is the  nonparametric model since $z_t$ is varies smoothly with $t$, unrelated to $q_t$.  If $\beta=0$ and $\sigma\rightarrow 0$ there is a probit relationship between $z_t$ and $u_t$.  Finally $s=0$ implies $\alpha_t+\beta q_t=z_t$ for any $\beta$.   The full range of possibilities is set out in \tref{pg} discussed in more detail below.  The function $\alpha_t$ is thought of as an intercept function. 
 
-The $\alpha_t=0$ and $\alpha_t=\alpha_0+\delta_0 t$ specifications are generalised by supposing $\alpha_t$  twice differentiable and minimising
+The $\alpha_t=0$ and $\alpha_t=\alpha_0+\delta_0 t$ specifications are generalised by supposing $\alpha_t$ is twice differentiable and minimising
 \be{spline}
  \sum_{t=1}^n\left(\frac{z_t-\alpha_t-\beta q_t}{h_t}\right)^2 + s^2\int_{-\infty}^{\infty} \left(\alpha_t''\right)^2\de t\ .
 \ee
 with respect to $\alpha_t$ and $\beta$.
- In \eref{spline} the $h_t$  weighs fitting errors: a large  $h_t$ at a particular $t$ implies  error at $t$ is largely ignored while small $h_t$ implies  error at $t$ is  minimized at all cost.  The function $a_t$ and scalar $b$ minimising \eref{spline} deliver a function $a_t+bq_t$ where $a_t$ is piecewise twice differentiable and $a_t+bq_t$ passes closest to , in a mean square error sense, to $z_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative.   At the minimum, the first term in \eref{spline} is $\sigma^2$. 
+ In \eref{spline} the $h_t$  weighs fitting errors: a large  $h_t$ at a particular $t$ implies  error at $t$ is largely ignored while small $h_t$ implies  error at $t$ is  minimized at all cost.  The function $a_t$ and scalar $b$ minimising \eref{spline} deliver a function $a_t+bq_t$ where $a_t$ is piecewise twice differentiable and $a_t+bq_t$ passes closest to, in a mean square error sense, to $z_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative.   At the minimum, the first term in \eref{spline} is $(s\sigma)^2$. 
 
 The  function $\alpha_t$ minimising \eref{spline}  is, at integer $t$,  $a_t=\E(\alpha_t|z_1,\ldots,z_n)$  computed with \eref{cusp} where $\eps_t$ and $\eta_t$ are normal, 0 mean, variance $\sigma^2$ random variables and $q_t$ fixed.  Between integer $t$,  the  minimum is quadratic in $t$.  A useful feature is that $\beta$ is simultaneously estimated alongside $a_t$ as the generalised least squares estimate under \eref{cusp}.  All calculations under \eref{cusp} provide error covariance matrices as detailed and applied below.  
 
@@ -274,27 +278,27 @@ The bottom row of \tref{pg} displays the general partial Gaussian specification 
 
 \section{Overall and global correlation}
 
-\cite{bjerve1993correlation} state ``The local regression slope, which focuses on change in expected $y$ as $x$ changes, may be of greater interest than expected  $y$ for a given $x$." They go on to argue for  a  ``universal scale--free standardised version of the local regression slope."  Their suggested measure  in  the current notation is 
+\cite{bjerve1993correlation} state ``The local regression slope, which focuses on change in expected $y$ as $x$ changes, may be of greater interest than expected  $y$ for a given $x$." They go on to argue for  a  ``scale--free standardised version of the local regression slope."\footnote{The scale free feature conflicts with the calculations below where  slope differs according to whether it is with respect to $t$ compared to $q_t$.  Hence the noise terms must also be affected by the transformation in a way not apparent in the expressions below.} Their suggested measure  in  the current notation is 
 \be{rhot}
  \rho_t\equiv\pm\left\{1+\left(\frac{\psi_t}{s\sigma h_t}\right)^{-2}\right\}^{-\frac{1}{2}}\ ,
 \ee
-where $s$, $\sigma$ and $h_t$ are as in \eref{cusp} or \eref{spline} and $\psi_t$ relates to the slope as outlined below.  The ratio $\psi_t/(s\sigma h_t)$ is a signal to noise ratio and a high value implies $\rho_t\approx \pm 1$.    In general the signal  $\psi_t$ is the local slope of the relationship while $s\sigma h_t$ is the local noise at $t$.   The sign of $\rho_t$ is discussed in the context of particular choices of signal $\psi_t$.  
+where $s$, $\sigma$ and $h_t$ are as in \eref{cusp} or \eref{spline} and $\psi_t$ is ``slope" at $t$ as set out below.  The ratio $\psi_t/(s\sigma h_t)$ is a signal to noise ratio and a high value implies $\rho_t\approx \pm 1$.    In general the signal  $\psi_t$ is the local slope of the relationship while $s\sigma h_t$ is a measure of local noise.   The sign of $\rho_t$ is discussed in the context of particular choices of signal $\psi_t$.  
 
-Take the simplest example -- the Gaussian copula 
+With the Gaussian copula 
 $$
-z_t=\rho q_t + (\sqrt{1-\rho^2})\varepsilon_t\ ,
+z_t=\beta q_t + (\sqrt{1-\rho^2})\varepsilon_t\ ,
 $$
-where $\varepsilon_t$ is standard normal.  In this  case there is no nonparametric component $\alpha_t$.  The slope with respect to $q_t$ is constant $\psi_t=\rho$ and the noise variance $s\sigma h_t=\sqrt{1-\rho^2}$ constant across $t$ and \eref{rhot} reduces to $\rho_t=\rho$ for all $t$.  This case is displayed in the first row of the of \tref{corr}.
+where $\varepsilon_t$ is standard normal.  In this  case the nonparametric component $\alpha_t$ is excluded.  The slope with respect to $q_t$ is constant $\psi_t=\beta=\rho$ and the noise variance $s\sigma h_t=\sqrt{1-\rho^2}$ constant across $t$ and \eref{rhot} reduces to $\rho_t=\rho$ for all $t$.  The Gaussian copula case is displayed in the first row of the of \tref{corr}.
 
 \begin{table}[htdp]
 \caption{Overall and local correlations.  In all cases $\hat\rho=\sqrt{1-\Ex\{(z_t-\hat z_t)^2\}}$}\label{corr}
 \begin{center}
 \begin{tabular}{l|ccc|l}
 \hline
-case & $\psi_t$ & $q_t$ & $\alpha_t$ & fitted model/estimate\\
+case & $\psi_t$ & $q_t$ & $\alpha_t$ & estimates\\
 \hline\hline
 Gaussian & & & \\
--- overall \& local &$\rho=\beta$ &$\checkmark$& $\times$ & $\hat\rho=\Ex(z_tq_t)$ \\
+-- overall,  local &$\rho=\beta$ &$\checkmark$& $\times$ & $\hat\rho=\Ex(z_tq_t)$ \\
 \hline
 nonparametric & & & \\
 -- overall &$\rho$ &$\times$ & $\checkmark$& $\hat\rho$ from $\widehat{\mathrm{PG}}(\beta=0)$\\
@@ -308,7 +312,7 @@ PG & & & \\
 \end{center}
 \end{table}%
 
-The second set of row in \tref{corr} is the nonparametric variation of the Gaussian copula is where, in \eref{cusp},  $\beta=0$.  Hence $q_t$ is eliminated and the  nonparametric component $\alpha_t$ is used to explain the relationship.  The   slope $\alpha_{t+1}-\alpha_t$  at  $t$ is, apart from error
+The second set of row in \tref{corr} is the nonparametric Gaussian copula where, in \eref{cusp},  $\beta=0$.  Hence $q_t$ is removed and  the relationship between $z_t$ and $q_t$ is entirely structured in terms of the  nonparametric component $\alpha_t$.  The   slope $\alpha_{t+1}-\alpha_t$  at  $t$ is, apart from error
 $\delta_t$ suggesting $\psi_t=\delta_t$.   However $\delta_t$ is the slope with respect to $t$ and
 \be{normslope}
 \psi_t = \frac{\de \alpha_t}{\de q_t} = \left( \frac{\de u}{\de t}\frac{\de q_t}{\de u}\right)^{-1}\frac{\de \alpha_t}{\de t}  \approx
@@ -316,8 +320,19 @@ $\delta_t$ suggesting $\psi_t=\delta_t$.   However $\delta_t$ is the slope with 
 \ee
 where $\phi$ is the standard normal density.    
 
-The final set of columns in \tref{corr} deals with the general PG case.   Again the overall correlation $\rho$ is derived from the overall fit.   This overall correlation exceeds that derived from both the Gaussian and nonparametric cases.   The higher overall correlation is partialled out locally according to both nonparametric and parametric components.   In any PG fit $\hat\beta$ will differ from the Gaussian copula estimate $\Ex(z_tq_t)$.     
+The final set of rows in \tref{corr} deals with the general PG case.   As in the other situations, the overall correlation $\rho$ is derived from the overall fit.   The overall correlation exceeds that derived from both the specialised Gaussian and nonparametric cases.   The higher overall correlation is partialed out locally according to both nonparametric and parametric components.   In any PG fit $\hat\beta$ will differ from the Gaussian copula estimate $\Ex(z_tq_t)$.  
 
+If $s=0$ then $s\eps_t=0$  and  the signal to noise ratio is infinite implying $\rho_t=1$ for all $t$.  Thus the empirical and comonotonic cases imply, as expected,  $\rho_t=\pm 1$.   With the linear probit model $\sigma=0$ and $\alpha_t=\alpha_0(1-2u_t)$ with slope with respect to $u_t$ of $-2\alpha_0$ and
+\be{normslope2}
+\psi_t =  \left( \frac{\de q_t}{\de u_t}\right)^{-1}\frac{\de \alpha_t}{\de u_t}  =
+ -2\alpha_0\phi(q_t)\cq  \rho_t\equiv\pm\left[1+\left\{\frac{2\alpha_0\phi(q_t)}{s\sigma h_t}\right\}^{-2}\right]^{-\frac{1}{2}}\ ,
+\ee
+If $h_t$ is constant then  local correlation is  highest if  $q_t=0$ and monotonically declines towards zero as $q_t$ moves away from zero. 
+
+The above $\psi_t$ and implied correlations are for the $(q,z)$ scale.  However the local correlations also apply on the $(u,v)$ scale since the transformation from $u$ to $q$ and $v$ to $z$ are the same inverse normal probability transform and
+$$
+\frac{\de v}{\de u} =\left(\frac{\de z}{\de v}\right)^{-1} \frac{\de z}{\de q} \frac{\de q}{\de u} = \frac{\de z}{\de q}\ .
+$$ 
 
 \section{Below here is review/junk}
 

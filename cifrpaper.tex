@@ -336,26 +336,26 @@ $$
 
 \section{Simulating from the PG copula} 
 
-To explain simulation with the PG model, consider initially  simulating from the special case: a Gaussian model given data $(q_t,z_t)$, $t=1,\ldots,n$ where
+To explain simulation with the PG model, consider initially  simulating from the special case: the Gaussian model.   Given data $(q_t,z_t)$, $t=1,\ldots,n$ where
 $q_t=\Phi(u_t)$ and $u_t=t/(n+1)$: 
 \be{rhohat}
-\tilde z\sim N(\hat\rho \tilde q,1-\hat\rho^2)\cq \hat\rho=\Ex(z_tq_t) = \E(\rho|\vec z)\cq \tilde q\sim N(0,1)\ .
+\tilde z_i\sim N(\hat\rho \tilde q_i,1-\hat\rho^2)\cq \hat\rho=\Ex(z_tq_t) = \E(\rho|\vec z)\cq \tilde q_i\sim N(0,1)\ ,
 \ee
 where $\vec z\equiv(z_1,\ldots,z_n)$.
-In the second expectation the $q_t$ are fixed.   Drawing $\tilde q$ multiple times produces multiple $\tilde z$'s.   In each of these draws the middle expression in \eref{rhohat} remains fixed.   To ensure  coverage, the random $q$'s are chosen successively as $q_1,\ldots,q_n$.   The  $n$ pairs $(u_t, \tilde v_t)$ where $\tilde v_t=\Phi(\tilde z_t)$, $t=1,\ldots,n$  are $n$ independent draws with guaranteed  uniform  empirical distribution for the $u_t$'s and approximately uniform empirical distribution for the $\tilde v_t$.   Repeatedly cycling over $t=1,\ldots,n$  produces an unlimited number of  draws.
+Simulating $\tilde q_i$ multiple times produces multiple $\tilde z_i$'s.   In these draws the middle expression in \eref{rhohat} remains fixed.   To ensure  coverage, the $\tilde q_i$ are chosen successively as $q_1,\ldots,q_n$.   The  $n$ pairs $(u_i, \tilde v_i)$ where $\tilde v_i=\Phi(\tilde z_i)$, $i=1,\ldots,n$  are $n$ independent draws with guaranteed  uniform  empirical distribution for the $u_i$'s and approximately uniform empirical distribution for the $\tilde v_i$.   Repeatedly cycling over $i=1,\ldots,n$  produces an unlimited supply of  draws.
 
-The PG generalisation of the Gaussian copula simulation  is to perform multiple cycles of $t=1,\ldots,n$ 
+The PG generalisation of the Gaussian copula simulation  is to perform multiple cycles  $i=1,\ldots,n$ of 
 \be{rhohat2}
-\tilde z_t\sim N(a_t+bq_t, s^2\sigma^2)\ , \ \ \ \  a_t=\E(\alpha_t|\vec z)\ , \ \ \ \ b=\E(\beta|\vec z)\ .
+\tilde z_i\sim N(a_i+bq_i, s^2\sigma^2)\ , \ \ \ \  a_i=\E(\alpha_i|\vec z)\ , \ \ \ \ b=\E(\beta|\vec z)\ .
 \ee
-The $a_t$ and $b$ and estimate of $\sigma$ are calculated with the Kalman Filter Smoother (KFS) recursion \citep{DeJong:91a} while $s$ is set to reflect desired smoothness.  Alternatively $s$ is estimated as discussed in \sref{xx}.  In  \eref{rho2} the $a_t$  and $b$ remain fixed, analogous to fixing $\hat \rho$   Gaussian copula simulation.
+The $a_i$ and $b$ and estimate of $\sigma$ are calculated with the Kalman Filter Smoother (KFS)  \citep{DeJong:91a} while $s$ is set to achieve desired smoothness.  Alternatively $s$ is estimated as discussed in \sref{xx}.  In  \eref{rho2} the $a_i$, $q_i$  and $b$ remain fixed across cycles, analogous to fixing $\hat \rho$  in the  Gaussian copula simulation.   
 
-Iterations \eref{rhohat} and \eref{rhohat2}  ignore  estimation variability in $\hat\rho$ or $a_t$ and $b$.  This shortcoming is addressed with  $a_t$ and $b$ varied across  each cycle with 
+Iterations \eref{rhohat} and \eref{rhohat2}  ignore  estimation variability in $\hat\rho$ or $a_t$ and $b$.  This shortcoming is addressed by varying  $a_i$ and $b$  across  each cycle according to 
 $$
-\tilde a_t \sim N\{a_t,\cov(\alpha_t|\vec z)\}\cq  \tilde b\sim N\{b,\cov(b|\vec z)\}\ .
+\tilde a_i \sim N\{\E(\alpha_i|\vec z),\cov(\alpha_i|\vec z)\}\cq  \tilde b\sim N\{\E(\beta|\vec z),\cov(b|\vec z)\}\ ,
 $$
-and using these  in \eref{rhohat2}  instead of $a_t$ and $b$.
-The indicated covariance matrices are calculated with the KFS while consisting  drawing is performed across $t$ with the 
+and using these  in the first relation of \eref{rhohat2}  instead of $a_i$ and $b$.
+The indicated expectations and covariance matrices are recursively calculated with the KFS while consistant  draws  across $i$  are made with the 
 simulation smoother extension  \citep{DeJong&Shephard:95}.  
  
 

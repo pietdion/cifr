@@ -332,31 +332,48 @@ If $h_t$ is constant then  local correlation is  highest if  $q_t=0$ and monoton
 The above $\psi_t$ and implied correlations are for the $(q,z)$ scale.  However the local correlations also apply on the $(u,v)$ scale since the transformation from $u$ to $q$ and $v$ to $z$ are the same inverse normal probability transform and slopes are identical\footnote{This also follows since local correlation is independent of scale.}
 $$
 \frac{\de v}{\de u} =\left(\frac{\de z}{\de v}\right)^{-1} \frac{\de z}{\de q} \frac{\de q}{\de u} = \frac{\de z}{\de q}\ .
-$$
-
+$$ 
 \section{Simulating from the PG copula} 
 
-To explain simulation with the PG model, consider initially  simulating from the special case: the Gaussian model.   Given data $(q_t,z_t)$, $t=1,\ldots,n$ where
-$q_t=\Phi(u_t)$ and $u_t=t/(n+1)$: 
+To explain simulation with the PG model, consider initially  simulating from a special case: the Gaussian model.   Given data $(q_t,z_t)$, $t=1,\ldots,n$ where
+$q_t=\Phi(u_t)$ and $u_t=t/(n+1)$ suppose 
 \be{rhohat}
-\tilde z_i\sim N(\hat\rho \tilde q_i,1-\hat\rho^2)\cq \hat\rho=\Ex(z_tq_t) = \E(\rho|\vec z)\cq \tilde q_i\sim N(0,1)\ ,
+\tilde z_i\sim N(\hat\rho \tilde q_i,1-\hat\rho^2)\cq \hat\rho=\Ex(z_tq_t) = \E(\rho|  z)\cq \tilde q_i\sim N(0,1)\ ,
 \ee
-where $\vec z\equiv(z_1,\ldots,z_n)$.
-Simulating $\tilde q_i$ multiple times produces multiple $\tilde z_i$'s.   In these draws the middle expression in \eref{rhohat} remains fixed.   To ensure  coverage, the $\tilde q_i$ are chosen successively as $q_1,\ldots,q_n$.   The  $n$ pairs $(u_i, \tilde v_i)$ where $\tilde v_i=\Phi(\tilde z_i)$, $i=1,\ldots,n$  are $n$ independent draws with guaranteed  uniform  empirical distribution for the $u_i$'s and approximately uniform empirical distribution for the $\tilde v_i$.   Repeatedly cycling over $i=1,\ldots,n$  produces an unlimited supply of  draws.
+where $z\equiv(z_1,\ldots,z_n)$,  remaining fixed in the subsequent discussion.
+Simulating $\tilde q_i$ multiple times produces multiple $\tilde z_i$ while $\hat\rho$  remains fixed.   To ensure  coverage, the $\tilde q_i$ are chosen successively as $q_1,\ldots,q_n$.   The  $n$ pairs $(u_i, \tilde v_i)$ where $\tilde v_i=\Phi(\tilde z_i)$, $i=1,\ldots,n$  are $n$ independent draws with   uniform  empirical distribution for the $u_i$ and approximately uniform empirical distribution for the $\tilde v_i$.   Repeatedly cycling over $i=1,\ldots,n$  produces an unlimited supply of  draws.
 
-The PG generalisation of the Gaussian copula simulation  is to perform multiple cycles  $i=1,\ldots,n$ of 
+The PG generalisation of the Gaussian copula simulation  is repeatedly cycling over  $i=1,\ldots,n$ with 
 \be{rhohat2}
-\tilde z_i\sim N(a_i+bq_i, s^2\sigma^2)\ , \ \ \ \  a_i=\E(\alpha_i|\vec z)\ , \ \ \ \ b=\E(\beta|\vec z)\ .
+\tilde z_i\sim N(a_i+bq_i, s^2\sigma^2)\ , \ \ \ \  a_i=\E(\alpha_i|  z)\ , \ \ \ \ b=\E(\beta|  z)\ .
 \ee
 The $a_i$ and $b$ and estimate of $\sigma$ are calculated with the Kalman Filter Smoother (KFS)  \citep{DeJong:91a} while $s$ is set to achieve desired smoothness.  Alternatively $s$ is estimated as discussed in \sref{xx}.  In  \eref{rho2} the $a_i$, $q_i$  and $b$ remain fixed across cycles, analogous to fixing $\hat \rho$  in the  Gaussian copula simulation.   
 
-Iterations \eref{rhohat} and \eref{rhohat2}  ignore  estimation variability in $\hat\rho$ or $a_t$ and $b$.  This shortcoming is addressed by varying  $a_i$ and $b$  across  each cycle according to 
+Iterations \eref{rhohat} and \eref{rhohat2}  ignore  estimation variability in $\hat\rho$ or $a_i$ and $b$.  This shortcoming is addressed by varying  $a_i$ and $b$  across  each cycle 
 $$
-\tilde a_i \sim N\{\E(\alpha_i|\vec z),\cov(\alpha_i|\vec z)\}\cq  \tilde b\sim N\{\E(\beta|\vec z),\cov(b|\vec z)\}\ ,
+\tilde a_i \sim N\{\E(\alpha_i|  z),\cov(\alpha_i|  z)\}\cq  \tilde b\sim N\{\E(\beta|  z),\cov(b|  z)\}\ ,
 $$
 and using these  in the first relation of \eref{rhohat2}  instead of $a_i$ and $b$.
-The indicated expectations and covariance matrices are recursively calculated with the KFS while consistant  draws  across $i$  are made with the 
-simulation smoother extension  \citep{DeJong&Shephard:95}.  
+The conditional expectations and covariance matrices are recursively calculated with the KFS while consistant  draws  across $i$  are made with the 
+simulation smoother extension  \citep{DeJong&Shephard:95}. 
+
+\section{Factor PG copula model}
+
+The PG  model is stated in terms of the generic variable $q_t=\Phi^-(u_t)$ where $u_t=t/(n+1)$, $t=1,\ldots,n$.   The sole relevance of $x_t=F_x^-\{\Phi(q_t)\}$   on  $y_t=F^-_y\{\Phi(z_t)\}$ is on  the ordering  of $y_t$: once  $y_t$  is ordered using $x_t$, the latter has no further import.  This suggest a vector extension  to the PG model.
+
+Suppose $y_t$ is a $p$--vector with components $y_{it}$, $i=1,\ldots,p$ with $y_t$ is observed for $t=1,\ldots n$.   Suppose each component series in $y_t$ is ordered according to $x_t$, a scalar series observed or inferred along with the $y_{it}$.   Without loss of generality assume $y_t$, $t=1,\ldots,n$ denotes the component series after ordering with respect to $x_t$ and let $v_t$ and $z_t$ be defined from the componentwise ordered $y_t$ as, for $t=1,\ldots,n$, 
+$$
+z_t = \Phi^-_*(v_t)\cq v_t = F_*(y_t)\cq q_t=\Phi^-(u_t)\cq u_t=\frac{1}{n+1}\ .
+$$
+In terms of this notation define the one factor PG model as 
+\be{vcusp}
+z_t = 1\alpha_t + \beta q_t + s\sigma\{\diag(h_t)\} \eps_t\ ,
+\ee
+where $\alpha_t$ is  as in \eref{cusp}, and $1$,  $h_t$ and $\eps_t$ are $p$--vectors with component one,  $h_{it}$,  and $\eps_{it}$, respectively.  Further $\beta$ is vector while $s$ and $\sigma$ are scalars.
+
+The one--factor PG model explains components of $z_t$ in terms of a common nonparametric component $\alpha_t$, a parametric Gaussian component $q_t$, and error.  Replacing $1\alpha_t$ in \eref{cusp} by a vector  $\alpha_t$ and making $s\sigma$ component specific  yields the PG model.  Variants include forcing  a common response to $q_t$ by requiring  $\beta$ to be scalar. 
+
+The one--factor PG model is estimated in the same way as the PG model, using vector $z_t$.   In practice $x_t$, the scalar variable serving to order the components of $y_t$, is either external driver or a composition from $y_t$.
  
 
 \section{Below here is review/junk}

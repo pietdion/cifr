@@ -209,7 +209,7 @@ where $f_i$ and $f_j$ are the $x_i$ and $x_j$ densities at the $r_i$ and $r_i$ q
 
 \section{Partially Gaussian copulas}
 
-Suppose $(u,v)=F_*(x,y)$  where $x$ and $y$ are scalar random variables.    Suppose $u_1<\cdots<u_n$  are   ordered observed values of $u$ and $q_t=\Phi^-(u_t)$, $t=1,\ldots,n$.  The correspondingly ordered values of $v$ and $z=\Phi^-(v)$ are denoted $v_t$ and $z_t$.  Note $\Ex(z_t)=\Ex(q_t)=0$ and $\Vx(z_t)=\Vx(q_t)=1$ where $\Ex$ and $\Vx$ evaluate the mean and variance assuming $t$ is uniform on the integers $1,\ldots,n$. 
+Suppose $(u,v)=F_*(x,y)$  where $x$ and $y$ are scalar random variables.    Suppose $0<u_1<\cdots<u_n<1$  are   ordered observed values of $u$ and $q_t=\Phi^-(u_t)$, $t=1,\ldots,n$.  The correspondingly ordered values of $v$ and $z=\Phi^-(v)$ are denoted $v_t$ and $z_t$.  Note $\Ex(z_t)=\Ex(q_t)=0$ and $\Ex(z^2_t)=\Ex(q^2_t)=1$ where $\Ex$  is the empirical mean. 
 
 Smoothing methods are here proposed to smooth and simulate $y$ values  using a copula on $(u,v)$ constructed via    a cubic spline model linking $z$ and $u$.   Of particular concern are simulated $z$ when $u$ is  near $0$ or $1$ corresponding to  $x$ extremes.    Given a simulated $u$ and in turn $z$, $(x,y)=F^-_*\{u,\Phi(z)\}$, a draw from the joint.  Constraining $u$ draws to say the upper tail, yields corresponding upper tail values for $y$.   The challenge is to produce cogent $z$'s or $y$'s that properly reflect dependence in different parts of the distribution unencumbered by inappropriate constraints, and in particular tail constraints, inherent in say the Gaussian copula setup.    Practical methods admit fitting on the basis of observed data, and testing procedures for  departures or otherwise from Gaussianity.   The method outlined below achieves this.
 
@@ -240,7 +240,7 @@ The $\alpha_t=0$ and $\alpha_t=\alpha_0+\delta_0 t$ specifications are generalis
  \sum_{t=1}^n\left(\frac{z_t-\alpha_t-\beta q_t}{h_t}\right)^2 + s^2\int_{-\infty}^{\infty} \left(\alpha_t''\right)^2\de t\ .
 \ee
 with respect to $\alpha_t$ and $\beta$.
- In \eref{spline} the $h_t$  weighs fitting errors: a large  $h_t$ at a particular $t$ implies  error at $t$ is largely ignored while small $h_t$ implies  error at $t$ is  minimized at all cost.  The function $a_t$ and scalar $b$ minimising \eref{spline} deliver a function $a_t+bq_t$ where $a_t$ is piecewise twice differentiable and $a_t+bq_t$ passes closest to, in a mean square error sense, to $z_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative.   At the minimum, the first term in \eref{spline} is $(s\sigma)^2$. 
+ In \eref{spline} the $h_t$  weighs fitting errors: a large  $h_t$ at a particular $t$ implies  error at $t$ is largely ignored while small $h_t$ implies  error at $t$ is  minimized at all cost.  The function $a_t$ and scalar $b$ minimising \eref{spline} deliver a function $a_t+bq_t$ where $a_t$ is piecewise twice differentiable and $a_t+bq_t$ passes closest to, in a mean square error sense, to $z_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative.   At the minimum, the first term in \eref{spline} is $(s\sigma)^2$.   \cite{Brown&DeJong:2001} demonstrate the equivalence of \eref{cusp} and \eref{spline}.
 
 The  function $\alpha_t$ minimising \eref{spline}  is, at integer $t$,  $a_t=\E(\alpha_t|z_1,\ldots,z_n)$  computed with \eref{cusp} where $\eps_t$ and $\eta_t$ are normal, 0 mean, variance $\sigma^2$ random variables and $q_t$ fixed.  Between integer $t$,  the  minimum is quadratic in $t$.  A useful feature is that $\beta$ is simultaneously estimated alongside $a_t$ as the generalised least squares estimate under \eref{cusp}.  All calculations under \eref{cusp} provide error covariance matrices as detailed and applied below.  
 
@@ -282,7 +282,7 @@ The bottom row of \tref{pg} displays the general partial Gaussian specification 
 \be{rhot}
  \rho_t\equiv\pm\left\{1+\left(\frac{\psi_t}{s\sigma h_t}\right)^{-2}\right\}^{-\frac{1}{2}}\ ,
 \ee
-where $s$, $\sigma$ and $h_t$ are as in \eref{cusp} or \eref{spline} and $\psi_t$ is ``slope" at $t$ as set out below.  The ratio $\psi_t/(s\sigma h_t)$ is a signal to noise ratio and a high value implies $\rho_t\approx \pm 1$.    In general the signal  $\psi_t$ is the local slope of the relationship while $s\sigma h_t$ is a measure of local noise.   The sign of $\rho_t$ is discussed in the context of particular choices of signal $\psi_t$.  
+where $s$, $\sigma$ and $h_t$ are as in \eref{cusp} or \eref{spline} and $\psi_t$ is the regression slope at $t$ as set out below.  The ratio $\psi_t/(s\sigma h_t)$ is a signal to noise ratio and a high value implies $\rho_t\approx \pm 1$.    In general the signal  $\psi_t$ is the local slope of the relationship while $s\sigma h_t$ is a measure of local noise.   The sign of $\rho_t$ is discussed in the context of particular choices of signal $\psi_t$.  
 
 With the Gaussian copula 
 $$
@@ -312,11 +312,11 @@ PG & & & \\
 \end{center}
 \end{table}%
 
-The second set of row in \tref{corr} is the nonparametric Gaussian copula where, in \eref{cusp},  $\beta=0$.  Hence $q_t$ is removed and  the relationship between $z_t$ and $q_t$ is entirely structured in terms of the  nonparametric component $\alpha_t$.  The   slope $\alpha_{t+1}-\alpha_t$  at  $t$ is, apart from error
-$\delta_t$ suggesting $\psi_t=\delta_t$.   However $\delta_t$ is the slope with respect to $t$ and
+The second set of row in \tref{corr} is the nonparametric Gaussian copula where, in \eref{cusp},  $\beta=0$.  Hence $q_t$ is removed and  the relationship between $z_t$ and $t$ or $u_t$ is  modelled in terms of the  nonparametric component $\alpha_t$.  The   slope $\alpha_{t+1}-\alpha_t$  at  $t$ is, apart from error,
+$\delta_t$.   However $\delta_t$ is the slope with respect to $t$ and required is the slope with respect to $q_t$:
 \be{normslope}
-\psi_t = \frac{\de \alpha_t}{\de q_t} = \left( \frac{\de u}{\de t}\frac{\de q_t}{\de u}\right)^{-1}\frac{\de \alpha_t}{\de t}  \approx
-\left\{\frac{1}{n\phi(q_t)}\right\}^{-1}\delta_t  = n\phi(q_t)\delta_t\ ,
+\psi_t=\frac{\de \alpha_t}{\de q_t} = \left( \frac{\de u}{\de t}\frac{\de q_t}{\de u}\right)^{-1}\frac{\de \alpha_t}{\de t}  \approx
+\left\{\frac{1}{n\phi(q_t)}\right\}^{-1}\delta_t  = n\delta_t\phi(q_t)\ ,
 \ee
 where $\phi$ is the standard normal density.    
 
@@ -329,10 +329,35 @@ If $s=0$ then $s\eps_t=0$  and  the signal to noise ratio is infinite implying $
 \ee
 If $h_t$ is constant then  local correlation is  highest if  $q_t=0$ and monotonically declines towards zero as $q_t$ moves away from zero. 
 
-The above $\psi_t$ and implied correlations are for the $(q,z)$ scale.  However the local correlations also apply on the $(u,v)$ scale since the transformation from $u$ to $q$ and $v$ to $z$ are the same inverse normal probability transform and
+The above $\psi_t$ and implied correlations are for the $(q,z)$ scale.  However the local correlations also apply on the $(u,v)$ scale since the transformation from $u$ to $q$ and $v$ to $z$ are the same inverse normal probability transform and slopes are identical\footnote{This also follows since local correlation is independent of scale.}
 $$
 \frac{\de v}{\de u} =\left(\frac{\de z}{\de v}\right)^{-1} \frac{\de z}{\de q} \frac{\de q}{\de u} = \frac{\de z}{\de q}\ .
-$$ 
+$$
+
+\section{Simulating from the PG copula} 
+
+To explain simulation with the PG model, consider initially  simulating from the special case: a Gaussian model given data $(q_t,z_t)$, $t=1,\ldots,n$ where
+$q_t=\Phi(u_t)$ and $u_t=t/(n+1)$: 
+\be{rhohat}
+\tilde z\sim N(\hat\rho \tilde q,1-\hat\rho^2)\cq \hat\rho=\Ex(z_tq_t) = \E(\rho|\vec z)\cq \tilde q\sim N(0,1)\ .
+\ee
+where $\vec z\equiv(z_1,\ldots,z_n)$.
+In the second expectation the $q_t$ are fixed.   Drawing $\tilde q$ multiple times produces multiple $\tilde z$'s.   In each of these draws the middle expression in \eref{rhohat} remains fixed.   To ensure  coverage, the random $q$'s are chosen successively as $q_1,\ldots,q_n$.   The  $n$ pairs $(u_t, \tilde v_t)$ where $\tilde v_t=\Phi(\tilde z_t)$, $t=1,\ldots,n$  are $n$ independent draws with guaranteed  uniform  empirical distribution for the $u_t$'s and approximately uniform empirical distribution for the $\tilde v_t$.   Repeatedly cycling over $t=1,\ldots,n$  produces an unlimited number of  draws.
+
+The PG generalisation of the Gaussian copula simulation  is to perform multiple cycles of $t=1,\ldots,n$ 
+\be{rhohat2}
+\tilde z_t\sim N(a_t+bq_t, s^2\sigma^2)\ , \ \ \ \  a_t=\E(\alpha_t|\vec z)\ , \ \ \ \ b=\E(\beta|\vec z)\ .
+\ee
+The $a_t$ and $b$ and estimate of $\sigma$ are calculated with the Kalman Filter Smoother (KFS) recursion \citep{DeJong:91a} while $s$ is set to reflect desired smoothness.  Alternatively $s$ is estimated as discussed in \sref{xx}.  In  \eref{rho2} the $a_t$  and $b$ remain fixed, analogous to fixing $\hat \rho$   Gaussian copula simulation.
+
+Iterations \eref{rhohat} and \eref{rhohat2}  ignore  estimation variability in $\hat\rho$ or $a_t$ and $b$.  This shortcoming is addressed with  $a_t$ and $b$ varied across  each cycle with 
+$$
+\tilde a_t \sim N\{a_t,\cov(\alpha_t|\vec z)\}\cq  \tilde b\sim N\{b,\cov(b|\vec z)\}\ .
+$$
+and using these  in \eref{rhohat2}  instead of $a_t$ and $b$.
+The indicated covariance matrices are calculated with the KFS while consisting  drawing is performed across $t$ with the 
+simulation smoother extension  \citep{DeJong&Shephard:95}.  
+ 
 
 \section{Below here is review/junk}
 

@@ -361,19 +361,19 @@ simulation smoother extension  \citep{DeJong&Shephard:95}.
 
 The PG  model is stated in terms of the generic variable $q_t=\Phi^-(u_t)$ where $u_t=t/(n+1)$, $t=1,\ldots,n$.   The sole relevance of $x_t=F_x^-\{\Phi(q_t)\}$   on  $y_t=F^-_y\{\Phi(z_t)\}$ is on  the ordering  of $y_t$: once  $y_t$  is ordered using $x_t$, the latter has no further import.  This suggest a vector extension  to the PG model.
 
-Suppose $y_t$ is a $p$--vector with components $y_{it}$, $i=1,\ldots,p$ with $y_t$ is observed for $t=1,\ldots n$.   Suppose each component series in $y_t$ is ordered according to $x_t$, a scalar series observed or inferred along with the $y_{it}$.   Without loss of generality assume $y_t$, $t=1,\ldots,n$ denotes the component series after ordering with respect to $x_t$ and let $v_t$ and $z_t$ be defined from the componentwise ordered $y_t$ as, for $t=1,\ldots,n$, 
+Suppose $y_t$ is a $p$--vector with components $y_{it}$, $i=1,\ldots,p$ with $y_t$ is observed for $t=1,\ldots n$.   Suppose each component series in $y_t$ is ordered according to $x_t$, a scalar series observed or inferred along with the $y_{it}$.   Without loss of generality assume $y_t$, $t=1,\ldots,n$ denotes the component series after ordering with respect to $x_t$ and define $v_t$ and $z_t$ from the componentwise ordered $y_t$ as, for $t=1,\ldots,n$, 
 $$
 z_t = \Phi^-_*(v_t)\cq v_t = F_*(y_t)\cq q_t=\Phi^-(u_t)\cq u_t=\frac{1}{n+1}\ .
 $$
-In terms of this notation define the one factor PG model as 
-\be{vcusp}
-z_t = 1\alpha_t + \beta q_t + s\sigma\{\diag(h_t)\} \eps_t\ ,
+In terms of this notation the one factor PG model is
+\be{factor}
+z_t = 1\alpha_t + \beta q_t + s\grave h_t\eps_t\cq \eps_{t} \sim N(0,\sigma^2I)\ ,
 \ee
-where $\alpha_t$ is  as in \eref{cusp}, and $1$,  $h_t$ and $\eps_t$ are $p$--vectors with component one,  $h_{it}$,  and $\eps_{it}$, respectively.  Further $\beta$ is vector while $s$ and $\sigma$ are scalars.
+where $\alpha_t$ is  as in \eref{cusp}, $\grave h_t$ the diagonal matrix formed from vector $h_t$, and $1$,  $h_t$ and $\eps_t$ are $p$--vectors with component one,  $h_{it}$,  and $\eps_{it}$, respectively.  Further $\beta$ is vector while $s$ and $\sigma$ are scalar.
 
 The one--factor PG model explains components of $z_t$ in terms of a common nonparametric component $\alpha_t$, a parametric Gaussian component $q_t$, and error.  Replacing $1\alpha_t$ in \eref{cusp} by a vector  $\alpha_t$ and making $s\sigma$ component specific  yields the PG model.  Variants include forcing  a common response to $q_t$ by requiring  $\beta$ to be scalar. 
 
-The one--factor PG model is estimated in the same way as the PG model, using vector $z_t$.   In practice $x_t$, the scalar variable serving to order the components of $y_t$, is either external driver or a composition from $y_t$.
+The one--factor PG model is estimated in the same way as the PG model, using vector $z_t$.   In practice $x_t$, the scalar variable serving to order the components of $y_t$, is either an external driver or a composition from $y_t$.
  
 
 \section{Below here is review/junk}

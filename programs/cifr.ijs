@@ -10,10 +10,23 @@ dir=:'~/documents/research/cifr/'
 Phi=:pnorm :. qnorm
 
 rddat=: 3 : 0
-  dat=:readcsv dir,'/data/cifrdatdaily.csv'
+  dat=:readcsv dir,'/data/cifrdat.csv'
   ({.dat)=:|:x=.>".L:0  '-_'&charsub L:0 }.dat
   date=:1&todayno date
   {.dat
+)
+
+rdfire=: 3 : 0
+  dat=:readcsv '~/documents/research/chi/fire.csv'
+  ({.dat)=:|:}.dat
+  date=:(todayno@:getdate)"1 date
+  state=:s:state
+  fire=:".fire
+  loss=:,(". :: 0:)"1 house_loss
+  temp=:,".tmax
+  ffdi=:".ffdi
+  wind=:".wind
+  rain=:,".rainc6
 )
 
 NB. rddat''
@@ -21,39 +34,59 @@ NB. rddat''
 phi=:(%&(%:&o.2))@^@-@-:@*:     NB.  standard normal density
 rhot=:%@%:@>:@%@*:              NB.  
 
-cusph=:3 : 0  NB. cubic spline model with forcing x
-   c=.3-%:3['z q s'=.y
-   h=:(%mean) 1: P q
+Zsc=:zsc@:(Phi^:_1)@:P
+
+cusph=:3 : 0  NB. cubic spline model with state starting conditions x
+   h=: 1"0 P q[c=.3-%:3['z q s'=.y
    start=.(_;_ _);(0 1 1,c),:0 0 1 1
    D_t=.(1 1 0 0 0),(0 1 1 0,c),:0 0 1 0 1
    D=:start,z;"0 2 (q,.s*h) (0 0;0 3)}"1 2 D_t
 )
 
 figx=: 3 : 0
-  pd 'reset;sub ',":p,p['p n'=.$u=.P"1>y
-  pd 'show'[res=:panel"1/~u 
-  header=:<'    b      a0      d0      rho ',:' t-stat  t-stat  t-stat %:1-*:ssig'
+  pd 'reset;sub ',":2##y
+  pd 'show'[res=:panel"1/~>y 
+  header=:<'     b       r       l0',:'  t-stat     R       lf'
   header,res
 )
 
 panel=: 4 : 0
-  pd 'new;pensize 1;yticpos -3 -2 -1 0 1 2 3;xticpos -3 -2 -1 0 1 2 3'
-  if. x-:y do. <'' return. end. 
-  rho=.mean*/zsc"1 'q z'=.Phi^:_1 'u v'=.(x,:y)/:"1 x
-  'a d'=.|:ad['ad covad int covint'=.|:SMI cusph z;q;s=.^9
-  'b a0 d0'=.bad[tstat=.bad%sig*c['bad sig c'=.beta_KFR;sig_KFR;|getd C_KFR
+  pd 'new;pensize 1;yticpos -3 -2 -1 0 1 2 3 ;xticpos -3 -2 -1 0 1 2 3'
+  if. x-:y do. <'' return. end.
+  l0=.(#q)*1+^.1-*:r=.mean*/'q z'=.Zsc"1 'x y'=.(x,:y)/:"1 x[n=.#x 
+  'nds b C ell'=.res_KFR['a d'=.|:ad['ad covad int covint'=.|:SMI cusph z;q;s=.^5
+  tstat=.b%sig*c['nh det sig'=.nds[b=.{.b[c=.{.|getd C['l0f lif'=.ell
+NB.  r_t=.rhot (psi=.b+(#d)*(phi q)*d)%s*sig*h
   pd L:_1 (<q;z);~'type dot;color black;'
-  pd L:_1 (<q;rho*q);~'type line;color red'
-  pd L:_1 (<q;b*q);~'type line;color green'
-  pd L:_1 (<q;a+b*q);~'type line;color black'
-  rho_t=.rhot (psi=.b+(#d)*(phi q)*d)%s*sig*h
-  pd L:_1 (<q;rho_t);~'type line;color purple'
-NB.  rho_t=.rhot s*sig*h%tau=.b+((*#)d)*phi q
-  <8j4":L:0 (bad,:tstat),.rho,%:1-*:s*sig
+  pd L:_1 (<q;r*q);~'type line;color red'
+  pd L:_1 (<q;a+b*q);~'type line;color green'
+NB. pd L:_1 (<(r*q);~a+b*q);~'type line;color purple'
+NB.  pd L:_1 (<q;a);~'type line;color yellow'
+NB.    pd L:_1 (<q;((a+b*q)%s*sig)[(r*q%%:1-*:r));~'type line;color red'
+NB.  pd L:_1 (<q;r*q);~'type line;color black'
+NB.  pd L:_1 (<q;r_t);~'type line;color purple'
+  <8j3":L:0 (b,tstat),.(r,R),.l0,(#q)*1+^.1-*:R=.%:1-*:s*sig
+)
+
+NB. rdfire ''
+
+fcop=: 3 : 0
+  chisq=.+/*:rnorm 'df n'=.y
+  chisq,:eps=.chisq+0.31*rnorm n
 )
 
 
-figx anz;cba;nab;wbc
+comp=: 3 : 0
+  'U D V'=.svd Z=.>Zsc L:0 y
+  
+  wrs %:1-% getd %.cov |: Z
+  c=.-{.D mp|:V
+  figx c;|.y
+)
+
+
+NB.figx  (fcop 1 1000)](,<@comp)anz;cba;nab;wbc;mqg
+comp anz;cba;nab  NB.;wbc;mqg;areit;asx;dspread;tspread
 stop
 
 simnorm=: 3 : 0

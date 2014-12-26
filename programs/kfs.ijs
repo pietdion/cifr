@@ -99,8 +99,7 @@ KFR =: 3 : 0                                          NB.  Uses the output of KF
    if. (p=.#beta)=0 do. elli=.ell0  
    else.  detp=. +: ^. | -/ . * C
           elli =.(d-detp)+(nh-p)*>:^.(nh**:sig)%(nh-p) end.
-   'sig_KFR beta_KFR C_KFR ell_KFR'=:sig;beta;C;elli
-   (nh,d,sig);beta;C;(ell0,elli)
+   res_KFR=:(nh,d,sig);beta;C;(ell0,elli)
 ) 
 
 

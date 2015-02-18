@@ -356,13 +356,13 @@ $$
 $$ 
 \section{Simulating from the PG copula} 
 
-To explain PG simulation, consider initially  simulating from  the Gaussian model.   Given data $(q_t,z_t)$, $t=1,\ldots,n$ where
+To explain PG simulation, consider initially  the Gaussian model.   Given data $(q_t,z_t)$, $t=1,\ldots,n$ where
 $q_t=\Phi(u_t)$ and $u_t=t/(n+1)$ suppose 
 \be{rhohat}
 \tilde z_i\sim N(r \tilde q_i,1-r^2)\cq r=\Ex(z_tq_t) = \E(\rho|  z)\cq \tilde q_i\sim N(0,1)\ ,
 \ee
 where $z\equiv(z_1,\ldots,z_n)$ contains the observed values of $z_t$.
-Simulating $\tilde q_i$ multiple times produces multiple $\tilde z_i$ while $r$  remains fixed.   To ensure  coverage, the $\tilde q_i$ are chosen successively as $q_1,\ldots,q_n$.   The  $n$ pairs $(u_i, \tilde v_i)$ where $\tilde v_i=\Phi(\tilde z_i)$, $i=1,\ldots,n$  provide $n$ independent draws with   uniform  empirical distribution for the $u_i$ and approximately uniform empirical distribution for the $\tilde v_i$.   Repeatedly cycling over $i=1,\ldots,n$  produces an unlimited supply of  draws.
+Simulating $\tilde q_i$ multiple times produces multiple $\tilde z_i$ while $r$  remains fixed.   To ensure  coverage, $\tilde q_i=q_i$,  $i=1,\ldots, n$.   The  $n$ pairs $(u_i, \tilde v_i)$ where $\tilde v_i=\Phi(\tilde z_i)$, $i=1,\ldots,n$  provide $n$ independent draws with   uniform  empirical distribution for the $u_i$ and approximately uniform empirical distribution for the $\tilde v_i$.   Repeatedly cycling over $i=1,\ldots,n$  produces an unlimited supply of  draws.
 
 The PG generalisation of \eref{rhohat} is to repeatedly cycle over  $i=1,\ldots,n$ with 
 \be{rhohat2}
@@ -418,6 +418,89 @@ The one--factor PG model is estimated in the same way as the PG model, using vec
  
 
 \section{Below here is review/junk}
+
+\subsection{A  model for monitoring slope}
+Suppose
+\be{slope}
+y_t = \beta m_t + \mu_t + s\eps_t\cq \mu_{t+1} = \mu_{t-h+1} + hr_t + c\eta_t \cq r_{t+1}=r_t + \eta_t\ ,
+\ee
+where $y_t$ is a stock price,  $m_t$ is a market index, $\mu_t$ is the price level and $r_t$ is the return per period and $h$ is a positive  integer.   Note $r_t$ measures  the expected  per period change in the level $\mu_t$.   Thus
+
+\subsection{Kelly criterion}
+
+Suppose $r$ is a vector of stock returns with mean $\mu$ and covariance matrix $C$.    Suppose proportion $\pi_i$ of total wealth $w$  is invested in stock $i$.  Then the rate of return on the portfolio is 
+$ \pi'r$.   The expected  log wealth after one period   is 
+$$
+\E[\ln \{w(1+\pi' r)\}] \approx \ln(w) + \pi'\E(r) -\frac{\pi'\E(rr')\pi}{2} =  \ln(w) + \pi'\mu -\frac{\pi'(C+\mu\mu')\pi}{2}\ .
+$$ 
+To maximise log wealth (and hence wealth), maximise this expression with respect to $\pi$.   Setting up the Lagrangian, differentiating and equating to zero yields 
+$$
+\pi = (C+\mu\mu' - \lambda I)^{-1}\mu\cq 1'\pi=1\ .
+$$
+Given the optimal $\pi$ the growth rate is 
+$$
+\E\ln(1+\pi'r) \approx \mu'(C+\mu\mu' - \lambda I)^{-1}\mu - \frac{\mu'(C+\mu\mu' - \lambda I)^{-1}}{2}
+$$
+
+The factor $1+\pi'r$ is the growth factor.   Over $n$ periods the growth factor is
+$$
+\e^{\ln(1+\pi'r_1)+\ln(1+\pi'r_2)+\cdots \ln(1+\pi'r_n)} \rightarrow \e^{n\E\ln(1+ \pi'r_t)} = \e^{nm}
+$$
+where $r_t\sim(\mu,C)$ are the vectors of growth rates for each period and $\pi$ is the fixed allocation.   Hence the rate of growth is
+$$
+m=\E\ln(1+\pi'r_t) 
+$$
+
+\subsection{Continuous formulation}
+For a single stock we have $\de s/s = \mu\de t + \sigma\de b$ where $b$ is brownian motion.  Alternatively 
+$\de s=\mu s\de t + \sigma s\de b$.    For a portfolio $\pi$ of stocks this becomes
+$$
+\frac{\pi'\de s}{\pi s} =\pi'\mu\de t + \pi'\de b
+$$
+$$
+\pi=-C^{-1}(1r_f-\mu)
+$$
+Note $C^{-1}(r-\mu)$ is the standardised prediction error when predicting each component of $r$ using all the other components and supposing $r$ is realised.   Since $\mu>1r_f$,  outcomes $r=1r_f$ are downside surprises.
+Thus  $\pi$ is the negative of the standardised prediction error when predicting each component of $r$ using all other components and assuming the downside surprise $r=1r_f$.   A high value $\pi_i$ occurs if  there is huge downside surprise if $r_i=r_f$   when all other components  downward surprise at  $r_f$.    Hence the Kelly criterion loads the portfolio with stocks $i$ which have  large downward surprise at $r_i=r_f$ if all other stocks downward surprise with outcomes $r_f$.      
+
+
+
+\subsection{Markowitz}
+
+Suppose we wish to maximise the expected return $\pi'\mu$ subject to a constraint on the volatility, $\pi'C\pi\le c$.  Then the Lagrangian is 
+$\pi'\mu +\lambda (c-\pi'C\pi)$.   Differentiating and equating to zero yields the first order conditions
+$$
+\mu = 2\lambda C\pi\qquad \Rightarrow\qquad \pi = \frac{1}{2\lambda} C^{-1}\mu 
+$$
+where $\lambda$ is chosen so that $\pi'C\pi=c$. 
+ 
+
+ If $C=c11'$ then
+
+To maximise the expected growth rate requires $\pi$ to be chosen as above.  Can we write a SSM for this?
+$$
+1=1'\pi\cq s_t=1\mu + r_t + \eps_t 
+$$
+
+
+Multiplying the first equation by $1'$ yields
+$$
+\pi=n\le \cq\lambda=n1'\mu - n1'(C+\mu\mu')\pi\cq  
+$$
+$$
+\mu = (C+\mu\mu')\pi\qquad\Rightarrow\qquad \pi=(C+\mu\mu')^{-1}\mu
+$$
+Maximising the expected log--accumulation yields the first order conditions
+$
+\E(r_t) = \E(r_tr_t')\pi
+$ or $\pi=\{\E(r_tr_t')\}^{-1}\E(r_t)$.  If one the components of $r_t$ is constant (the risk free rate of return $\delta$ say), then (using partitioned inverses)
+$$
+\pi = \{\cov(r_t)\}^{-1}\{\E(r_t)-\delta 1)\ .
+$$
+
+
+
+
 
 \subsection{\cite{bjerve1993correlation} review}
 \begin{enumerate}

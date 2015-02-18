@@ -10,7 +10,7 @@ dir=:'~/documents/research/cifr/'
 Phi=:pnorm :. qnorm
 
 rddat=: 3 : 0
-  dat=:readcsv dir,'/data/cifrdat.csv'
+  dat=:readcsv dir,'/data/cifrdatdaily.csv'
   ({.dat)=:|:x=.>".L:0  '-_'&charsub L:0 }.dat
   date=:1&todayno date
   {.dat
@@ -29,6 +29,61 @@ rdfire=: 3 : 0
   rain=:,".rainc6
 )
 
+cum=:(*/\)@:>:
+
+pstock=: 3 : 0
+  n=.#y=.cum r=.r%100['r s h'=.y
+  Z=.,:1,h$0 [ G=.,:s,0
+  T=.1(<h,h)}(h(<0,h)}(_1|.id h),.0),0
+  H=.((3-%3),1) (0 1;h,1)} ((h+1),2)$0
+  start=.(('';(h+1)$_));T,.}."1 H
+  D=:start,y;"0 2 (Z,.G),T,.H
+  'a cova i covi'=: |:xx=:PR KF D
+  r=.{:"1 a[covr=.(<1 1){"2 sqr cova
+  plot u=.r%covr+*:r
+  return.
+  s=.0[w=.c=.100
+  for_t. i.#y do.
+    pt=.t{y
+    ut=.t{u 
+    wt=.({:c)+({:s)*pt
+    st=.(wt*ut)%pt
+    ct=.(1-ut)*wt
+    w=.w,wt[s=.s,st[c=.c,ct
+    wrs t,ut,st,ct,wt,100*pt
+  end.
+  plot u
+) 
+
+sh=: 3 : 0
+  n=.#r=.y%100
+  c=.s=.p=.1
+  for_t. i.n do.
+    p=.p,({:p)*1+(t-1){r
+    gain=.({:s)*({:p)*(t-1){r
+    c=.c,({:c)+0.5*gain
+    s=.s,({:s)-0.5*gain%{:p
+  end.
+  plot (+:p),:c+s*p
+)
+
+test=: 3 : 0
+  x=. rnorm 200 3
+ 'mu C'=.(mean;cov) x
+ (C+*/~ mu)%.mu
+NB. +/mu%.(C+mu*"0 1 mu)-lambda*id#C
+)
+
+
+test ''
+
+NB.  pstock (nab);(^10);1
+
+stop
+
+sh %&100 rnorm 100
+
+stop
 NB. rddat''
 
 phi=:(%&(%:&o.2))@^@-@-:@*:     NB.  standard normal density
@@ -78,7 +133,6 @@ fcop=: 3 : 0
 
 comp=: 3 : 0
   'U D V'=.svd Z=.>Zsc L:0 y
-  
   wrs %:1-% getd %.cov |: Z
   c=.-{.D mp|:V
   figx c;|.y

@@ -74,18 +74,21 @@
 
 \begin{document}
 
-\section*{Estimating systemic risk measures}
+\section*{Measuring  systemic risk}
 
 \section{$\sr$}
 
-$\sr$ is a Systemic Risk measure based on the Marginal Expected Shortfall [$\mes$] due to  \cite{acharya2012aer}. $\sr_{jt}$ is the expected capital shortfall of financial institution $j$ conditional on a systemic event
-$$\sr_{jt}=\max(0,[kL_{jt}-(1-k)\lmes_{jt}-1]W_{jt})$$
-where $k$ is a prudential capital requirement; $W$ is market value of equity; $D$ is book value of debt; $L=(D+W)/W$ is financial leverage; $\lmes$ is long run $\mes$.
+$\sr$ is a Systemic Risk measure based on the Marginal Expected Shortfall [$\mes$] due to  \cite{acharya2012aer}. The expected capital shortfall of financial an institution is
+$$S=\left|k\frac{D+W}{W}-(1-k)M-1\right|^+W\ ,
+$$
+where $k$ is a prudential capital requirement, $W$ is market value of equity; $D$ is book value of debt and
+$$
+M=\E_t(R_{j,t+1:t+h}|R_{m,t+1:t+h}<C)\ ,
+$$ 
+is the long run $\mes$, 
+where $R_{jt}$ is equity return on financial institution $j$, $R_{mt}$ is return on the financial system, $C$ is crisis threshold return.
 
-$$\lmes_{jt}=E_t(R_{jt+1:t+h}|R_{mt+1:t+h}<C).$$
-where $R_{jt}$ is equity return on financial institution $j$; $R_{mt}$ is return on the financial system, $C$ is crisis threshold return.
-
-Aggregate systemic risk of financial system is $$\sum_{j=1}^{N}\sr_{jt}.$$
+Aggregate systemic risk of financial system is $$\sum_{j=1}^{N}S_{jt}.$$
 
 \subsection{\cite{brownlees2015}}
 

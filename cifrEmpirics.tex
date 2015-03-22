@@ -74,57 +74,16 @@
 
 \begin{document}
 
-\section*{Measuring  systemic risk}
+\renewcommand{\cs}{\ensuremath{\mathrm{CS}}}
 
-\section{$\sr$}
+\section{Zeta score modelling}
 
-$\sr$ is a Systemic Risk measure based on the Marginal Expected Shortfall [$\mes$] due to  \cite{acharya2012aer}. The expected capital shortfall of financial an institution is
-$$S=\left|k\frac{D+W}{W}-(1-k)M-1\right|^+W\ ,
-$$
-where $k$ is a prudential capital requirement, $W$ is market value of equity; $D$ is book value of debt and
-$$
-M=\E_t(R_{j,t+1:t+h}|R_{m,t+1:t+h}<C)\ ,
-$$ 
-is the long run $\mes$, 
-where $R_{jt}$ is equity return on financial institution $j$, $R_{mt}$ is return on the financial system, $C$ is crisis threshold return.
+The zeta score of an observation $x_i$ is $\zeta_t\equiv (\Phi^-\circ  \P)r_t$ where $\P$ denotes the empirical percentile and $\Phi$ the standard normal distribution.   By construction the $\zeta_i$ are normally distributed and hence should be particularly amenable to modelling.
 
-Aggregate systemic risk of financial system is $$\sum_{j=1}^{N}S_{jt}.$$
+  How is time dependence modelled   with a copula?  One way is to plot percentiles $(u_{it},u_{i,t-1})$ for each $i$ or $(\zeta_{it},\zeta_{i,t-1})$
 
-\subsection{\cite{brownlees2015}}
-
+\cite {Engle2014} use data  on  196 large financial institutions in Europe: banks, insurance companies, financial services firms and real estate firms; daily equity returns and market capitalization from Datastream; quarterly book values for equity and debt from Compustat; world and Europe equity indexes from MSCI
 \bi
-\i Data: 95 large US financial firms; daily equity returns and market capitalization from CRSP; quarterly book values for equity and debt from Compustat
-\i Period: 2000-2012 
-\i Econometric methods:  
-\bi
-\i estimate Dynamic Conditional Correlation (DCC) model for firm and market with threshold GARCH volatilities
-\begin{equation*}
-\begin{bmatrix}
-R_{jt}\\ 
-R_{mt} 
-\end{bmatrix} \sim \mathcal{D}\left ( 0, 
-\begin{bmatrix}
-\sigma_{jt}^2 & \rho\sigma_{jt}\sigma_{mt}\\ 
-\rho\sigma_{jt}\sigma_{mt} & \sigma_{mt}^2 
-\end{bmatrix}\right )
-\end{equation*}
-\i obtain $\lmes$ using Monte Carlo simulation of returns based on model estimates. Use $S$ repetitions and compute 
-$$\lmes_{jt}=\frac{\sum_{s=1}^{S}R_{jt+1:t+h}^{s} \times I(R_{mt+1:t+h}^{s} < C)}{\sum_{s=1}^{S}I(R_{mt+1:t+h}^{s}<C)}$$
-where $I(x)=1$ if true and 0 otherwise.
-\ei
-
-\i Results:
-\bi
-\i $\sr$ successfully identifies systemically risky firms during the GFC
-\i $\sr$ has predictive value: predicts capital injections by Fed Reserve
-\i aggregate $\sr$ provides early warning of declines in industrial production and higher unemployment  
-\ei 
-\ei
-
-
-\subsection{\cite{Engle2014}}
-\bi
-\i Data: 196 large financial institutions in Europe: banks, insurance companies, financial services firms and real estate firms; daily equity returns and market capitalization from Datastream; quarterly book values for equity and debt from Compustat; world and Europe equity indexes from MSCI
 \i Period: 1990-2012 
 \i Econometric methods:  
 \bi
@@ -158,14 +117,14 @@ where $I(x)=1$ if true and 0 otherwise.
 \section{$\covar$}
 
 \cite{adrian2011} propose $\covar$ which is the $\var$ of the financial system $m$ when financial institution $j$ is in distress which is operationally defined as its $\var(q)$ level. 
-$$\text{Pr}(R_t^m\leq\covar_{qt}^{m|j}|R_t^j=\var_{qt}^j)=q.$$
+$$\text{Pr}(r_t^m\leq\covar_{qt}^{m|j}|r_t^j=\var_{qt}^j)=q.$$
 Increased risk to system $m$ when financial institution $j$ is in distress 
 $$\Delta \covar_{qt}=\covar_{qt}^{m|j}-\covar_{qt}^{m|b^j}$$ 
 where $b^j$ denotes the benchmark state for $j$ and equals its median return.
 
 \cite{Girardi2013} suggest to condition on when financial institution $j$ is at its $\var$ level at best:
-$$\text{Pr}(R_t^m\leq \covar_{qt}^{m|j}|R_t^j\leq \var_{qt}^j)=q.$$ They define the benchmark state $b^j$ as a one standard deviation around the mean
-$$\mu_t^j - \sigma_t^j \leq R_t^j \leq \mu_t^j + \sigma_t^j.$$
+$$\text{Pr}(r_t^m\leq \covar_{qt}^{m|j}|r_t^j\leq \var_{qt}^j)=q.$$ They define the benchmark state $b^j$ as a one standard deviation around the mean
+$$\mu_t^j - \sigma_t^j \leq r_t^j \leq \mu_t^j + \sigma_t^j.$$
 and measure the percentage systemic risk contribution of $j$ by
 $$\Delta \covar_{q,t}^{m|j}=100\times (\covar_{qt}^{m|j}-\covar_{qt}^{m|b^j})/\covar_{qt}^{m|b^j}.$$  \cite{Girardi2013} argue their measure improves on \cite{adrian2011} as it
 \bi
@@ -335,7 +294,7 @@ Definitions:
 $CoVaR$ 
 
 Increased risk to system $m$ when firm $i$ is at its $VaR$ level (in distress) is 
-$$\Delta CoVaR_t=CoVaR_{i,t}^{q,q}-CoVaR_{i,t}^{q,0.5}$$
+$$\Delta CoVar_t=CoVaR_{i,t}^{q,q}-CoVaR_{i,t}^{q,0.5}$$
 
 Estimation:
 \bi
@@ -384,7 +343,7 @@ Definitions:
 $CoVaR$ 
 $$\text{Pr}(R_{m,t}<-CoVaR_{i,t}^{q,p}|R_{i,t}=-VaR_{i,t}^p)=q$$
 Increased risk to system $m$ when firm $i$ is at its $VaR$ level (in distress) is 
-$$\Delta CoVaR_t=CoVaR_{i,t}^{q,q}-CoVaR_{i,t}^{q,0.5}$$
+$$\Delta CoVar_t=CoVaR_{i,t}^{q,q}-CoVaR_{i,t}^{q,0.5}$$
 
 Estimation:
 \bi

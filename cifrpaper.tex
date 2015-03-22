@@ -207,99 +207,228 @@ This differs from \eref{stress}  in that a different risk measure is used and  $
 \ee
 where $f_i$ and $f_j$ are the $x_i$ and $x_j$ densities at the $r_i$ and $r_i$ quantiles, respectively. 
 
+\section{Systemic risk}
+
+Suppose a firm at time $t$ has debt $D_t$ and equity $W_t$.   Then at $t$, $D_t+W_t$ is the total claim on the firm. 
+Regulated firms are generally required to hold a proportion $k$ of claims $k(D_t+W_t)$ as a prudential margin.    If  $k(D_t+W_t)>W_t$ then, prudentially speaking, the firm has capital shortfall   $k(D_t+W_t)-W_t$.  Negative capital shortfall indicates positive working capital.
+
+Assume $D_t=D_{t+1}=\cdots=D_{t+h}$ where $h$ is integer,  and 
+$$
+W_{t+h} = (1+i_{t+1}+\cdots+i_{t+h})W_t=(1+r_{t})W_t\ ,
+$$
+serving to define the firm return $r_t$.  Note $r_t$ is the  $h$ period arithmetic return up to  time $t+h$.  
+Then the capital shortfall at time $t+h$ is 
+$$
+S_t\equiv  k(D_{t+h}+W_{t+h})-W_{t+h} = k D_{t} - (1-k)(1+r_{t})W_t
+$$
+\be{cs}= \left\{k\ell_t-(1-k)r_{t} - 1\right\}W_t\cq \ell_t\equiv\frac{D_t+W_t}{W_t}\ ,
+\ee
+where $\ell_t$ is the leverage ratio.  Note  $S_t$ is a linear in $r_t$, the firm rate of return.
+
+
+A systemic event or ``crisis"   occurs in the interval $(t+1,t+h)$ if the market  return $r_{mt}\le c$ over ``the" period.   The crisis distribution of $S_t$ is the distribution of capital shortfall given $r_{mt}\le c$.  The systemic risk of  a firm is the expectation of the capital shortfall given  a crisis:
+\be{sr}
+\rho_t\equiv \E(S_t|r_{mt}\le c) \equiv \E^c(S_t) =  \{k\ell_t-(1-k)\E^c(r_{t})-1\}W_t\ .
+\ee
+The condition $D_{t+h}=D_t$ or less strongly $\E_t^c(D_{t+h})=D_t$ indicates the value of debt  does not change if there is a crisis.   
+
+Evaluating the systemic risk in a firm requires the evaluation or estimation of the ``crisis" expectation $\E^c(r_{t})$ also called the long run marginal expected shortfall (LRMES).  Systemic risk is a point estimate of capital shortfall in a crisis.   Since $S_t$ is linear in $r_t$ the crisis distribution of $S_t$ is known if the conditional distribution of $r_t|r_{mt}<c$ is known.      
+  
+
+Given a number of firms,  $\rho_t$ is vector with components $\rho_{it}$ corresponding to  firm $i$.   Aggregate systemic risk is then $1'\rho_t$.  The proportion of systemic risk in firm $j$ is  $\rho^+_{it}/(1'\rho_t)$ where $\rho^+_{it}$ is the positive part of $\rho_{it}$.
+
+An econometric models  links  returns $r_{it}$  to the  market return $r_{mt}$ enabling  the calculation of the crisis expectations 
+$$
+\E^c(r_{it}) \equiv \E(r_{it}|u_{mt}\le c^*)\cq c^*=\E\{(r_{mt}\le c)\}\ ,
+$$
+where $u_{mt}$ is the percentile of $r_{mt}$.
+Given a joint distribution for $(r_{it},r_{mt})$ the distribution is simulated and
+\be{sim}
+\E^c(r_{it}) \approx \frac{\hat \E\{(r_{mt}\leq c)r_{it}\}}{\hat \E\{(r_{mt}\leq c)\}}= \frac{\hat\E\{(u_{mt}\leq c^*)F^-_{it}(u_{it})\}}{c^*}\ ,
+\ee
+where the $r$ values in the middle expressions denote simulated values and $\hat\E$, averages over the simulated values.   The $u_{it}$ and $u_{mt}$ are the percentiles of $r_{it}$ and $r_{mt}$, respectively.
+
+The right hand expression in \eref{sim}  suggests using a copula to model the joint distributions $(r_{it},r_{mt})$.  Simulate $(u_{it},u_{mt})$, from the copula, discarding pairs with $u_{mt}>c^*$.   For each accepted $(u_{it},u_{mt})$  determine the actual return using the respective marginal distributions.   Issues to be addressed are:
+\bi
+\i Are the marginal distributions time invariant?  Could have situation where the marginal distribution evolves over time and/or is state dependent
+\i Is the copula time invariant?   Could have situation where the copula is state dependent.    
+\ei
+
+
+The first step here is to examine the marginal distributions of the returns and the empirical copula of returns.
+
+\section{Empirical studies}
+\cite{brownlees2015} use  data on 95 large US financial firms for the period 2000-2012:   daily equity returns and market capitalization from CRSP; quarterly book values for equity and debt from Compustat.   A   Dynamic Conditional Correlation (DCC) model is estimated for  firm and market returns.  Write
+\newcommand{\veps}{\varepsilon}
+$$
+\cov (r_t|t) = V_tR_tV_t'\cq R_t\equiv \cov(\veps_t|t)\cq \veps_t=V_t^{-1}r_t\ ,
+$$
+where $V_t$ is the diagonal matrix of volatilities at time $t$ and $R_t$ is the correlation matrix at time $t$.   Volatilities in $V_t$  are estimated using univariate threshold GARCH models.  The estimate of $R_t$ is the  correlation matrix corresponding to fitted covariance matrix $C_t$,  fitted using the model
+$$
+(C_t - C) = \alpha (C_{t-1}-C)+\beta (\veps_t\veps'_t-C) \cq C\equiv\cov(\veps_t)\ .
+$$
+
+\cite{brownlees2015} find the above systemic risk measure  a)  successfully identifies systemically risky firms during the GFC;
+b)  predicts capital injections by Fed Reserve; and c) aggregate systemic risk provides early warning of declines in industrial production and higher unemployment.
+
+{\bf Comment.}  With the DCC model both volatilities and correlations have a time dependent structure.  These are modelled separately.
+An alternative approach is where 
+
+\section{ARCH specification}
+
+We have $u_{it}$, $u_{mt}$ and model the later as
+$u_{t} = \Phi(z_t)$ where $z_t$ is standard normal.   A GARCH(1,1) model stated in terms of noise $\eps_t\sim(0,1)$ and time varying volatility $\sigma_t$:
+$$
+y_t=  \sigma_t\eps_t\cq \sigma^2_{t+1} = \alpha_0+\alpha_1y^2_{t}+ \beta_0 \sigma_t^2\cq \eps_t\sim N(0,1)\ .
+$$
+\begin{equation}\label{garch}
+z_t=  \sigma_t\eps_t\cq (\sigma^2_{t+1}-1) = \alpha (\sigma^2_{t}-1) + \beta(z_t^2-1)\cq \eps_t\sim N(0,1)\ .
+\end{equation}
+$$
+r_{mt}=(F_m^-\circ\Phi)(\sigma_t\eps_t)
+$$
+Since $\E(z_t^2)=1$ and $\alpha<1$, then in the long run $\sigma^2_t\rightarrow 1$.   If $z_t$ is in either tail and hence $z_t^2$ is far from  1 then $\sigma^2_{t+1}$ is much bigger than 1 and $z_{t+1}$ will be in the tail.   Then
+\be{forward}
+r_{it}=F_i^-(u_{it})\cq u_{it}\sim C\{u_{it}|\Phi(z_t)\}
+\ee
+Thus volatility clustering occurs since $z_t$ in one or tail, drives, via the copula, both $r_{it}$ and $r_{jt}$ into the tail.      
+
+Steps in fitting:
+\begin{enumerate}
+\i  An ARCH model is fit to the market return $z_t=(\Phi^-\circ F_m)(r_{mt})$ where $F_m$ is the empirical distribution of the market rates
+\i  The $z_t$ is simulated forward from time $t=n$ using the ARCH model. 
+\i  Retain only those forward simulations such that the cumulative drop $\prod_{t=n+1}^N\{1+(F_m^-\circ \Phi)(z_t)\}$ is less than the crisis drop.
+\i  For each forward simulated value, chose $r_{it}$ using the conditional copula and simulation smoothing
+\i Calculate the capital shortfall for firm $i$.
+\end{enumerate}
+
+   
+The rationale is that  $(y_{t}-\mu)^2$ is the latest available estimate of the variance at time $t$ and this latest   estimate is combined with the  ``permanent" component $\sigma^2_{t}$.   Constraints  are required on $a_0$, $a_1$ and $b_1$ to ensure $\sigma_t$ stays positive and finite.  If  $a_1=b_1=0$ then $y_t$ is noise with mean $\mu$. 
+
+In our case $y_t=z_t$ is standard normal so we can drop $\mu$ to get
+$$
+z_t=  \sigma_t\eps_t\cq \sigma^2_{t+1} = a_0+a_1 \sigma^2_{t} + b_1z_t^2\ .
+$$ 
+
+
+Fitting GARCH models with R.  The  command $garch(y,c(1,1))$ fits  model $garch$ to $y$.  The $garch$ command requires $library(tseries)$. 
+
+The quantity $a_0/(1-a_1-b_1)$ is the long run average $\sigma^2_t$ since it is the constant solution to the right hand side equation \eref{garch}, if  $(y_t-\mu)^2$ is replaced by its expectation.    We want the long run average to be 1 implying
+$
+a_0=1-a_1-b_1
+$ and hence
+$$
+z_t=  \sigma_t\eps_t\cq \sigma^2_{t+1} = a_0+a_1 \sigma^2_{t} + (1-a_0-a_1)z_t^2\ .
+$$
+$$
+z_t=  \sigma_t\eps_t\cq (\sigma^2_{t+1}-1) = a_1 (\sigma^2_{t}-1) + (1-a_0-a_1)(z_t^2-1)\ .
+$$
+
+
+
+ \fref{fig7} displays output from fitting a GARCH model to the daily percentage returns of the FTSE index plotted in \fref{fig6}.   In this fit  $\mu$ is set to the sample mean return, $\hat a_1=0.045$ indicates moderate autocorrelation in the standard deviation while $\hat b_1= 0.942$ indicates high reaction to the latest volatility $(y_t-\mu)^2$.  The long run average standard deviation is $\sqrt{0.009/(1-0.045-0.942)}=0.825$, marginally above the empirical standard deviation of 0.796.   The  standard errors of the coefficients are 0.003, 0.007 and 0.010, respectively for $a_0$, $a_1$ and $b_1$.  These are available using the $vcov(r)$ where $r$ contains the results of the $garch$ command.  Hence all three coefficients are significant.
+
+GARCH stands for generalized ARCH where the latter stands for autoregressive conditional heteroskedasticity.    GARCH(1,1) indicates one lag in both the $\sigma_t^2$ and $(y_t-\mu)^2$ terms.   The GARCH($p,q$) model extends this to $p$ and $q$ lags.   The  ARCH($q$) model contains only lags in $(y_{t}-\mu_t)^2$  and hence is GARCH($0,q$).   
+    
+Estimating GARCH models is similar to ARMA models.   For any set of $a$ and $b$ parameters as well as starting conditions,  $y_0$ and $\sigma_0$,   the GARCH equation for $\sigma_t^2$  is used to recursively calculate $(y_t-\hat y_{t})/\sigma_t$.  These standardised errors, as well as related information,  are combined to evaluate the normal based likelihood.   The likelihood is maximised  with respect to the unknown parameters using a numerical search. 
+
+Forecasting future volatility with  a GARCH model consists of iterating the $\sigma_t^2$ equation \eref{garch} forward from the latest available time point $t=n$.    In this iteration, future $(y_t-\mu_t)^2$ are replaced by their latest conditional expectation. 
+
+
+
 \section{Partially Gaussian copulas}
 
-Suppose $(u,v)=F_*(x,y)$  where $x$ and $y$ are scalar random variables.    Suppose $0<u_1<\cdots<u_n<1$  are   ordered observed values of $u$ and $q_t=\Phi^-(u_t)$, $t=1,\ldots,n$.  The correspondingly ordered values of $v$ and $z=\Phi^-(v)$ are denoted $v_t$ and $z_t$.  Note $\Ex(z_t)=\Ex(q_t)=0$ and $\Ex(z^2_t)=\Ex(q^2_t)=1$ where $\Ex$  is the empirical mean. 
+Suppose $(u,v)=F_*(x,y)$  where $x$ and $y$ are scalar random variables.    Suppose $0<u_1<\cdots<u_n<1$  are   ordered observed values of $u$ and $q_j=\Phi^-(u_j)$, $t=1,\ldots,n$.  The correspondingly ordered values of $v$ and $z=\Phi^-(v)$ are denoted $v_j$ and $z_j$.  Note $\Ex(z_j)=\Ex(q_j)=0$ and $\Ex(z^2_j)=\Ex(q^2_j)=1$ where $\Ex$  is the empirical mean. 
 
-Smoothing methods are here proposed to smooth and simulate $y$ values  using a copula on $(u,v)$ constructed via    a cubic spline model linking $z$ and $u$.   Of particular concern are simulated $z$ when $u$ is  near $0$ or $1$ corresponding to  $x$ extremes.    Given a simulated $u$ and in turn $z$, $(x,y)=F^-_*\{u,\Phi(z)\}$, a draw from the joint.  Constraining $u$ draws to say the upper tail, yields corresponding upper tail values for $y$.   The challenge is to produce cogent $z$'s or $y$'s that properly reflect dependence in different parts of the distribution unencumbered by inappropriate constraints, and in particular tail constraints, inherent in say the Gaussian copula setup.    Practical methods admit fitting on the basis of observed data, and testing procedures for  departures or otherwise from Gaussianity.   The method outlined below achieves this.
+Smoothing methods are here proposed to smooth and simulate $y$ values  using a copula on $(u,v)$ constructed via    a cubic spline model linking $u$ to $z$.   Of particular concern are simulated $z$ when $u$ is  near $0$ or $1$ corresponding to  $x$ extremes.    Given a simulated $u$ and in turn $z$, $(x,y)=F^-_*\{u,\Phi(z)\}$, a draw from the joint.  Constraining $u$ draws to say the upper tail, yields corresponding upper tail values for $y$.   The challenge is to produce cogent $z$'s or $y$'s that properly reflect dependence in different parts of the distribution unencumbered by inappropriate constraints, and in particular tail constraints, inherent in say the Gaussian copula setup.    Practical methods admit fitting on the basis of observed data, and testing procedures for  departures or otherwise from Gaussianity.   The method outlined below achieves this.
 
 \begin{comment}
-   The simulation singles out independent and dependent variables.   Which should be which?  If $x$ and $y$ are actual time series the simulation $(x_t,\hat y_t)$ is ordered back into the original time series order.
+   The simulation singles out independent and dependent variables.   Which should be which?  If $x$ and $y$ are actual time series the simulation $(x_j,\hat y_j)$ is ordered back into the original time series order.
 \end{comment}
 
-The partially Gaussian  (PG) copula for $(u,v)$ is stated in terms of  $q\equiv\Phi^-(u)$ and $z\equiv\Phi^-(v)$ on the grid   $u_t=t/(n+1)$, $t=1,\ldots,n$ with 
+The partially Gaussian  (PG) copula for $(u,v)$ is stated in terms of  $q\equiv\Phi^-(u)$ and $z\equiv\Phi^-(v)$ on the grid   $u_j=j/(n+1)$, $j=1,\ldots,n$ with 
 \be{cusp}
-z_t = \alpha_t+\beta q_t+ sh_t\eps_t\cq \alpha_{t+1}=\alpha_t +\delta_t+c\eta_t\cq \delta_{t+1}=\delta_t+\eta_t\ .
+z_j = \alpha_j+\beta q_j+ sh_j\eps_j\cq \alpha_{j+1}=\alpha_j +\delta_j+c\eta_j\cq \delta_{t+1}=\delta_j+\eta_j\ .
 \ee
-Here $\eps_t$ and $\eta_t$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$ and $c=3-\sqrt 3$. The  $q_t$ term is the   Gaussian component and  $\alpha_t$ a nonparametric deviation.   
+Here $\eps_j$ and $\eta_j$ are serially and contemporaneously uncorrelated zero mean disturbances with common variance $\sigma^2$ and $c=3-\sqrt 3$. The  $q_j$ term is the   Gaussian component and  $\alpha_j$ a nonparametric deviation.   
 
-The parameter $s$ controls overall smoothness while  $h_t\ge 0$,  controlling the variability at different $t$ determines local smoothness.
-In particular if $s=0$ then the signal $\alpha_t+\beta q_t$ is forced to reproduce every  $z_t$ while $h_t=0$ implies reproduction at the particular $t$.     If $h_t$ is large then little notice is taken of $z_t$ and the fitted signal at $t$ is relatively smooth.  Thus $s$ controls overall smoothness of the signal and  $h_t$ the smoothness at a particular $t$.  Comparability between models and fits is facilitated by normalising $h_t>0$ such that the average  is 1.  
+The parameter $s$ controls overall smoothness while  $h_j\ge 0$,  controlling the variability at different $t$ determines local smoothness.
+In particular if $s=0$ then the signal $\alpha_j+\beta q_j$ is forced to reproduce every  $z_j$ while $h_j=0$ implies reproduction at the particular $t$.     If $h_j$ is large then little notice is taken of $z_j$ and the fitted signal at $t$ is relatively smooth.  Thus $s$ controls overall smoothness of the signal and  $h_j$ the smoothness at a particular $t$.  Comparability between models and fits is facilitated by normalising $h_j>0$ such that the average  is 1.  
 
 
-The Gaussian copula is where $\alpha_t$ and $h_t$ are  identically 0 and  1, respectively, implying  $(z_t,q_t)$ with $t$ uniform on $1,\ldots,n$  is bivariate normal  with correlation $\beta=\pm\sqrt{1-(s\sigma)^2}\equiv\rho$.    
+The Gaussian copula is where $\alpha_j$ and $h_j$ are  identically 0 and  1, respectively, implying  $(z_j,q_j)$ with $t$ uniform on $1,\ldots,n$  is bivariate normal  with correlation $\beta=\pm\sqrt{1-(s\sigma)^2}\equiv\rho$.    
 
-The starting condition for the recursion in \eref{cusp} are the second two equations with $t=0$ and where $\alpha_0$ and $\delta_0$ are  unknown parameters, similar to $\beta$. If $s\rightarrow\infty$ then $\sigma\rightarrow 0$,  $(\alpha_t,\delta_t)\rightarrow 0$ for $t=0,\ldots n$, and \eref{cusp} describes a Gaussian copula.  
+The starting condition for the recursion in \eref{cusp} are the second two equations with $t=0$ and where $\alpha_0$ and $\delta_0$ are  unknown parameters, similar to $\beta$. If $s\rightarrow\infty$ then $\sigma\rightarrow 0$,  $(\alpha_j,\delta_j)\rightarrow 0$ for $t=0,\ldots n$, and \eref{cusp} describes a Gaussian copula.  
 
-The function $\alpha_t$ is thought of as an intercept function and provides for a nonparametric extension to the Gaussian copula.  If $\sigma\rightarrow 0$, equivalent to $s\rightarrow\infty$,  the first equation in \eref{cusp} is
+The function $\alpha_j$ is thought of as an intercept function and provides for a nonparametric extension to the Gaussian copula.  If $\sigma\rightarrow 0$, equivalent to $s\rightarrow\infty$,  the first equation in \eref{cusp} is
 $
-z_t = \alpha_0+\delta_0 t + \beta q_t + s\eps_t
+z_j = \alpha_0+\delta_0 t + \beta q_j + s\eps_j
 $
-and  $\beta=\rho$ if $\alpha_0=\delta_0=0$.    Model \eref{cusp} with  $\beta=0$ is the  nonparametric model since $z_t$ is varies smoothly with $t$, unrelated to $q_t$.  If $\beta=0$ and $\sigma\rightarrow 0$ there is a probit relationship between $z_t$ and $u_t$.  Finally $s=0$ implies $\alpha_t+\beta q_t=z_t$ for any $\beta$.   The full range of possibilities is set out in \tref{pg} discussed in more detail below.  
+and  $\beta=\rho$ if $\alpha_0=\delta_0=0$.    Model \eref{cusp} with  $\beta=0$ is the  nonparametric model since $z_j$ is varies smoothly with $t$, unrelated to $q_j$.  If $\beta=0$ and $\sigma\rightarrow 0$ there is a probit relationship between $z_j$ and $u_j$.  Finally $s=0$ implies $\alpha_j+\beta q_j=z_j$ for any $\beta$.   The full range of possibilities is set out in \tref{pg} discussed in more detail below.  
 
-The $\alpha_t=0$ and $\alpha_t=\alpha_0+\delta_0 t$ specifications are generalised by supposing $\alpha_t$ is twice differentiable and minimising
+The $\alpha_j=0$ and $\alpha_j=\alpha_0+\delta_0 t$ specifications are generalised by supposing $\alpha_j$ is twice differentiable and minimising
 \be{spline}
- \sum_{t=1}^n\left(\frac{z_t-\alpha_t-\beta q_t}{h_t}\right)^2 + s^2\int_{-\infty}^{\infty} \left(\alpha_t''\right)^2\de t\ .
+ \sum_{t=1}^n\left(\frac{z_j-\alpha_j-\beta q_j}{h_j}\right)^2 + s^2\int_{-\infty}^{\infty} \left(\alpha_j''\right)^2\de t\ .
 \ee
-with respect to $\alpha_t$ and $\beta$.
- In \eref{spline} the $h_t$  are fitting weights: a large  $h_t$ implies  error at $t$ is largely ignored while a small $h_t$ implies  error at $t$ is  minimized at all cost.  The function $a_t$ and scalar $b$ minimising \eref{spline} deliver a function $a_t+bq_t$ where $a_t$ is piecewise twice differentiable and $a_t+bq_t$ passes closest to, in a mean square error sense, to $z_t$  with a penalty $s^2$ for  roughness measured in terms of the second derivative.   At the minimum, the first term in \eref{spline} is $(s\sigma)^2$.   \cite{Brown&DeJong:2001} demonstrate the equivalence of \eref{cusp} and \eref{spline}.
+with respect to $\alpha_j$ and $\beta$.
+ In \eref{spline} the $h_j$  are fitting weights: a large  $h_j$ implies  error at $t$ is largely ignored while a small $h_j$ implies  error at $t$ is  minimized at all cost.  The function $a_j$ and scalar $b$ minimising \eref{spline} deliver a function $a_j+bq_j$ where $a_j$ is piecewise twice differentiable and $a_j+bq_j$ passes closest to, in a mean square error sense, to $z_j$  with a penalty $s^2$ for  roughness measured in terms of the second derivative.   At the minimum, the first term in \eref{spline} is $(s\sigma)^2$.   \cite{Brown&DeJong:2001} demonstrate the equivalence of \eref{cusp} and \eref{spline}.
 
-The  function $\alpha_t$ minimising \eref{spline}  is, at integer $t$,  $a_t=\E(\alpha_t|z_1,\ldots,z_n)$  computed with \eref{cusp} where $\eps_t$ and $\eta_t$ are normal, 0 mean, variance $\sigma^2$ random variables and $q_t$ fixed.  Between integer $t$,  the  minimum is quadratic in $t$.  A useful feature is that $\beta$ is simultaneously estimated alongside $a_t$ as the generalised least squares estimate under \eref{cusp}.  All calculations under \eref{cusp} provide error covariance matrices as detailed and applied below.  
+The  function $\alpha_j$ minimising \eref{spline}  is, at integer $t$,  $a_j=\E(\alpha_j|z_1,\ldots,z_n)$  computed with \eref{cusp} where $\eps_j$ and $\eta_j$ are normal, 0 mean, variance $\sigma^2$ random variables and $q_j$ fixed.  Between integer $t$,  the  minimum is quadratic in $t$.  A useful feature is that $\beta$ is simultaneously estimated alongside $a_j$ as the generalised least squares estimate under \eref{cusp}.  All calculations under \eref{cusp} provide error covariance matrices as detailed and applied below.  
 
 \section{Special cases of the PG model}  
 
-Special cases of  \eref{cusp}  are displayed in \tref{pg}.   In \eref{cusp}, if $s\rightarrow\infty$ then $\sigma\rightarrow 0$   since the variance of $z_t$ is finite.    Thus $s\rightarrow\infty$  implies the noise to signal ratio becomes large where noise refers to   $s\eps_t$ and signal to $\eta_t$, the error term driving  the smooth component $\alpha_t$.   As the noise to signal ratio $s$ increases, less of the variation in $z_t$ is explained by $\alpha_t$.  In the limit $\sigma$ is zero implying $\alpha_t=\alpha_0+\delta_0 t$, as straight line.   The further restriction $\alpha_0=\delta_0=0$ forces $\alpha_t$ identically zero.
+Special cases of  \eref{cusp}  are displayed in \tref{pg}.   In \eref{cusp}, if $s\rightarrow\infty$ then $\sigma\rightarrow 0$   since the variance of $z_j$ is finite.    Thus $s\rightarrow\infty$  implies the noise to signal ratio becomes large where noise refers to   $s\eps_j$ and signal to $\eta_j$, the error term driving  the smooth component $\alpha_j$.   As the noise to signal ratio $s$ increases, less of the variation in $z_j$ is explained by $\alpha_j$.  In the limit $\sigma$ is zero implying $\alpha_j=\alpha_0+\delta_0 t$, as straight line.   The further restriction $\alpha_0=\delta_0=0$ forces $\alpha_j$ identically zero.
 
 
 
-The first row in \tref{pg} is the  Gaussian copula.  In this setup $\alpha_t$ is identically zero: there is no  signal component.  The additional restriction $\beta=0$ eliminates the Gaussian component $q_t$.  Co (or counter) monotonicity results in the Gaussian framework if $\rho=\pm 1$ as displayed in the third row.
-If $s= 0$ then there is no measurement noise and the combined signal $\alpha_t+\beta q_t$ must pass through the points $z_t$ resulting in a perfect fit.   In terms of \eref{spline}, $s=0$ implies there is no roughness penalty and hence the minimisation is solely focussed on minimising the first, squared error, term, achieved  by setting $\alpha_t+\beta q_t=z_t$. 
+The first row in \tref{pg} is the  Gaussian copula.  In this setup $\alpha_j$ is identically zero: there is no  signal component.  The additional restriction $\beta=0$ eliminates the Gaussian component $q_j$.  Co (or counter) monotonicity results in the Gaussian framework if $\rho=\pm 1$ as displayed in the third row.
+If $s= 0$ then there is no measurement noise and the combined signal $\alpha_j+\beta q_j$ must pass through the points $z_j$ resulting in a perfect fit.   In terms of \eref{spline}, $s=0$ implies there is no roughness penalty and hence the minimisation is solely focussed on minimising the first, squared error, term, achieved  by setting $\alpha_j+\beta q_j=z_j$. 
  
  \begin{table}[htdp]
 \caption{Special cases of the PG copula; in all cases $\rho\equiv\pm\sqrt{1-(s\sigma)^2}$}\label{pg}
 \begin{center}
 \begin{tabular}{l|c|ccccc|l}
 \hline
-case& $\alpha_t$ & $\beta$ &$s$ & $\sigma$ & $\alpha_0$&$\delta_0$  & other\\
+case& $\alpha_j$ & $\beta$ &$s$ & $\sigma$ & $\alpha_0$&$\delta_0$  & other\\
 \hline
 Gaussian & 0 &  & $\infty$ & $0$&  0&0 &$\rho=\beta$\\
 independence &  0 & 0 & $\infty$&0 & 0 &0 &$\rho=0$\\
-$\pm$comonotonic  & 0 &$\pm 1$ &0 & 0 &0 & 0 &$z_t=\pm q_t$  \\
-empirical  & $z_t$ &  & $0$  &  &   &  &$\rho=1$ \\ 
-linear probit &$\alpha_0(1-2u_t)$&  0 &  $\infty$ &0& & $\frac{-2\alpha_0}{n+1}$ &indep. if $\alpha_0=0$\\
-nonparametric & $\E(z_t|u_t)$  & 0 & & & &  & non Gaussian \\
-PG & $\E(z_t-\beta q_t|u_t)$ & & & & & &  \\
+$\pm$comonotonic  & 0 &$\pm 1$ &0 & 0 &0 & 0 &$z_j=\pm q_j$  \\
+empirical  & $z_j$ &  & $0$  &  &   &  &$\rho=1$ \\ 
+linear probit &$\alpha_0(1-2u_j)$&  0 &  $\infty$ &0& & $\frac{-2\alpha_0}{n+1}$ &indep. if $\alpha_0=0$\\
+nonparametric & $\E(z_j|u_j)$  & 0 & & & &  & non Gaussian \\
+PG & $\E(z_j-\beta q_j|u_j)$ & & & & & &  \\
 \hline
 \end{tabular}
 \end{center}
 \end{table}%
 
-The linear probit row in \tref{pg}  eliminates the Gaussian component $q_t$ by setting $\beta=0$, and giving maximum penalty for rougness.   The resulting prediction  is a straight line $\hat z_t=\alpha_0+\delta_0 t$.  However the mean of the $z_t$ and hence $\hat z_t$ is zero implying $0=\alpha_0 + \delta_0(n+1)/2$.   Solving for $\delta_0$ gives the $\delta_0$ constraint displayed in \tref{pg} and the resulting straight line signal $\alpha_t$.
+The linear probit row in \tref{pg}  eliminates the Gaussian component $q_j$ by setting $\beta=0$, and giving maximum penalty for rougness.   The resulting prediction  is a straight line $\hat z_j=\alpha_0+\delta_0 t$.  However the mean of the $z_j$ and hence $\hat z_j$ is zero implying $0=\alpha_0 + \delta_0(n+1)/2$.   Solving for $\delta_0$ gives the $\delta_0$ constraint displayed in \tref{pg} and the resulting straight line signal $\alpha_j$.
 
 The bottom row of \tref{pg} displays the general partial Gaussian specification absent  any constraints on the parameters.  Eliminating the Gaussian component from the signal by setting $\beta=0$ leads to the nonparametric, non Gaussian specification in the second last row of \tref{pg}.
 
 \section{Assessing goodness of fit}
 
-A plot of $a_t+b q_t$ versus $r q_t$ is useful for assessing Gaussianity -- that is whether the copula  is Gaussian.   If $a_t+bq_t\approx rq_t$ then the quantiles predicted under the G and PG models are approximately the same and  a 45 degree line plot suggests a Gaussian copula is adequate.     This analog of the qq--plot is converted to the pp--plot analog  by transforming each coordinate using $\Phi$.   Using the inverse marginal distribution of each of the variables displays the copula fit information in the original scale. 
+A plot of $a_j+b q_j$ versus $r q_j$ is useful for assessing Gaussianity -- that is whether the copula  is Gaussian.   If $a_j+bq_j\approx rq_j$ then the quantiles predicted under the G and PG models are approximately the same and  a 45 degree line plot suggests a Gaussian copula is adequate.     This analog of the qq--plot is converted to the pp--plot analog  by transforming each coordinate using $\Phi$.   Using the inverse marginal distribution of each of the variables displays the copula fit information in the original scale. 
 
-For the Gaussian copula the single parameter is $0\le\rho\le 1$, estimated by  $r$.   The analogous estimate for the PG copula is $R=\pm\sqrt{1-(s\hat\sigma)^2}$ signed according to $b$.   A measure of the  contribution of the nonparametric component $\alpha_t$  to the PG fit is  
+For the Gaussian copula the single parameter is $0\le\rho\le 1$, estimated by  $r$.   The analogous estimate for the PG copula is $R=\pm\sqrt{1-(s\hat\sigma)^2}$ signed according to $b$.   A measure of the  contribution of the nonparametric component $\alpha_j$  to the PG fit is  
 $
 R^2-r^2 = 1-r^2 - (s\hat\sigma)^2
 $.
-A more formal analysis is based on the log--likelihood where in $\eref{cusp}$ the disturbance terms $\eps_t$ and $\eta_t$ are assumed normally distributed.    Then  minus twice the log--likelihood\footnote{This is the log--likelihood $z_t\sim N(\rho q_t,1-\rho^2)$ and differs from the bivariate Gaussian log--likelihood.  It appears  as  $s\rightarrow\infty$, $s\hat\sigma\rightarrow\sqrt{ 1-b^2}$ and so the G copula appears enforced.}  of the Gaussian and  PG model  are computed and their difference compared to a chi--squared distribution with 2 degrees of freedom for significance.
+A more formal analysis is based on the log--likelihood where in $\eref{cusp}$ the disturbance terms $\eps_j$ and $\eta_j$ are assumed normally distributed.    Then  minus twice the log--likelihood\footnote{This is the log--likelihood $z_j\sim N(\rho q_j,1-\rho^2)$ and differs from the bivariate Gaussian log--likelihood.  It appears  as  $s\rightarrow\infty$, $s\hat\sigma\rightarrow\sqrt{ 1-b^2}$ and so the G copula appears enforced.}  of the Gaussian and  PG model  are computed and their difference compared to a chi--squared distribution with 2 degrees of freedom for significance.
 
 Local  measures of departure from Gaussianity are 
 \be{lr}
-\frac{z_t-r q_t}{h_t\sqrt{1-r^2}}\cq \frac{z_t-a_t-bq_t}{ s\hat\sigma h_t}\ .
+\frac{z_j-r q_j}{h_j\sqrt{1-r^2}}\cq \frac{z_j-a_j-bq_j}{ s\hat\sigma h_j}\ .
 \ee
 The  standardised residuals
 provide insight into areas of lack of fit, with mean and standard deviation, across $t$,  of 0 and 1, respectively.
 
 \section{Tuning PG to particular parts of the joint distribution}
-The function $h_t$ is used to assign  importance to parts of the joint of distribution.  If all parts are equally important then $h_t=1$ for all $t$.   If $h_t\approx 0$ when $t\approx n$ then fidelity  is enforced in the upper tail.  Alternatively if $h_t\approx 0$ for $t\approx n/2$ then there is an attempt to accurately reproduce $z_t$ in the middle of the distribution with smoothness  in both tails.
+The function $h_j$ is used to assign  importance to parts of the joint of distribution.  If all parts are equally important then $h_j=1$ for all $t$.   If $h_j\approx 0$ when $t\approx n$ then fidelity  is enforced in the upper tail.  Alternatively if $h_j\approx 0$ for $t\approx n/2$ then there is an attempt to accurately reproduce $z_j$ in the middle of the distribution with smoothness  in both tails.
 \section{Overall and local correlation}
 
-\cite{bjerve1993correlation} state ``The local regression slope, which focuses on change in expected $y$ as $x$ changes, may be of greater interest than expected  $y$ for a given $x$." They go on to argue for  a  ``scale--free standardised version of the local regression slope."\footnote{The scale free feature conflicts with the calculations below where  slope differs according to whether it is with respect to $t$ compared to $q_t$.  Hence the noise terms must also be affected by the transformation in a way not apparent in the expressions below.} In terms of the current notation, their suggested measure is 
+\cite{bjerve1993correlation} state ``The local regression slope, which focuses on change in expected $y$ as $x$ changes, may be of greater interest than expected  $y$ for a given $x$." They go on to argue for  a  ``scale--free standardised version of the local regression slope."\footnote{The scale free feature conflicts with the calculations below where  slope differs according to whether it is with respect to $t$ compared to $q_j$.  Hence the noise terms must also be affected by the transformation in a way not apparent in the expressions below.} In terms of the current notation, their suggested measure is 
 \be{rhot}
  \rho_t\equiv\pm\left\{1+\left(\frac{\psi_t}{s\sigma h_t}\right)^{-2}\right\}^{-\frac{1}{2}}\ ,
 \ee
@@ -905,7 +1034,7 @@ The above development sets out our proposed  broad  framework for linking bivari
 We will employ publicly available data as published by APRA and other regulators.
 
 \section*{References}
-\bibliography{/users/pietdejong/documents/research/piet2}
+\bibliography{/users/pietdejong/documents/research/cifr/piet2}
 
 
 \end{document}

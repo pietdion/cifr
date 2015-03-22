@@ -1,5 +1,5 @@
 
-load 'csv dates tables/tara'
+load 'stats/r/rserve csv dates tables/tara'
 
 XL=:readxlworkbook
 
@@ -8,6 +8,46 @@ load fdir,'programs/kfs.ijs'
 dir=:'~/documents/research/cifr/'
 
 Phi=:pnorm :. qnorm
+zeta=:qnorm@:P
+covzeta=:cov@:|:@:(zeta"1)@|:
+
+simarch=: 3 : 0
+  'n a b'=.y
+  eps=.rnorm n+100
+  s2=.1[z=.{.eps
+  for_t. i.n+10 do.
+    z=.z,(t{eps)*%:s2=.1+(a*<:s2)+b*<:*:{:z
+  end.
+  <.n*pnorm (-n){.z
+)
+
+Rinit=: 3 : 0
+NB.  In R
+NB.  library(Rserve)
+NB.  Rserve(args='--no-save')
+   pid=.{.2!:2 '/Library/Frameworks/R.framework/Resources/bin/R CMD /Library/Frameworks/R.framework/Versions/3.1/Resources/library/Rserve/libs//Rserve --no-save' 
+   Ropen''
+   Rlib 'tseries '
+)
+
+fitarch=: 3 : 0
+  'y' Rset (-mean)y
+  Rcmd 'r=garch(y,c(1,1))'
+  sig2=.*:{."1 >{:{.Rget 'r$fitted.values'
+  Rcmd 'r=summary(r)'
+  'a0 a1 b1'=.coef['coef sd tval pval'=.|:>{:{.Rget'r$coef'
+  for_t. i.N=.12 do.
+    sig2n=.a0 + (a1**:{:y) + b1*{:sig2
+    yn=.(%:sig2n)*rnorm 1
+    y=.y,yn[sig2=.sig2,sig2n
+  end.
+  (-N){.y,.%:sig2
+)
+
+plot (**|) {. |:fitarch cba 
+  
+accum=:*/\@:>:@:%&100
+ 
 
 rddat=: 3 : 0
   dat=:readcsv dir,'/data/cifrdatdaily.csv'
@@ -15,6 +55,10 @@ rddat=: 3 : 0
   date=:1&todayno date
   {.dat
 )
+
+stop
+
+stop
 
 rdfire=: 3 : 0
   dat=:readcsv '~/documents/research/chi/fire.csv'

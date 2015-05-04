@@ -83,7 +83,7 @@ ct=: 4 : 0   NB. actual (x=0) or predicted (x~:0) capital shortfall for a single
   if. x=0 do. d,w,:r return. end.
   ind=.(year>2003)*.newmonth
   nu=.(ind#i.#r) (dcc@:{.)"0 2 r,.asx        NB. Tx2xS predictive distributions 
-  lndw=.(-/ln ind#"1 d,:w)+logit k%1-k=.0.08 NB. log leverage  Tx1
+  lstar=.(-/ln ind#"1 d,:w)-logit k=.0.92     NB. log leverage  Tx1
   ell=.lndw -"0 1 ({."2 nu)%100              NB. TxS
   ({:"2 nu);E\"1 ell                         NB. 2xTxS
 )
@@ -105,7 +105,7 @@ NB. time '1 dcc cba,.asx'
 
 NB. pcs 'cba'
 
-xxx=:1 ct 'cba'
+NB. xxx=:1 ct 'cba'
 
 stop
 

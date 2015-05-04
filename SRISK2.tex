@@ -245,48 +245,42 @@ where the correlation is computed using a uniform distribution for $c$.
 
 If $d_t$ and $w_t$ are the debt and equity of a firm at time $t$ then the capital shortfall at time $t$ is 
 \be{shortfall}
-(1-k) d_t  - k w_t\ .
+kd_t  - (1-k) w_t = kd_t\left\{1-\e^{-(\ell_t+k^*)}\right\}\ ,
 \ee
-Define 
+where 
 $$
-\ell_t \equiv \ln\frac{d_t}{w_t} \cq \frac{\e^{\ell_t}}{1+\e^{\ell_t}} = \frac{d_t}{d_t+w_t}\ .
-$$ 
-The last quantity is the value of $k$ making capital shortfall \eref{shortfall} zero.
+\ell_t \equiv \ln\frac{d_t}{w_t} \cq k^*\equiv\ln \frac{k}{1-k}\ .
+$$
+The quantity $\ell_t$ is called the log--leverage and $\ell_t>-k^*$ implies capital shortfall \eref{shortfall} is positive. 
 
-Basel II assumes $1-k=0.08$ implying there is  positive  ``Basel II shortfall"  if
-$
- 0.08 d_t>0.92 w_t
-$
-or  
-$$
-\ell_t > \ln(11.5) = 2.44\ .
-$$
+Basel II assumes $k=0.08$ implying $k^*=-2.44$  and there is  positive  ``Basel shortfall"  if
+$\ell_t > 2.44$
 As the log leverage $\ell_t$  increases to 2.44 the firm approaches the Basel II threshold. 
 The actual Basel II shortfall is
 $$
- 0.08 d_t - 0.92 w_t =0.08d_t(1-\e^{-\ell^*_t})\cq \ell_t^*=\ell_t-2.44 \ .
+ 0.08d_t(1-\e^{-\ell^*_t})\cq \ell_t^*\equiv\ell_t+k^*=\ell_t-2.44 \ .
 $$
+Call $\ell_t^*$ the Basel leverage.
 
 \subsection{Future returns}
 
 Consider  time  $t+h$ where $h>0$.  Then
 $$
-\ell_{t+h} = \ln \frac{d_{t+h}}{w_{t+h}} = \ln d_t - \ln w_t - \nu_{t} = \ell_t -\nu_{t} \ .
+\ell_{t+h} = \ln \frac{d_{t+h}}{w_{t+h}} = \ell_t -\nu_{t}\cq \nu_t\equiv \ln\frac{w_{t+h}}{w_t}  \ .
 $$
-where it is assumed $d_{t+h}=d_t$ and $\nu_{t}$ is the return on equity over $(tt)$. 
-The  Basel II shortfall  at time $t+h$ is,
+where it is assumed $d_{t+h}=d_t$.  Hence $\nu_{t}$ is the return on equity over $(t,t+h)$. 
+In terms of the Basel leverage $\ell_t^*$ at time $t$, the  Basel II shortfall  at time $t+h$ is,
 \be{bs}
 kd_t(1-\e^{-\ell^*_t+\nu_{t}})\cq k\equiv 0.08\ , 
-\ee
-where the leverage $\ell^*_t$ is known at time $t$.  
-The Basel II limit is reached if $\nu_{t}=\ell_t^*$ and  breached  if
+\ee 
+The Basel II limit is reached at $t+h$ if $\nu_{t}=\ell_t^*$ and  breached  if
 $
 \nu_{t}< \ell_t^*
 $.
 A breach is  unlikely if $\ell^*_t$ is low.
 
 
-Engle defines the systemic risk (SRISK) of a firms as the expected Basel II shortfall:
+Engle defines the systemic risk (SRISK) of a firm as the expected Basel II shortfall at $t+h$,
 $$
 k d_t\E(1-\e^{-\ell^*_t+\nu_t}) =  kw_t\{1-\e^{-\ell^*_t}\E(\e^{\nu_t})\}\ ,
 $$
@@ -333,25 +327,38 @@ Firm $i$ breaches the Basel II capital standard if, from \eref{bs},
 $$
 1-\e^{-\ell^*_{it}+\nu_{it}} >0 \cq \nu_{it}< \ell_{it}^*\equiv \ell_{it}-2.44  \ .
 $$
-For each firm $i$ define the  default put and standardized systemic risk as 
+For each firm $i$ define the  Basel put and standardized systemic risk as 
 \be{put}
-p_{it}\equiv  |1-\e^{-\ell^*_{it}+\nu_{it}}|^+=\left|1-(11.5)\e^{-\ell_{it}+\nu_{it}}\right|^+\cq \E(p_{it})>0\ ,
+p_{it}\equiv  |1-\e^{-\ell^*_{it}+\nu_{it}}|^+\cq \E(p_{it})>0\ ,
 \ee
-where, as before, $\E$ denotes stressed expectation.  The systemic risk depends only on the present leverage  and the lower tail of the stressed $\nu_{it}$ distribution.    
+where, as before, $\E$ denotes stressed expectation.  The systemic risk in firm $i$ depends only on the present leverage  and the lower tail of the stressed $\nu_{it}$ distribution.
 
-The put $p_{it}$ can be set up as a tradable financial contract as it relies only on the present leverage and future return.  Market participants can value the put in much the same way as any other put and use the contract to diversify risk.  Firms can use the puts to share default risk.    From the regulators perspective  the put is valued using a stressed, rather than risk neutral, expectation.
+The total Basel put value and hence systemic risk for firm  $i$ is   $kd_{it}\E(p_{it})$ with $k=0.08$.   This is the value of insuring firm $i$ does not breach the Basel standard.  In practice it may be appropriate to discount $p_{it}$ in \eref{put} by a risk free rate applicable over the period $(t,t+h)$.        
+
+The put $p_{it}$ can be set up as a tradable financial contract as it relies only on the present leverage and the future return on $w_{it}$.  Market participants can value the put in  the same way as any other put and use the contract to diversify risk.  Firms can use the puts to share Basel default risk.    From the regulators perspective  the put is valued using a stressed, rather than risk neutral, expectation and regulators can monitor put values for systemic risk. Governments can charge firm $i$ the put value if there are  implicit government bailout guarantees.
 
 In terms of the put in \eref{put}, the standardised system systemic is defined as
 \be{nsrisk}
 \Ex\{\E(p_{it})\} = \E\{\Ex(p_{it})\}\ , 
 \ee
-where $\Ex$ is an debt weighted average with respect to $i$.  The contribution of firm $i$ to the system systemic risk $\Ex\{\E(p_{it})\}$ is  
-$$
-\frac{\de \Ex\{\E(p_{it})\} }{\de \E(p_{it}) } = \frac{d_{it}}{d_{+t}}\E(p_{it})\ .
-$$
-Thus systemically important firms are those that heavily contribute  to the total system debt, and have high put values.
+where $\Ex$ is an debt weighted average over firms $i$.  Scaling the standardised systemic risks $\E(p_{it})$ and $\Ex\{\E(p_{it})\}$ by $kd_{it}$ and $kd_{+t}$, respectively, yields the monetary values of  systemic risk.
 
-Scaling the standardised systemic risks $\E(p_{it})$ and $\Ex\{\E(p_{it})\}$ by $kd_{it}$ and $kd_{+t}$, respectively, yields the monetary values of  systemic risk.
+
+
+  The contribution of firm $i$ to \eref{nsrisk} is  
+$$
+\frac{\de \Ex\{\E(p_{it})\} }{\de \E(p_{it}) } = \frac{d_{it}\E(p_{it})}{d_{+t}}\ ,
+$$
+which is the total value of the firm $i$ put  as a proportion of all debt.  Systemically important firms are those that heavily contribute  to the total system debt, and have high put values.  
+
+The percentage change in the system systemic risk with respect to a one percent change in the systemic risk of firm $i$ is
+$$
+\frac{\de \ln \Ex\{\E(p_{it})\} }{\de \ln \E(p_{it}) } = \frac{d_{it}}{d_{+t}\Ex\{\E(p_{it})\}}\ ,
+$$
+which is $k$ times  the  debt in firm $i$ as a proportion of the value of the Basel system put.
+
+Default put options similar to \eref{put} have been discussed in the insurance literature as critical to an evaluation of a firm:  see for
+example \citet{merton1977analytic}, \citet{doherty1986price}, \citet{cummins1988risk}, \citet{myers2001capital} and \citet{sherris2006solvency}.
 
 \subsection{Stressed expectations}
 
@@ -437,5 +444,7 @@ $$
 v_t =-\ln\left\{ \frac{\Ex_\pi(a_{it})}{w_t} - \e^{\ell_t}\right\}
 $$
 
+\section*{References}
+\bibliography{/users/pietdejong/documents/research/cifr/piet2}
 
 \end{document}

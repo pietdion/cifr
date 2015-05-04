@@ -1,16 +1,226 @@
-
+load '~user/piet.ijs'
 load 'stats/r/rserve csv dates tables/tara'
-
-XL=:readxlworkbook
 
 fdir=:'/users/pietdejong/documents/research/cifr/'
 load fdir,'programs/kfs.ijs'
-dir=:'~/documents/research/cifr/'
 
-Phi=:pnorm :. qnorm
-zeta=:qnorm@:P
+dir=:'~/documents/research/cifr/'
+time=: 6!:2
+
+rddat=: 3 : 0
+  dat=:readcsv dir,'/data/cifrdatdaily.csv'
+  ({.dat)=:|: (".)L:0  '-_'&charsub L:0 }.dat
+  'year month day'=:|:ymd=:todate 1&todayno date
+  newmonth=:1,0~:dif month   NB. assumes first is new month
+  {.dat
+)
+
+Init=: 0 : 0
+   rddat''
+NB.  run  R
+NB.  Assume .First=function(){library(Rserve)}
+NB.  Rserve(args="--no-save")
+   Ropen''
+   Rlib L:0  ;:'tseries rugarch rmgarch quantmod' 
+   c=.iread fdir,'c.j'
+)
+
+dplot=:'dot;pensize 2'&plot
+R=:Rcmd
+Phi=:pnorm :. ((3&<.)@:(_3&>.)@:qnorm)
+zeta=:(qnorm@:P)"1
+tocor=:((<0 1)&{)@:(diag@:%@:%:@:getd (mp mp [) ])
+E=:mean
+covar=:mean@(*/)@:((-mean)"1)
+
+dcc=: 3 : 0        NB. library(rmgarch)
+  'S h'=.6 22['y' Rset r=.y   NB.  y is long x 2 with r_m second column 
+  R 'm=list(armaOrder=c(0,0),include.mean=TRUE)' 
+  R 'v=list(garchOrder=c(1,1),model="gjrGARCH")'
+  R 'u=ugarchspec(mean.model=m,variance.model=v,distribution.model="norm")'
+  R 'c=dccspec(uspec=multispec(replicate(ncol(y),u)),dccOrder=c(1,1),distribution="mvnorm")'
+  R 'fit=dccfit(c,y);model=fit@model;mfit=fit@mfit;#print(names(model));#print(names(mfit))'  
+  'mu sig Qbar'=.Rget L:0 'model$mu';'model$sig';'mfit$Qbar'
+  rho=:1{|:((#r),4)$ Rget 'unlist(mfit$R,use.names=FALSE)'
+  veps=:((epsi-rho*epsm)%%:1-*:rho),.epsm['epsi epsm'=:|:eps=.(r-mu)%sig
+  'a b g mu o aj bj'=.(0 5;1 6;2 7;3 8;4 9;10;11){L:0;{:"1 Rget 'mfit$coef'
+  rf=.,:'',.''
+  for_s.i.S do.
+    vepsf=.(?h$#r){veps
+    Sr=.,:'',''[sigt=.{:sig[Q=.2 2$1,rhot,(rhot=.{:rho),1          
+    for_t. i.h do.
+      Sr=.Sr,mu+sigt*et=.(2 2$(%:1-rhot^2),rhot,0 1)mp t{vepsf
+      sigt=.%:o+(*:sigt)*b+(a+g*(et<0))*et^2
+      rhot=.tocor Q=.(Qbar*1-aj+bj)+(aj**/~et)+bj*Q 
+    end.
+    rf=.rf,}.Sr
+  end.
+  rf=.}.rf                       NB. S x h x 2  array of simulated future returns
+  'nui num'=.|:(/:{:"1) +/"2 rf  NB. 2 x S pairs (nu_i,nu_m)' sorted  according nu_m
+)
+
+ct=: 4 : 0   NB. actual (x=0) or predicted (x~:0) capital shortfall for a single firm
+  'd w r'=."."1 y,"1 0 'DW '
+  k=.0.08
+  if. x=0 do. d,w,:(k*d)-(1-k)*w return. end.
+  ind=.(year>2003)*.newmonth
+  nuim=.(ind#i.#r) (dcc@:{.)"0 2 r,.asx    NB. T x 2 x S predictive distributions
+  'd w'=.ind#"1 d,:w
+  ((k*d)-"0 1 (1-k)*w*"0 1 {."2 >:nuim%100)  NB. T x 2 x S  capital shortfall, nu_m
+)
+
+dwcs=:0&ct  NB. T x 3 matrix d,w,capital shortfall     
+pcs=:1&ct   NB. T x S predicted capital shortfalls with rows ordered accoring market percentil
+
+pcs 'cba'
+stop
+
+
+
+
+
+
+ld=: 3 : 0
+ 'u v'=.P"1 y
+ x=.(>:@i.% >:)#v
+ ((covar"2 v,:"1 (u>"1 0 x))%"1-:x*1-x);x
+)
+
+pl=: 3 : 0
+  pd 'new;reset'
+  tics=.'-20 -15 -10 -5 0 5 10 15'
+  pd 'pensize 2;type line;color black;xticpos ',tics,';yticpos ',tics
+  for_i. i.#y do.
+    pd i{y
+  end.
+  pd 'show'
+return.
+   pd 'reset;new'
+   tics=.'-30 -25 -20 -15 -10 -5 0 5 10 15 20 25 30'
+   pd 'pensize 2;type dot;color red;xticpos ',tics,';yticpos ',tics
+   pd rm;ri
+   pd 'type line;color green'
+   pd LRMES
+   pd 'show'
+)
+
+
+
+pdraw=: 4 : '(<.x*#y){/:~y'        NB. percentile draws from y
+zdraw=: 4 : '(Phi x) pdraw y'   NB. zeta draws from y
+   
 covzeta=:cov@:|:@:(zeta"1)@|:
 
+fitarch=: 3 : 0"1
+  'y' Rset y 
+  R 'r=garch(y,c(1,1),include.mean=TRUE)'
+  sig=.}.{."1 >{:{.Rget 'r$fitted.values'
+  R 'r=summary(r)'
+  wrs 'a0 a1 b1'=.coef['coef stdev tval pval'=.|:>{:{.Rget'r$coef'
+  'yn sign'=.{:y,.0,sig
+  uf=.yf=.sigf=.''
+  for_t. i.250 do.
+    sigf=.sigf,sign=.%:a0+(a1**:yn)+b1**:sign
+    yf=.yf,yn=.sign*rnorm 1
+  end.
+  (}.y)%sig
+)
+
+tarch=: 3 : 0   NB. threshold model;library(rugarch);library(tseries) 
+   'y' Rset y 
+   R 'm=list(armaOrder=c(0,0),include.mean=TRUE)'
+   R 'v=list(garchOrder=c(1,1),model ="gjrGARCH")'
+   R 'u=ugarchspec(mean.model=m,variance.model=v)'
+   R 'fit=ugarchfit(u,y,solver.control=list(trace=0));print(fit)'
+   R 'res=fit@fit'
+   (n)=.{."1>{:{.matcoef[n=a.>{.>{:{:wrs matcoef=.Rget 'res$matcoef'
+   sigma=:Rget 'res$sigma'
+)
+
+
+pctarch=: 3 : 0
+  sig=.|: tarch"1 y
+  'mu s'=.(mean,:sd) sig 
+  'U D V'=.svd cor sig
+   -U tp |:|(sig-"1 mu)
+NB. 'U D V'=.svd cov y
+NB. tarch"1 |:U tp"2 1 (y-"1 mu)
+)
+ 
+
+plot pctarch zeta"1 cba,nab,anz,:mqg
+
+
+getfin=: 3 : 0
+  'y' Rset y
+  NB. Rcmd 'library(tseries)'
+  R 'y=get.hist.quote(c(y),quote="Adj",provider=c("yahoo"),method = NULL,origin ="1899-12-30",compression = "d",retclass = c("zoo"),quiet = FALSE, drop = FALSE)'
+  R 'print(summary(y))'
+  ,>{:1{ Rget 'y'
+)
+
+lag=: 4 : 'x(}.,:-@[}.])y' 
+
+
+stop
+
+sgarch=: 0 : 0   NB. Variance model applied to y
+   var.mod <- list(model ='sGARCH', garchOrder=c(1,1))
+   mean.mod <- list(armaOrder = c(1,1))
+   spec <- ugarchspec(var.mod,mean.mod)
+   garch <- ugarchfit(spec, y, solver.control=list(trace=0))
+   print(garch@fit)
+)
+
+ap=: 0 : 0   NB. threshold model applied to y
+   var.mod <- list(model ='apARCH', garchOrder=c(1,1))
+   mean.mod <- list(armaOrder = c(1,1))
+   f.pars <- list(delta = 1)
+   spec <- ugarchspec(var.mod,mean.mod,fixed.pars=f.pars)
+   garch <- ugarchfit(spec, y, solver.control=list(trace=0))
+   print(garch@fit)
+)
+ 
+mug=: 0 : 0
+ # GARCH-M -- Specify y and x
+   mean.mod.garch.m <- list(armaOrder = c(1,1), external.regressors = matrix(x), archm=TRUE)
+   spec <- ugarchspec(variance.model <- var.mod, mean.model <- mean.mod.garch.m)
+   garch.m <- ugarchfit(spec=spec, data=y, solver.control=list(trace=0))
+   print(garch.m)
+ # Adding external regressors
+   mean.mod.xreg <- list(armaOrder = c(1,1), external.regressors = matrix(x))
+   spec <- ugarchspec(variance.model <- var.mod, mean.model <- mean.mod.garch.m)
+   garch.xreg <- ugarchfit(spec=spec, data=y)
+   garch.xreg
+   print(garch.xreg)
+)
+
+rmgarch=: 0 : 0 
+  data(dji30ret) 
+  data <- dji30ret[, 1:3, drop = FALSE] 
+  uspec <- ugarchspec(mean.model = list(armaOrder = c(0,0), include.mean = FALSE), variance.model = list(garchOrder = c(1,1), model = "sGARCH"), distribution.model = "std") 
+  cspec <- cgarchspec(uspec = multispec( replicate(3, uspec)))
+  cfit <- cgarchfit(cspec, data =data, spd.control = list(lower = 0.1, upper = 0.9, type = "pwm", kernel = "epanech"),fit.control = list(eval.se = TRUE, trace = TRUE, stationarity = TRUE),solver = "solnp", solver.control = list(), out.sample = 0, parallel = FALSE, parallel.control = list(pkg = c("multicore", "snowfall"), cores = 2), fit = NULL, VAR.fit = NULL) 
+)
+
+mkr=:".@(10j6&":)   NB. make real
+
+pc=: 3 : 0
+  'U D V'=.svd cor y
+  getd D
+)
+
+pdcomp=: 3 : 0 
+  'U D V'=. svd ln tarch"1 zeta"1 banks=.cba,wbc,nab,anz,:mqg
+   (2&{."1 U) mp tarch"1 [-2{. D mp |:V
+)
+
+ pdcomp''
+
+
+stop
+
+  
 simarch=: 3 : 0
   'n a b'=.y
   eps=.rnorm n+100
@@ -21,42 +231,28 @@ simarch=: 3 : 0
   <.n*pnorm (-n){.z
 )
 
-Rinit=: 3 : 0
-NB.  In R
-NB.  library(Rserve)
-NB.  Rserve(args='--no-save')
-   pid=.{.2!:2 '/Library/Frameworks/R.framework/Resources/bin/R CMD /Library/Frameworks/R.framework/Versions/3.1/Resources/library/Rserve/libs//Rserve --no-save' 
-   Ropen''
-   Rlib 'tseries '
+
+fitrugarch=: 3 : 0"1
+  'y' Rset y=.y-mu=.mean y  NB. percentages
+  Rcmd 'r=ugarchfit(y,spec=ugarch(spec))'
 )
 
-fitarch=: 3 : 0
-  'y' Rset (-mean)y
-  Rcmd 'r=garch(y,c(1,1))'
-  sig2=.*:{."1 >{:{.Rget 'r$fitted.values'
-  Rcmd 'r=summary(r)'
-  'a0 a1 b1'=.coef['coef sd tval pval'=.|:>{:{.Rget'r$coef'
-  for_t. i.N=.12 do.
-    sig2n=.a0 + (a1**:{:y) + b1*{:sig2
-    yn=.(%:sig2n)*rnorm 1
-    y=.y,yn[sig2=.sig2,sig2n
-  end.
-  (-N){.y,.%:sig2
+
+ 
+
+
+
+lc=: 3 : 0
+ series=.;:'anz cba mqg nab wbc banks areit asx audusd comm dspread tspread bills'
+ 'U D V'=. svd z=.zsc"1 r=.>".L:0 series
+ K=. D mp |: V
+ sigt=.fitarch"1 }:K
 )
 
-plot (**|) {. |:fitarch cba 
   
 accum=:*/\@:>:@:%&100
  
 
-rddat=: 3 : 0
-  dat=:readcsv dir,'/data/cifrdatdaily.csv'
-  ({.dat)=:|:x=.>".L:0  '-_'&charsub L:0 }.dat
-  date=:1&todayno date
-  {.dat
-)
-
-stop
 
 stop
 
@@ -424,5 +620,7 @@ sens=: 3 : 0
 )
 
 NB. sens anz;wbc;mqg;cba
-  
+
+
+
   

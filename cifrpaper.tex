@@ -208,36 +208,332 @@ This differs from \eref{stress}  in that a different risk measure is used and  $
 where $f_i$ and $f_j$ are the $x_i$ and $x_j$ densities at the $r_i$ and $r_i$ quantiles, respectively. 
 
 \section{Systemic risk}
+\cite{brownlees2015} describe a model for systemic risk (SRISK) estimated for each financial firm $i$ and each time point $t$.    SRISK of a firm at time $t$ is the expected capital shortfall  it will experience in the period $(t,t+h)$ given a crisis downtown in the market over the same period.    Capital shortfall is defined as the ratio of equity to equity plus debt falling below a certain level $k$.  A crises market is a market return below $c$. 
+
+If expected capital shortfall  is zero then SRISK is zero.   The sum of  SRISK's  across all firms is the total SRISK in the economy and each firm contributes either zero or some proportion to the total SRISK in the economy.    Firms with a high  percentage SRISK (denoted SRISK\%) are systemically important and will be  of major concern to regulators. 
+
+
+
+
+\subsection{Debt and Equity}
 
 Suppose a firm at time $t$ has debt $D_t$ and equity $W_t$.   Then at $t$, $D_t+W_t$ is the total claim on the firm. 
-Regulated firms are generally required to hold a proportion $k$ of claims $k(D_t+W_t)$ as a prudential margin.    If  $k(D_t+W_t)>W_t$ then, prudentially speaking, the firm has capital shortfall   $k(D_t+W_t)-W_t$.  Negative capital shortfall indicates positive working capital.
+Regulated firms are generally required to hold a proportion $k$ of total claims $k(D_t+W_t)$ as a prudential margin.    If  $k(D_t+W_t)>W_t$ then, prudentially speaking, the firm has capital shortfall   
+$$S_t\equiv k(D_t+W_t)-W_t\ .
+$$  
+Negative capital shortfall indicates positive working capital.
 
-Assume $D_t=D_{t+1}=\cdots=D_{t+h}$ where $h$ is integer,  and 
+Concerned with predicting capital shortfall $S_{t+h}$ conditional on a systemic event defined as a market decline below a threshold $c$ over the time horizon $(t,t+h)$.  This is similar to \cite{acharya2012wp}.
+
+\subsection{Returns, leverage and capital shortfall}
+
+Consider a single firm with return $r_t$.   This is the percentage change in value over the period  $(t-1,t)$ known as period $t$.   The arithmetic return over the period $(t,t+h)$ is $\nu_t\equiv r_{t+1}+r_{t+2}+\cdots+r_{t+h}$ and is an $h$ period return.  If $h=1$ then  $\nu_t=r_{t+1}$. 
+
+The equity of a firm at time $t+h$ is 
 $$
-W_{t+h} = (1+i_{t+1}+\cdots+i_{t+h})W_t=(1+r_{t})W_t\ ,
+w_{t+h} = (1+\nu_{t})w_t\cq \nu_t\equiv r_{t+1}+\cdots+r_{t+h}\ ,
 $$
-serving to define the firm return $r_t$.  Note $r_t$ is the  $h$ period arithmetic return up to  time $t+h$.  
-Then the capital shortfall at time $t+h$ is 
-$$
-S_t\equiv  k(D_{t+h}+W_{t+h})-W_{t+h} = k D_{t} - (1-k)(1+r_{t})W_t
-$$
-\be{cs}= \left\{k\ell_t-(1-k)r_{t} - 1\right\}W_t\cq \ell_t\equiv\frac{D_t+W_t}{W_t}\ ,
+
+If the debt of the firm $d_t$  stays constant over the period $(t,t+h)$:   $d_t=d_{t+1}=\cdots=d_{t+h}$  and the capital shortfall i 
+\be{cs}
+c_{t+h}\equiv  k(d_{t+h}+w_{t+h})-w_{t+h} = k d_{t} - (1-k)(1+\nu_{t})w_t
 \ee
-where $\ell_t$ is the leverage ratio.  Note  $S_t$ is a linear in $r_t$, the firm rate of return.
+ Note  $c_{t+h}$ is a linear in $\nu_t$.
 
-
-A systemic event or ``crisis"   occurs in the interval $(t+1,t+h)$ if the market  return $r_{mt}\le c$ over ``the" period.   The crisis distribution of $S_t$ is the distribution of capital shortfall given $r_{mt}\le c$.  The systemic risk of  a firm is the expectation of the capital shortfall given  a crisis:
+\subsection{Systemic events and systemic risk of a firm}
+A systemic event or ``crisis"   occurs in the period $(t,t+h)$ if the market  return $r_{mt}(h)\le c$.   The systemic risk (SRISK)  of  a firm is the expectation of the capital shortfall given  a crisis:
 \be{sr}
-\rho_t\equiv \E(S_t|r_{mt}\le c) \equiv \E^c(S_t) =  \{k\ell_t-(1-k)\E^c(r_{t})-1\}W_t\ .
+\mathrm{SRISK}_t\equiv  \E_t\{S_{t+h}|r_{mt}(h)\le c\}  =  [k\ell_t-(1-k)\E_t^c\{r_{t}(h)\}-1]W_t\ .
 \ee
+where
+$$
+\mathrm{LRMES}_t \equiv \E^c\{r_{t}(h)\}\equiv \E_t\{r_t(h)|r_{mt}(h)<c\}\ ,
+$$
+and in terms of this notation:
+$$ 
+ \mathrm{SRISK}_t = \{k\mathrm{LVG}_t - (1-k)\mathrm{LRMES}_t - 1\}W_t\ .
+$$
 The condition $D_{t+h}=D_t$ or less strongly $\E_t^c(D_{t+h})=D_t$ indicates the value of debt  does not change if there is a crisis.   
 
-Evaluating the systemic risk in a firm requires the evaluation or estimation of the ``crisis" expectation $\E^c(r_{t})$ also called the long run marginal expected shortfall (LRMES).  Systemic risk is a point estimate of capital shortfall in a crisis.   Since $S_t$ is linear in $r_t$ the crisis distribution of $S_t$ is known if the conditional distribution of $r_t|r_{mt}<c$ is known.      
-  
+Evaluating the systemic risk in a firm requires the evaluation or estimation of the ``crisis" expectation, also called  the long run marginal expected shortfall (LRMES):
 
-Given a number of firms,  $\rho_t$ is vector with components $\rho_{it}$ corresponding to  firm $i$.   Aggregate systemic risk is then $1'\rho_t$.  The proportion of systemic risk in firm $j$ is  $\rho^+_{it}/(1'\rho_t)$ where $\rho^+_{it}$ is the positive part of $\rho_{it}$.
+$\mathrm{SRISK}_t$ is a point estimate of capital shortfall in a crisis.   Since $S_t$ is linear in $r_t$ the crisis distribution of $S_t$ is known if the conditional distribution of $r_t(h)|r_{mt}(h)<c$ is known.      
+ 
+\subsection{Vector generalisation} 
 
-An econometric models  links  returns $r_{it}$  to the  market return $r_{mt}$ enabling  the calculation of the crisis expectations 
+Aggregate systemic risk is 
+$$
+\mathrm{SRISK}_t = \sum_i \mathrm{SRISK}^+_{it}
+$$
+where $^+$ indicates the positive part of.   
+   The proportion of systemic risk in firm $i$ is then
+$$
+\mathrm{SRISK\%}_{it} = \frac{\mathrm{SRISK}_{it}^+}{\mathrm{SRISK}_{t}}
+$$ 
+
+\subsection{Example from vlab}
+See \fref{vlab} taken on 15 April 2015 from the website http://vlab.stern.nyu.edu
+
+\begin{figure}[htbp]
+\caption{default}\label{vlab}
+\begin{center}
+\includegraphics[width=15cm]{vlab.pdf}
+\end{center}
+\end{figure}
+
+\subsection{Discussion points}
+
+\begin{enumerate}
+\item  Above is similar to ``stress tests" regularly applied to financial firms.   However above uses only publicly available information
+\item  Above approach is forward looking -- ie distribution of future assets conditional on a systemic event.  Markets look at things forwardly so incorporating forward information.
+\item  Should have an appropriate $h$ and $c$ -- not too small etc.
+\item  Capital shortfall is natural to use since this generates reduced lending activiity etc.
+\item Measuring distress a firm is going to suffer conditional on a systemic event affecting the entire system.   Note this is different from capital shortfall conditional on firm default as with credit models.
+\item Not concerned with the probability of joint distress of a large proportion of firms in the financial system.   Here systemic risk is determined by the capital shortfall generated distressed institutions conditional on a systemic event.  Framework takes into account joint dependence among firms, as well as their size and degree of leverage.   Do a small number of large financial institutions pose systemic threats to the entire system?  Tail correlations might fail to do so.
+\item  Simplifying assumptions are made to deliver a measure that can be easily computed in practice.    Asset structure is captured in a limited sense.   
+\item   Measurement approach can be applied to non financial firms.   However these firms are not highly levereged and are not as vulnerable as financial firms.    Not clear how capital shortfall transmits to rest of economy.   
+
+\end{enumerate}
+
+
+\subsection{Static econometric model for systemic risk}
+
+An econometric models  links one period returns $r_{it}$  to the  market return $r_{mt}$ enabling  the calculation of 
+LRMES and SRISK.   The approach is to assume $(r_{it},r_{mt})$ are zero mean bivariate normal with volatilities $\sigma_{it}$ and $\sigma_{mt}$ and correlation $\rho_t$.  In this case
+$$
+\E(r_{it}|r_{mt}<c) = \frac{\rho_t\sigma_{it}}{\sigma_{mt}}\E(r_{mt}|r_{mt}<c)  = \rho_t\sigma_{it}\psi\left(\frac{c}{\sigma_{mt}}\right)\cq \psi(x)\equiv\frac{\phi(x)}{\Psi(x)}\ .
+$$
+Noting $r_{it}(h)=r_{i,t+1}+\cdots+r_{i,t+h}$ and similarly for $r_{mt}(h)$ then 
+$$
+\E\{r_{it}(h)|r_{mt}(h)<c\}  = \sqrt{h}\rho_t\sigma_{it}\ \psi\left\{\frac{\ln(1+c)}{\sigma_{mt}\sqrt h}\right\}\ .
+$$
+{\it Let us emphasize that the [last] formula ... has an error which is due to the fact that we are approximating MES using compound returns rather than arithmetic returns.    In particular [the] formula ... has a negative approximation error  and provides more extreme negative LRMES values.}
+
+\subsection{Modelling systemic risk using a dynamic model}
+
+\cite{brownlees2015} use  data on 95 large US financial firms for the period 2000-2012:   daily equity returns and market capitalization from CRSP; quarterly book values for equity and debt from Compustat.   A   Dynamic Conditional Correlation (DCC) model is estimated for  firm and market returns.  Write
+\newcommand{\veps}{\varepsilon}
+$$
+\cov (r_t|t) = V_tR_tV_t'\cq R_t\equiv \cov(\veps_t|t)\cq \veps_t=V_t^{-1}r_t\ ,
+$$
+where $R_t$ and  $V_t$  are the correlation and diagonal volatility matrix, respectively, at time $t$.   Volatilities in $V_t$  are estimated using univariate threshold GARCH models.  The estimate of $R_t$ corresponds to the correlations in covariance matrix $C_t$ assuming
+$$
+(C_t - C) = \alpha (C_{t-1}-C)+\beta (\veps_t\veps'_t-C) \cq C\equiv\cov(\veps_t)\ .
+$$
+where $C$ is the long run covariance matrix.
+
+\cite{brownlees2015} find the above systemic risk measure  a)  successfully identifies systemically risky firms during the GFC;
+b)  predicts capital injections by Fed Reserve; and c) aggregate systemic risk provides early warning of declines in industrial production and higher unemployment.
+
+Thus the model  estimates the beta of a firm equity on a broad market index.
+A bivariate volatility model is estimated for the return on the broad market and the equity return of each firm. This model allows volatilities and correlations to evolve.    The estimated process is used to simulate the probability of severely negative outcomes over an extended period. Assuming that firms can only operate if capital is a non--trivial proportion of their total liabilities, SRISK is defined as the capital that would be needed to achieve a market cap that is 8\% of the book value of assets in the event of a crisis. The input to SRISK is size, leverage and risk. Each is important and a firm that wants to reduce its SRISK, can operate on any of these characteristics. A crisis is taken to be a 40\% drop in global equity values over six months. SRISK is computed weekly for firms from about 70 countries and published on the internet at http://vlab.stern.nyu.edu.  In extending this analysis to international markets, the model is naturally generalized to a multivariate volatility model. The data are considered to be the equity return on one firm, the equity return on a global index of equity returns, and perhaps some lags. The use of daily data for assets that are priced in different time zones means that closing prices are not measured at the same time and consequently there may be some important effect from lagged factor returns.
+
+\subsection{Systemic risk based on probabilities}
+
+If $d_t$ and $w_t$ are the debt and equity of a firm at time $t$ then the capital shortfall at time $t$ is 
+$$
+(1-k) d_t  - k w_t
+$$
+Basel II assumes $1-k=0.08$ implying there is  positive  capital shortfall if 
+$
+ 0.08 d_t>0.92 w_t
+$
+or  leverage $d_t/w_t>11.5$ or the log--leverage is greater than $\ln(11.5)=2.44$.  
+	
+Given the debt and equity, the capital shortfall at time $t$ is zero if 
+$$
+\frac{k_t}{1-k_t} = \frac{d_t}{w_t}\cq k_t= \frac{d_t/w_t}{1+d_t/w_t} = \frac{d_t}{d_t+w_t}
+$$
+where $0\le k_t\le 1$  is thought of as a risk index and $k_t/(1-k_t)$ is the leverage or risk odds.   
+
+
+Now consider the situation at time  $t+h$ where $h>0$, 
+$$
+ k_{t+h}\equiv\frac{d_{t+h}}{d_{t+h}+w_{t+h}} =  \frac{d_t}{d_t+\e^{\nu_{t+h}}w_t}
+$$ 
+where it is assumed $d_{t+h}=d_t$ and $\nu_{t+h}$ is the $h$ period return over $(t,t+h)$.  The   logit risk/log leverage is
+$$
+\ell_{t+h}\equiv\ln \frac{k_{t+h}}{1-k_{t+h}} = \ln \frac{d_{t+h}}{w_{t+h}} = \ln d_t - \ln w_t - \nu_{t+h} = \ell_t -\nu_{t+h} \ .
+$$
+Hence a large positive return $\nu_{t+h}$ implies a lower  risk.  As the logit risk/log leverage  increases to 2.44 the firm approaches the Basel II threshold.
+
+If there are a number of  firms $i$ then $\ell_t$ and $\nu_{t+h}$ are  vectors with components $\ell_{it}$ and $\nu_{it}$, respectively, and in vector terms, $\ell_{t+h}=\ell_t - \nu_{t+h}$.   The aggregate risk is $1'\ell_{t+h}$.
+
+
+\subsection{Systemic risk}
+
+Systemic risk is defined as the log--leverage in the system as a whole:   that is  aggregate all debt and equity and compute, as above, the log--leverage $\ell_t^+$.    Then
+$$
+\ell^+_{t+h} = \ln \frac{d^+_t}{w^+_t}-\nu^+_{t+h} =  \ln \sum_i\alpha_{it}\frac{ d_{it}}{ w_{it}} -\nu^+_{t+h}= \ln \Ex_w(\e^{\ell_{it}})-\nu^+_{t+h} \cq \alpha_{it}\equiv\frac{w_{it}}{ w^+_t}\ .
+$$
+where $\nu_{t+h}^+$ is the aggregate return
+$$
+\ln \frac{1'w_{t+h}}{1'w_t} = \ln\Ex_w(\nu_{it})
+$$
+Differentiating with respect to $\ell_{i,t+h}$ yields
+$$
+\frac{\de \ell^+_{t+h}}{\de \ell_{i,t+h}} = \frac{\alpha_{it}\e^{\ell_{it}}}{\sum_i\alpha_{it}\e^{\ell_{it}}} \frac{\de\nu_{i,t+h}}{\de \ell_{i,t+h}}=\frac{w_{it}\e^{\ell_{it}}}{\sum_iw_{it}\e^{\ell_{it}}}
+=\frac{d_{it}}{\sum_id_{it}}=\frac{d_{it}}{d_t^+}\ ,
+$$
+implying the percentage change in overall forecast leverage respect to a percentage change of the forecast leverage of  firm $i$ is proportional to the proportion of debt in firm $i$.   Further 
+$$
+\ell^+_{t+h} = \ln \Ex_w(\e^{\ell_{it}})-\nu^+_{t+h} \approx \Ex_d(\ell_{it})-\Ex_d(\nu_{i,t+h})\
+$$
+Thus the contribution of firm $i$ to the systemic risk is 
+
+
+\subsection{Comparing default probabilities}
+
+Suppose $\ell_{it}$ and $\ell_{t}$ are the risk for firm $i$ and the combination of firms.   Then the excess risk in firm $i$ is
+$$
+\ell_{it}-\ell_t = \ln \frac{d_{it}}{d_t} - \ln \frac{w_{it}}{w_t} + (\nu_t-\nu_{it})\ .
+$$
+Thus if firm $i$ has the the same leverage as the average leverage then the excess risk is the underperformance over the time interval $(t,t+h)$. 
+
+Note
+
+and hence can define
+$$
+x
+$$
+
+
+\subsection{Systemic risk}
+
+The total leverage in the system is
+
+a value weighted average of the individual leverages.   The $k_t$ for  capital shortfall for the system as a whole can be
+produced from this total leverage.   The logit $\ell_t$ of $k_t$ then yields a risk index for the system as a whole.  Note
+$$
+\ell_t \equiv \ln \frac{d_{t+h}}{w_{t+h}}=-\nu_t+\ln \sum_i\alpha_{it}\frac{ d_{it}}{ w_{it}}\ne \sum_i \ell_{it}
+$$
+
+Can look at
+$$
+\ell_{it}-\ell_t  = \ln d_{it}-\ln d_t - (\ln w_{it}-\ln w_t) - (\nu_{it}-\nu_t)
+$$
+
+Suppose there are a number of firms and define
+$$
+d_t=\sum_i d_{it}\cq w_t=\sum_i w_{it} \cq  \frac{\ell_{it}}{\ell_t}
+$$
+
+
+
+The log--odds can be related to other variables.  In many cases the capital injection required is negative indicating capital can be withdrawn from the company without it breaching prudential standards.
+
+
+
+
+\subsection{GARCH-DDC simulation}
+
+We can consider the distribution of the projected log--leverage (pll) conditional on other variables including the market return
+$$
+\E(\ell_t|\nu_{mt}\le c)  = \ln d_t -\ln w_t -\E(\nu_t|\nu_{mt}\le c)\ .
+$$
+Alternatively we can consider the  $\alpha$--percentiles of $\ell_t$ denoted $\ell^\alpha_t$ such that
+$
+\alpha=\P(\ell_t\le \ell_t^\alpha)
+$.  Note
+$$
+\ell_t^\alpha = \ln d_t -\ln w_t -\nu_t^\alpha = \ln \frac{d_t}{w_t}-\nu_t^\alpha\  .
+$$
+
+The GARCH-DCC setup delivers forecast or simulated values of $r^s_{t}(h)$, $s=1,\ldots, S$  for each  $t$.      Assume the simulated values are ordered in terms of increasing market returns $r^s_{mt}(h)$ and arranged in an $2\times S$ matrix $C_t$ where  the bottom row is the simulated market return.
+
+This computation is complicated by two things:
+\begin{enumerate}
+\item  Dividends my be paid  in the period $(t, t+h)$ serving to reduce equity.  Typically at most one dividend  is payable which can be accumulated to  $t+h$ and used to increase equity.   That is for purposes of  assessing model accuracy $w_{t+h}$ is increased by proportion $1+f_{t'}(1+r_{t'})^{t+h-t'}$ where $t\le t'<t+h$ is  ex--dividend date and $f_t$ is the dividend yield.
+\item  Debt may change over the period.
+\end{enumerate}
+
+In terms of $C_t$ the SRISK measure of \cite{brownlees2015} is the average, along each row of the prefixes.  For example,  the average in row $i$ of the  first $s$ entries is the systemic risk of firm $i$ at time $t$ conditional on  $r_{mt}(h)\le F_{mt}^{-}(s/S)$ where  $F_{mt}$ is the empirical distribution of the  $r^s_{mt}(h)$, $s=1,\ldots,S$.
+
+A default or breach of prudential margins occurs if $c_{it}^s>0$.  The probability of a default if $r_{mt}(h)\le F_{mt}^{-}(v)$ is estimated as 
+$$
+\hat p_{it}=\frac{\sum_{s=1}^{[vS]}I(c^s_{it}>0)}{[vS]}\ ,
+$$
+where $v$ is given, for example $v=0.1$.
+Joint probabilities of default are estimated similarly: the joint probability of a subset $B$ of firms  breaching their margins is 
+estimated as
+$$
+\hat p_{Bt} = \frac{\sum_{s=1}^{[vS]}\prod_{i\in B} I(c^s_{it}>0)}{[vS]}\ .
+$$
+These probabilities generally decline with $v$: that is as the market downturn becomes less extreme.
+
+Instead of asking what is the probability of a default (ie breach of prudential regulation) it is meaningful to consider what would $k$ have to be in order for it to be in default at time $t+h$.    Writing this value as
+$$
+k_t d_t - (1-k_t)\{1+r_t(h)\}w_t = 0 \qquad \implies \qquad k_t=\frac{1}{1+d_t/[\{1+r_t(h)\}w_t]}
+$$
+This equation can be computed given $r_t(h)$ and hence for every simulated value to arrive at $k_t^s$.    If $d_t\equiv0$ then $k_t=1$ indicating  a healthy state of affairs.  If $d_t/w_t$ is large then $k_t\approx 0$.    Hence as $k_t$ drops there is more danger. 
+
+
+
+Furthermore
+$$
+\ln k_t = -\ln \left[1+\{1+r_t(h)\}^{-1}\frac{d_t}{w_t}\right]\approx -\{1+r_t(h)\}^{-1}\frac{d_t}{w_t}\approx -\e^{-r_t(h)}\frac{d_t}{w_t}
+$$
+$$
+\kappa_t \equiv \ln(-\ln k_t) \approx  \ln (d_t) - \ln (w_t) - r_t(h)
+$$
+A large value for $\kappa_t$ indicates 
+
+
+To study the time series and cross sectional behaviour of $\hat p_{it}$, it is useful to define the  normal scores 
+$$
+z_{it} \equiv \Phi^-(\hat p_{it})\cq i=1,\ldots, n\cq t=1,\ldots, T\ .
+$$
+Defining  $z_t\equiv (z_{1t},\ldots,z_{nt})'$ then a firm is systemically important if it is highly collinear with the other scores. 
+
+An entropy based measure of systemic risk is
+$$
+H_t = -\E(\ln p_{Bt})\equiv -\sum_B p_{Bt}\ln p_{Bt}\ .
+$$
+
+Systemically important firms are those which, when in default, are highly likely to be associated with a joint default.
+joint probability of matrix is then 
+$$
+  P_t\equiv \frac{1}{S} I_tI_t'\cq  I_t = I(\rho^s_{it}>0)
+$$
+
+
+ can define the probability of a firm going in default as
+$$
+\hat p_{it}\equiv \frac{\sum_{s=1}^SI(\rho_{it}^s>0)}{S}
+$$ 
+In terms of this notation the probability of all firms going bankrupt and non
+
+
+
+\subsection{Time--varying copula model}
+
+Suppose $\delta\ge 1$ and the rotated Gumbel copula modelling lower tail dependence:
+$$
+C_\delta(u,v) = u+v-1+\e^{-[\{-\ln(1-u)\}^{\delta}+\{-\ln(1-v)\}^{\delta}]^{1/\delta}}
+$$
+Further suppose a sequence
+$$
+\delta_{t+1} = 1+\left(\omega + \alpha \frac{\sum_{s=0}^{m-1}|u_{t-s}-v_{t-s}|}{m}+ \beta\delta_t\right)^2\ .
+$$
+Note $\delta_t$ is always greater than 1.  \cite{patton2006modelling} has more details.   The model is fitted by estimating marginal models first and then by maximizing the copula likelihood using the fitted uniform marginals.
+
+\subsection{Data  used in \cite{brownlees2015} }
+
+\begin{itemize}
+\item Large US financial firms (ie capitalization greater than 5bln US)
+\item Jan 3, 2000 through to Dec 31, 2012:  not all companies continuously traded
+\item Daily returns and market capitalization from CRSP
+\item Quaterly book value of equity and debt from COMPUSTAT.
+\item SIC codes used to segment firms into 4 industry groups (Depositries (29), Broker Dealers (10), Insurance (34) and Others (22))
+\end{itemize}
+
+SRISK is computed with the parameters $k=0.08$, $c=-0.1$, $h=22$ (a month).  SRISK computed at end of each month using all available data at that data, therefore no look ahead bias.  
+
+LRMES computed with the GARCH-DCC model for each firm.   Uses all available data starting from Jan 3, 2000 to end of each month.
+
+
+\subsection{Older stuff}
+   
 $$
 \E^c(r_{it}) \equiv \E(r_{it}|u_{mt}\le c^*)\cq c^*=\E\{(r_{mt}\le c)\}\ ,
 $$
@@ -257,33 +553,153 @@ The right hand expression in \eref{sim}  suggests using a copula to model the jo
 
 The first step here is to examine the marginal distributions of the returns and the empirical copula of returns.
 
-\section{Empirical studies}
-\cite{brownlees2015} use  data on 95 large US financial firms for the period 2000-2012:   daily equity returns and market capitalization from CRSP; quarterly book values for equity and debt from Compustat.   A   Dynamic Conditional Correlation (DCC) model is estimated for  firm and market returns.  Write
-\newcommand{\veps}{\varepsilon}
-$$
-\cov (r_t|t) = V_tR_tV_t'\cq R_t\equiv \cov(\veps_t|t)\cq \veps_t=V_t^{-1}r_t\ ,
-$$
-where $V_t$ is the diagonal matrix of volatilities at time $t$ and $R_t$ is the correlation matrix at time $t$.   Volatilities in $V_t$  are estimated using univariate threshold GARCH models.  The estimate of $R_t$ is the  correlation matrix corresponding to fitted covariance matrix $C_t$,  fitted using the model
-$$
-(C_t - C) = \alpha (C_{t-1}-C)+\beta (\veps_t\veps'_t-C) \cq C\equiv\cov(\veps_t)\ .
-$$
 
-\cite{brownlees2015} find the above systemic risk measure  a)  successfully identifies systemically risky firms during the GFC;
-b)  predicts capital injections by Fed Reserve; and c) aggregate systemic risk provides early warning of declines in industrial production and higher unemployment.
 
 {\bf Comment.}  With the DCC model both volatilities and correlations have a time dependent structure.  These are modelled separately.
-An alternative approach is where 
+An alternative approach is where ...
+
+
+
+{\bf \cite{engle2014dynamic}} describes a new approach to estimating time varying regression coefficients.   The approach is called Dynamic Conditional Beta (DCB).   Consider $(y_t,x_t)$ where  $y_t$  and $x_t$ are vectors.  Interested in $\E_t(y_t|x_t)$.   This is expression  may be linear in $x_t$ and depending on the past information set.  Write
+\newcommand{\F}{{\cal F}}
+$$
+(y_t,x_t)|\F_{t-1} \sim N(\mu_t,H_t) \implies y_t|x_t,\F_{t-1}\sim N\{\mu_{yt}+B_t(x_t-\mu_{xt}), C_{yy,t}\}
+$$
+where
+$$
+B_t= H_{yx,t}H^-_{xx,t}\cq  C_{yy,t}= H_{yy,t}-B_tH_{xx,t}B'_t\ .
+$$
+These expressions depend on the time varying covariance matrix $H_t$.    For implementation we need a model for $\mu_t$ and $H_t$.
+
+
+
+
+\section{TARCH modelling}
+
+The standard approach to the joint modelling of returns is where volatility adjusted returns are modelled, for each security, as
+\newcommand{\vareps}{\varepsilon}
+\be{mean.model}
+r_{t}=\mu+\sigma_t\eps_t\cq \eps_t\sim (0,1)\cq  \eps^-_t\equiv(\eps_t<0)=(r_t<\mu)\ ,
+\ee
+%frac{r_{it} - \mu_i}{\sigma_{it}} = \rho_{it}\eps_{mt} + \sqrt{1-\rho_{it}^2}\vareps_{it}
+Further
+\be{vol}
+\sigma_{t+1}^2 = \omega+ (\alpha+\gamma\eps^-_t) (r_t-\mu)^2 + \beta\sigma^2_t=\omega+ \sigma^2_t\{(\alpha+\gamma \eps^-_t)\eps_{t}^2 + \beta\}\\ .
+\ee
+Hence the response in the variance to $\eps_t^2$  is increased by $\gamma$   if $\eps_{t}<0$ compared to the response if $\eps_t>0$.  This is a simple threshold GARCH model:  called TARCH.   
+
+The simple TARCH model \eref{mean.model} and \eref{vol} is generalised by replacing $r_t-\mu$ by a time series model possibly including explanatory variables.   Further $\omega$ can be replaced by $x_t'\delta$ where $x_t$ is a vector of explanatory variables, while extra lags can be introduced on the right hand side of \eref{vol}.  
+
+ Taking expectations of both sides of \eref{vol} yields
+ $$
+\sigma_{t+1}^2 = \omega+ \left\{\alpha+\beta+\gamma \E(\eps^-_t\eps_{t}^2)\right\}\sigma_t^2\ .
+ $$
+For a long run stationary solution 
+$$
+\sigma^2 = \frac{\omega }{1-\alpha-\beta-\gamma\E(\eps^-_t\eps_t^2)}\cq \E(\eps^-_t\eps_t^2)=p\E(\eps_t^2|\eps_t<0)+(1-p)\E(\eps_t^2|\eps_t\ge 0)\\ .
+$$
+where $p\equiv\E(\eps_t^-)$.  For the symmetric case, $p=1/2$ and  $\E(\eps_t^2|\eps_t<0)=1$ implying $\E(\eps^-_t\eps_t^2)=1$ and
+$
+\omega=(1-\alpha-\beta-\gamma)\sigma^2
+$.  With the zeta transform  $\sigma^2=1$ and hence the sum of the coefficients is 1.
+
+Alternatively
+$$
+\E(\eps^-_t\eps_t^2) = p +\rho\sqrt{p(1-p)} = p\left(1+\rho\sqrt{\frac{1-p}{p}}\right)\ ,
+$$
+where $\rho$ is the correlation between $\eps_t^-$ and $\eps_t^2$.   For a symmetric distribution this reduces to $(1+\rho)/2$. 
+
+The above setup holds for each security $i$ including the market, assumed to have index $i=m$.   The correlation between securities can also be modelled.   This is achieved by modelling the correlation of each security with the market, denoted $\rho_{it}$ or assuming the correlation matrix of the stack of the $\eps_t$, denoted $\eps_t$  are generated from a positive definite matrix $Q_t$ say where \citep{engle2002dynamic}
+$$
+Q_{t+1} = (1-\alpha-\beta) S + \alpha \eps_t\eps_t' + \beta Q_t\ ,
+$$
+where $\eps_t$ is the vector of $\eps_{it}$, including that of the market.
+
+ \section{TARCH modelling applied to zeta scores}
+ 
+ In this case $\omega_i\approx 0$, $\alpha_i$ and $\beta_i$ is generally positive and significant, while $\gamma_i$ is positive and marginally significant.  This suggests in these cases
+ $$
+ \zeta_{it}=\sigma_{it}\eps_{it}\cq \sigma_{i,t+1}^2= \{\alpha_i + \gamma_i(\zeta_{it}<0)\}\zeta_{it}^2+\beta_i\sigma^2_{it} 
+ $$
+ Thus negative $\zeta_{it}$ tend to increase volatility while positive $\zeta_{it}$ have no effect on volatility.  The persistence is 
+ $$
+1+\alpha_i+\frac{\gamma_i}{2}+\beta_i
+ $$
+ assuming $\E\{(\zeta_i<0)\}=1/2$.   
+
+\section{Lee--Carter modelling of financial variables}
+
+Suppose $r_t$ is a vector of rate of returns with mean vector $\mu$.   Further suppose the returns are standardised so that over time each has mean zero and standard deviation 1.  Then write
+$$
+\frac{r_{it}-m_i}{s_i}=\beta_i\kappa_t+ \psi_i\eps_{it}\cq \kappa_t= \mu+\sigma_t\eps_t\cq  \eps_t,\eps_{it}\sim N(0,1)\ ,
+$$
+where $\kappa_t$ is normalised so that $\kappa_1=\overline r_1$ and $\kappa_n=\overline r_n$ and
+$$
+\sigma^2_{t+1} = \alpha_0+\alpha_1(\kappa_{t}-\mu)^2+ \beta_0 \sigma_t^2\ .
+$$
+Under the model the variance at time $t$ of the standardised $r_{it}$ is 
+$\beta_i^2 \sigma^2_t + \psi^2_i$ while the covariance between $r_{it}$ and $r_{jt}$ is  $\beta_i\sigma^2_t\beta_j$.
+Hence the squared correlation between $r_{it}$ and $r_{jt}$ is
+$$
+\frac{(\beta_i\sigma^2_t\beta_j)^2}{(\beta_i^2 \sigma^2_t + \psi^2_i)(\beta_j^2 \sigma^2_t + \psi^2_j)} = \left\{\left(1+\frac{\psi^2_i}{\beta_i^2\sigma_t^2}\right)\left(1+\frac{\psi^2_j}{\beta_i^2\sigma_t^2}\right)\right\}^{-1}
+$$
+As $\sigma_t$ becomes large the correlation approaches 1. 
+
+\section{Understanding of model}
+\bi
+\i  The observed distribution of $r_{mt}$ outcomes is a reasonable reflection of the (unconditional) marginal distribution at each $t$.
+\i  Hence the $u_{mt}\equiv \P(r_{mt})$ are reasonable uniforms on the basis of the unconditional marginals
+\i  In the standard analysis we use a model describing the conditional distribution at each $t$
+\i  To what extent is $u_{mt}$ the conditional uniform i.e. uniforms calculated from the conditional distribution?  Do we need these.  Note that $r_{mt}$ can be viewed unconditionally or conditionally.   i.e. the across time distribution of the $r_{mt}$ will be close the unconditional whereas $r_{mt}$ itself is chosen conditionally if we employ a time series model.     
+\i  So it appears the computed $u_{mt}$ can be regarded as unconditional.  (just like $r_{mt}$).    However they can also regarded as generated conditionally.  Ditto for $\zeta_{mt}$ etc.
+\i  So suppose we have estimate $\sigma_{mt}$ using a garch model based on either the $r_{mt}$, $\logit \P(r_{mt})$ or $\zeta_{mt}$.   For the latter this is the conditional variance of $\zeta_{mt}$ i.e.
+$$
+\zeta_{mt}|t-1 \sim N(0,\sigma^2_{mt})
+$$
+\i So at each future $t$ (forecast or smoothed), given $\sigma_{mt}$  we draw $r_{mt}$ or $\zeta_{mt}$, compute $\P(r_{mt})$ or $\Phi(\zeta_{mt})$.  The former is with respect to the whole distributions whereas the latter is with respect to the normal.
+\ei 
 
 \section{ARCH specification}
+   A GARCH(1,1) model stated in terms of noise $\eps_t\sim(0,1)$ and time varying volatility $\sigma_t$:
+$$
+r_t= \mu + \sigma_t\eps_t\cq \sigma^2_{t+1} = \alpha_0+\alpha_1(r_{t}-\mu)^2+ \beta_0 \sigma_t^2\cq \eps_t\sim N(0,1)\ .
+$$
+Here $\mu$ is the average return, assumed independent of time.
 
-We have $u_{it}$, $u_{mt}$ and model the later as
-$u_{t} = \Phi(z_t)$ where $z_t$ is standard normal.   A GARCH(1,1) model stated in terms of noise $\eps_t\sim(0,1)$ and time varying volatility $\sigma_t$:
-$$
-y_t=  \sigma_t\eps_t\cq \sigma^2_{t+1} = \alpha_0+\alpha_1y^2_{t}+ \beta_0 \sigma_t^2\cq \eps_t\sim N(0,1)\ .
-$$
+Instead of using  actual returns we can consider the zeta transform $\zeta_t=(\Phi^-\circ \P)(r_t-\mu)$
+with 
 \begin{equation}\label{garch}
-z_t=  \sigma_t\eps_t\cq (\sigma^2_{t+1}-1) = \alpha (\sigma^2_{t}-1) + \beta(z_t^2-1)\cq \eps_t\sim N(0,1)\ .
+\zeta_t=  \sigma_t\eps_t\cq (\sigma^2_{t+1}-1) = \alpha (\sigma^2_{t}-1) + \beta(\zeta_t^2-1)\cq \eps_t\sim N(0,1)\ .
 \end{equation}
+The second equation can be written as
+$$
+\sigma^2_{t+1} = (1-\alpha-\beta) +  \alpha \sigma^2_{t} + \beta \zeta_t^2\ .
+$$
+
+Given the fit, \eref{garch} is simulated forward from $t=n$ to yield $\zeta_{n+1},\zeta_{n+2},\ldots$ and in turn
+$$
+\hat r_{t}=\mu+(\P^-\circ \Phi)(\zeta_{t})\cq t=n+1,n+2,\ldots\ .
+$$
+The inverse $\P^-$ is  with respect to the empirical distribution, or some modified version of the same  (a stressed version?)
+
+Now take the $u_{mt} = \Phi(\zeta_t)$ and the copulas $C(u_{it},u_{mt})$.   The copula can be the empirical copula or some smoothed version of the same.   Then 
+$$
+\hat r_{it} = \mu_i + \P^-(u_{it})\cq u_{it}\sim C(u_{it}|u_{mt}) \cq t=n+1,n+2,\ldots\ .
+$$
+Again, $\P^-$ is with respect to the past distribution of returns $r_{it}$ or some modified version of the same.  With the PG model the $\zeta_{it}$ are chosen given $\zeta_t$ and hence the relation becomes
+$$
+\hat r_{it} = \mu_i + (\P^-\circ\Phi)(\zeta_{it})\cq \zeta_{it}\sim \mathrm{PG}(\zeta_{it}|\zeta_{mt}) \cq t=n+1,n+2,\ldots\ .
+$$
+If returns are jointly normal this model reduces to the usual normal modelling.
+
+In terms of this setup:
+\bi
+\i Future market returns are generated in terms of an ARCH model stated in terms of the zeta transform
+\i Relationships (i.e. systemic risk) inherent in other returns are stated in terms of a PG copula
+\i Stressing is achieved in terms of stressing $\P_m$.
+\ei
+
+suggesting that in an unconstrained fit the coefficients should add to 1.
 $$
 r_{mt}=(F_m^-\circ\Phi)(\sigma_t\eps_t)
 $$

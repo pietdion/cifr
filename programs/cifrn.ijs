@@ -107,15 +107,29 @@ NB. pcs 'cba'
 
 NB. xxx=:1 ct 'cba'
 
-stop
+cte=:(%@] * <:)& 0.05
+phi=:cte
 
-try=: 3 : 0 
+Epi=: 3 : 0 
   'd w r'=."."1 y,"1 0 'dw '
-  'nui num'=:dcc r
-  'd w'=.{:d,.w
-  o_t=.(1+nui%100)*w%d
-  plot num ;E\nui+ln w%d
+  'nui num'=:dcc r,.asx      NB.
+  listar=.(ln %/{:d,.w)+logit k=:0.08 
+  pi=.k*(*>:&0)1-^nui-listar
+  'dit pit'=.({:d),E pi*phi P num
 )
+
+Epiall=: 3 : 0
+  'debti sriski'=.|:Epi"1 firms=.'cba','anz','nab','wbc',:'mqg'
+  debt=:+/debti=.debti%1e9
+  w=.debti%debt
+  srisk=.+/w*sriski
+  wrs <"1 firms
+  (debti,debt),(sriski,srisk),:(,+/)debti*sriski
+)
+  
+  
+
+Epiall''
 
 
 stop

@@ -81,11 +81,12 @@ dccold=:1&dcccore
 ct=: 4 : 0   NB. actual (x=0) or predicted (x~:0) capital shortfall for a single firm
   'd w r'=."."1 y,"1 0 'dw '
   if. x=0 do. d,w,:r return. end.
-  ind=.(year>2003)*.newmonth
-  nu=.(ind#i.#r) (dcc@:{.)"0 2 r,.asx        NB. Tx2xS predictive distributions 
-  lstar=.(-/ln ind#"1 d,:w)-logit k=.0.92     NB. log leverage  Tx1
-  ell=.lndw -"0 1 ({."2 nu)%100              NB. TxS
-  ({:"2 nu);E\"1 ell                         NB. 2xTxS
+  ind=:(year>:2003)*.newmonth
+  lstar=.(-/"1 ln ind#d,.w)+logit k=.0.08    NB. T
+  nu=.(ind#i.#r) (dcc@:{.)"0 2 r,.asx        NB. Tx2xS predictive distributions
+  'nui num'=.1 0 2|:nu%100                   NB. 2xTxS
+  put=.k*(*>&0)1-^nui-"1 0 lstar             NB. TxS
+  (ind#d);put,:"1 num                        NB. T;Tx2xS
 )
 
 dwk=:0&ct   NB. T x 3 matrix d,w,k     
@@ -108,29 +109,40 @@ NB. pcs 'cba'
 NB. xxx=:1 ct 'cba'
 
 cte=:(%@] * <:)& 0.05
-phi=:cte
+min12=:(12&*)@(^&11)@(1&-)
+phi=:min12
 
-Epi=: 3 : 0 
-  'd w r'=."."1 y,"1 0 'dw '
-  'nui num'=:dcc r,.asx      NB.
-  listar=.(ln %/{:d,.w)+logit k=:0.08 
-  pi=.k*(*>:&0)1-^nui-listar
-  'dit pit'=.({:d),E pi*phi P num
+sr=: 3 : 0    
+NB. 'd pn'=:|:(1&ct)"1 y             NB. (mxT);mxTx2xS  -- m=#y
+  dt=:+/dit=:d                       NB. T;mxT 
+  'pit numt'=:2 3 0 1|:pn            NB. 2;SxmxT
+  numt=:numt%100
+  sigit=:sd pit                      NB. mxT
+  Ex=:+/@:(* %"1 +/@:])&dit          NB.          (mxT) Ex mxT 
+  sigt=:sd pt=:Ex"2 pit              NB. T;T  
+  phium=:phi 2 0 1|:P"1[1 2 0|:numt  NB. SxmxT <- mxTxS <- SxmxT
+  psiit=:(E (phium-1)*pit)%sigit     NB. mxT
+  psit=:(Ex psiit)%sigt              NB. T
+  sigpsiit=:sigit*psiit              NB. mxT
+  yrmo=:yr+(mo-1)%12['yr mo da'=:|:ind#ymd
 )
+ 
+NB.  sr 'cba','anz','nab','wbc',:'mqg'       NB. m=#firms
 
-Epiall=: 3 : 0
-  'debti sriski'=.|:Epi"1 firms=.'cba','anz','nab','wbc',:'mqg'
-  debt=:+/debti=.debti%1e9
-  w=.debti%debt
-  srisk=.+/w*sriski
-  wrs <"1 firms
-  (debti,debt),(sriski,srisk),:(,+/)debti*sriski
-)
-  
-  
+phiu=: phi  P"1 num           NB. mxTxw
+Es=:E phi@P
 
-Epiall''
+test=: 3 : 0
+  sigit=.sd pit=.2 0 1 |:put          NB. (mxT); SxmxT
+  sigt=.sd pt=.Ex"2 pit               NB. T;SxT
+  psiit=.psi                          NB. mxT
+  phium=.2 0 1|:phi P"1 num           NB. SxmxT
+  psiit2=.(E (phium-1)*pit)%sigit     NB. mxT
+  psit=.(E ({."2 phium-1)*pt)%sigt    NB. SxT
+  (psit*sigt)-:Ex psiit*sigit
+)	
 
+xxx=:sr ''
 
 stop
 

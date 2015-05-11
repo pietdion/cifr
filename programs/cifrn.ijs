@@ -21,7 +21,7 @@ NB.  run  R
 NB.  Assume .First=function(){library(Rserve)}
 NB.  Rserve(args="--no-save")
    Ropen''
-   Rlib L:0  ;:'tseries rugarch rmgarch quantmod' 
+   Rlib 'rmgarch'   NB.  'quantmod' 
    c=.iread fdir,'c.j'
 )
 
@@ -111,38 +111,33 @@ NB. xxx=:1 ct 'cba'
 cte=:(%@] * <:)& 0.05
 min12=:(12&*)@(^&11)@(1&-)
 phi=:min12
+lo=:_15"0
+ln=: (lo`^.@.(>&0))"0                     	NB. log or zero
+
 
 sr=: 3 : 0    
-NB. 'd pn'=:|:(1&ct)"1 y             NB. (mxT);mxTx2xS  -- m=#y
-  dt=:+/dit=:d                       NB. T;mxT 
-  'pit numt'=:2 3 0 1|:pn            NB. 2;SxmxT
-  numt=:numt%100
-  sigit=:sd pit                      NB. mxT
-  Ex=:+/@:(* %"1 +/@:])&dit          NB.          (mxT) Ex mxT 
-  sigt=:sd pt=:Ex"2 pit              NB. T;T  
+  'dit pn'=:|:(1&ct)"1 y             NB. (mxT);mxTx2xS  -- m=#y
+  'pit numt'=:2 3 0 1|:pn            NB. 2xSxmxT
+  'muit sigit'=:(mean,:sd) pit       NB. (mxT);mxT
   phium=:phi 2 0 1|:P"1[1 2 0|:numt  NB. SxmxT <- mxTxS <- SxmxT
-  psiit=:(E (phium-1)*pit)%sigit     NB. mxT
-  psit=:(Ex psiit)%sigt              NB. T
-  sigpsiit=:sigit*psiit              NB. mxT
-  yrmo=:yr+(mo-1)%12['yr mo da'=:|:ind#ymd
+  sigphi=:mean^:2 sd phium           NB. 1
+  betait=:(E(phium-1)*pit)%sigphi    NB. mxT
+  Ex=:+/@:(* %"1 +/@:])&dit          NB.   (mxT) Ex mxT 
+  sigt=:sd pt=:Ex"2 pit              NB. T;SxT
+  betat=:Ex betait  
+  yrmo=:(yr-2000)+(mo-1)%12['yr mo da'=:|:ind#ymd
 )
- 
-NB.  sr 'cba','anz','nab','wbc',:'mqg'       NB. m=#firms
 
-phiu=: phi  P"1 num           NB. mxTxw
-Es=:E phi@P
 
-test=: 3 : 0
-  sigit=.sd pit=.2 0 1 |:put          NB. (mxT); SxmxT
-  sigt=.sd pt=.Ex"2 pit               NB. T;SxT
-  psiit=.psi                          NB. mxT
-  phium=.2 0 1|:phi P"1 num           NB. SxmxT
-  psiit2=.(E (phium-1)*pit)%sigit     NB. mxT
-  psit=.(E ({."2 phium-1)*pt)%sigt    NB. SxT
-  (psit*sigt)-:Ex psiit*sigit
-)	
+xxx=:sr 'cba','anz','nab','wbc','mqg','boq',:'ben'       NB. m=#firms
+
+stop
 
 xxx=:sr ''
+
+stop
+
+dpl=:('xticpos 03 04 05 06 07 08 09 10 11 12 13 14 15'&plot)@(yrmo&;)@(1000&*)
 
 stop
 

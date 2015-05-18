@@ -9,7 +9,7 @@
 
 
 
-\newcommand{\logit}{\mathrm{logit}}
+\newcommand{\logit}{\mathrm{lgt}}
 \newcommand{\I}{\mathrm{I}}
 \newcommand{\E}{\mathrm{E}}
 \newcommand{\p}{\mathrm{P}}
@@ -45,6 +45,8 @@
 \renewcommand{\v}{\ensuremath{\mathrm{v}_q}}
 \newcommand{\m}{\ensuremath{\mathrm{m}}}
 \newcommand{\tvar}{\ensuremath{\mathrm{TVaR}}}
+\renewcommand{\c}{\ensuremath{\mathrm{CoVaR_q}}}
+\renewcommand{\v}{\ensuremath{\mathrm{VaR}_q}}
 
 
 
@@ -88,7 +90,7 @@
 {Systemic risk}
 
 \begin{abstract}
-This article refines and further develops the SRISK methodology recently proposed in the literature.
+This article refines, builds on and extends  SRISK methodology recently proposed in the literature.  The refinement is to define SRISK in terms of a put on the Basel shortfall.   The definition is built on by defining the systemic beta of a firm in terms of the departure of a stressed expectation from the normal expectation the put.  By stressed expectation is meant an expectation that averages conditional expectations over outcomes defined by a stressor variable combined with  a stressor function.  The stressor variable and function are chosen by the practitioner and include functions of a  market wide variable. Since stressed expectations are linear, a system systemic beta is naturally defined as linear in the firm specific systemic beta's.    The methodology  generalises automatically to situations where systemic stress arises from the interaction of multiple system wide variables.    Application is made to Australian financial data. 
 \end{abstract}
 
 \maketitle
@@ -135,11 +137,11 @@ As the log leverage $\ell_{it}$  increases to 2.44 the firm approaches the Basel
 
 \section{Future capital shortfall}
 
-Financial institutions and regulators are concerned with future Basel compliance and having an understanding of  the likelihood of a  future Basel breach.   Future compliance depends on the future return on equity.   Consider  firm $i$ at time  $t+h$ where $h>0$.  Then
+Financial institutions and regulators are concerned with future Basel compliance and understanding  the likelihood of a  future Basel breach.   Future compliance depends on the future return on equity.   Consider  firm $i$ at time  $t+h$ where $h>0$.  Then
 $$
 \ell_{i,t+h} = \ln \frac{d_{i,t+h}}{w_{i,t+h}} = \ell_{it} -\nu_{it}\cq \nu_{it}\equiv \ln\frac{w_{i,t+h}}{w_{it}}  \ ,
 $$
-where it is assumed $d_{i,t+h}=d_{it}$.  Hence $\nu_{it}$ is the return on equity over $(t,t+h)$.  The future return is unknown at time $t$ but may be reasonably well understood in terms of its distribution.
+where it is assumed $d_{i,t+h}=d_{it}$.  Hence $\nu_{it}$ is the return on equity over $(t,t+h)$.  The future return is unknown at time $t$ but may be its distribution may be  well understood.
 
 In terms of the Basel leverage $\ell_{it}^*$ at time $t$, the  Basel II shortfall  at time $t+h$ is,
 \be{bs}
@@ -158,18 +160,18 @@ A breach is  unlikely if $\ell^*_{it}$ is low i.e. either the log--leverage is l
 
 \section{Systemic risk -- SRISK}
 
-\cite{brownlees2015} defines the systemic risk (SRISK) of a financial system defined by a group of firms  at time $t$ as
+\cite{brownlees2015} define the systemic risk (SRISK) of a group of firms  at time $t$ as
 \be{esrisk}
-k\sum_i d_{it}|1-\Es(\e^{\nu^*_{it}})|^+  \cq |x|^+\equiv \max(0,x) \ ,
+k\sum_i d_{it}|1-\Es(\e^{\nu^*_{it}})|^+  \ ,\ \ |x|^+\equiv \max(0,x)\ ,\ \  \nu_{it}^*\equiv \nu_{it}-\ln\frac{d_{it}}{w_{it}}-\logit\ k\ ,
 \ee
-where $k$ is the Basel constant, $d_{it}$ is the debt of firm $i$ at time $t$ and $\nu_t$  and $\Es$ denotes  expectation conditional on a stress event:  in their case a severe general market downturn.
+where $k$ is the Basel constant, $d_{it}$  and $\nu^*_{it}$ are, respectively,  the debt and the Basel and log--leverage adjusted future return  of firm $i$ at time $t$,  and $\Es$ denotes  expectation conditional on a stress event $\phi$:  in their case a severe general market downturn.
 The contribution of firm $i$ is thus a put on the conditional expected value of the Basel II shortfall of firm $i$ at $t+h$.
 
- The proportionate contribution of firm $i$  to \eref{esrisk} is called the systemic risk of firm $i$
+ The proportionate contribution of firm $i$  to \eref{esrisk} is called the systemic risk of firm $i$:
  \be{sriskperc}
  \mathrm{SRISK}_i\equiv\frac{|1-\Es(\e^{\nu^*_{it}})|^+}{\Ex\{|1-\Es(\e^{\nu^*_{it}})|^+\}}\ , 
  \ee
-where $\Ex$ denotes  debt weighted averaging.     A large proportion indicates a systemically important firm.  The  expression \eref{sriskperc} depends on $k$ only through its logit.  The values of the ``puts" $|1-\Es(\e^{\nu^*_{it}})|^+$  in \eref{sriskperc} are known at time $t$:  there is no uncertainty except for possible estimation uncertainty in the expected value.
+where $\Ex$ denotes  debt weighted averaging.     A large $\mathrm{SRISK}_i$ indicates a systemically important firm.  The  expression \eref{sriskperc} depends on $k$ only through its logit.  The values of the ``puts" $|1-\Es(\e^{\nu^*_{it}})|^+$  in \eref{sriskperc} are known at time $t$:  there is no uncertainty except for possible estimation uncertainty in the stressed expected value.
 
  If the stressed distribution of $\nu^*_{it} $ is concentrated on the negative axis then  $\e^{\nu^*_{it}}<0$ and
 $$
@@ -187,7 +189,7 @@ and  \eref{cond} is equivalent to
 $$
 \mu +h\frac{\sigma^2}{2}\le \frac{\ell_{it}^*}{h} \ ,
 $$
-indicating a Basel breach is unlikely unless $\ell_{it}$ is near 2.44, the Basel limit.
+indicating a Basel breach is unlikely if $\ell^*_{it}$ is very negative equivalent to  $\ell_{it}$ well below 2.44, the Basel limit.
 
 
 The system SRISK is zero if all firm the SRISK contributions are zero that is if \eref{cond} holds for every $i$.  This would be usual in the Australian case.
@@ -220,7 +222,9 @@ example \citet{merton1977analytic}, \citet{doherty1986price}, \citet{cummins1988
 
 The total Basel put value and hence Basel risk for firm  $i$ is   $d_{it}\E(p_{it})$.   This is the cost of insuring firm $i$ does not breach the Basel standard.  In practice it may be appropriate to discount $p_{it}$ in \eref{put} by the interest rate over the period $(t,t+h)$ and value the put with risk neutral rather than normal expectation.       
 
-The put $p_{it}$ is tradable since, given $k$, it relies only on the present leverage and the future return $\nu_{it}$ on equity $w_{it}$.  Market participants can value the put in  the same way as any other put and use the contract to diversify risk.  Firms can buy puts in the market to hedge Basel default risk.    Regulators will value puts using a stressed, rather than risk neutral, expectation and regulators can monitor stressed put values for systemic risk. Regulators can charge firms their put value if there are implicit government bailout guarantees.
+The put $p_{it}$ is tradable since, given $k$, it relies only on the present leverage and the future return $\nu_{it}$ on equity $w_{it}$.  Market participants can value the put in  the same way as any other put and use the contract to diversify risk.  Firms can buy puts in the market to hedge Basel default risk.    
+
+However regulators will value the puts $p_{it}$ using a stressed, rather than risk neutral, expectation.   Stressed expectations correspond closely to conditional expectation given a systemically important event or events.    Regulators are concerned with the possibility of Basel breaches if such events occur and hence have an overbearing interest in monitoring stressed expectations.   In the extreme regulators can charge firms all or a  proportion of their stressed put values if there are implicit government bailout guarantees.
 
 In terms of the put values $\E(p_{it})$, the  system Basel risk is defined as the debt weighted average of the individual firm's put values:
 \be{nsrisk}
@@ -251,56 +255,62 @@ $$
 $$
 The covariance is zero whenever  $p_{it}$ is independent of $\phi$ which occurs if $\phi=1$.
 
-  To a Bayesian the stressed expectation \eref{formula}  is the mean in  a posterior density of $p_{it}$:
+  To a Bayesian the stressed expectation \eref{formula}  is the mean of $p_{it}$  in  the posterior density
 \be{post}
 \int \phi f(p_{it}|\phi) f(\phi)\de \phi=\int \phi f(p_{it},\phi)\de \phi= \E(\phi|p_{it})f(p_{it})\ .
 \ee
-Any outcome $p_{it}$ such that $\E(\phi|p_{it})$ is large  is amplified and vice versa.  Note \eref{post} is a density since $\phi\ge 0$ and $\E(\phi)=1$.  Further note
+Note \eref{post} is a density since $\phi\ge 0$ and $\E(\phi)=1$.   Any outcome $p_{it}$ such that $\E(\phi|p_{it})$ is large  is amplified and vice versa.   Further
 $$
-\E_s(p_{it}) = \E(p_{it}\phi) = \E\left\{x \frac{\phi f(p_{it})}{f(p_{it})}\right\}\ ,
+\E_s(p_{it})  = \E\left\{p_{it} \frac{\phi f(p_{it})}{f(p_{it})}\right\}\ ,
 $$
-that is the density  $f(p_{it})$ of $p_{it}$  is replaced by  the density $\phi f(p_{it})$.  Hence more importance is given to those outcomes deemed more important by $\phi$. 
+that is the density  $f(p_{it})$ of $p_{it}$  is replaced by  the density $\phi f(p_{it})$.  Hence more importance is given to those outcomes given more weight by $\phi$. 
 
 
 \section{Systemic beta}
-Writing  $\sigma_{\phi}$ as the standard deviation of $\phi$,  define the stress in firm $i$ with respect to stress $\phi$ as
+Writing  $\sigma_{\phi}$ as the standard deviation of $\phi$,  define the systemic beta of firm $i$ with respect to stress $\phi$ as
 \be{zscore}
 \beta_{it}\equiv \frac{\Es(p_{it})- \E(p_{it})}{\sigma_\phi}= \frac{\E\{(\phi-1)p_{it}\}}{\sigma_\phi}= \frac{ \cov\{\E(p_{it}|\phi),\phi\}}{\sigma_\phi} \cq
 \ee
 where  $\sigma_\phi$ is the standard deviation of $\phi$.  Thus
 \be{zscore2}
-\Es(p_{it}) = \E(p_{it}) + \sigma_\phi\beta_{it}\cq \E(p_{it}|\phi) \approx \E(p_{it}) + \beta_{it}\frac{\phi-1}{\sigma_\phi}\ .
+\Es(p_{it}) = \E(p_{it}) + \beta_{it}\sigma_\phi\cq \E(p_{it}|\phi) \approx \E(p_{it}) + \beta_{it}\frac{\phi-1}{\sigma_\phi}\ .
 \ee
-The second, approximate, relationship is suggested using a regression interpretation.  
+The second, approximate, relationship is suggested from  a regression interpretation of $\cov(p_{it},\phi)/\sigma^2_\phi$ as the regression coefficient of $p_{it}$ on $\phi$.
 
-The formulas in \eref{zscore2} suggests two ways of  thinking about the  stress effect $\beta_{it}$.   First, the left hand side equation shows  it is the change in the expected Basel put price if  $\sigma_\phi$ units of stress are applied, and where $\phi$ is used to model the stress.  The quantity $(\phi-1)/\sigma_\phi$ is thought of as a ``stress factor."   The stress factor has mean 0 and standard deviation 1 and serves to scale  $p_{it}$ to yield a stress effect.  The distribution of $\phi$ determines the distribution of the stress factor. If the stress factor is normally distributed then a stress effect more than doubling of the put value  occurs less than about $2.5\%$ of the time.    
+The formulas in \eref{zscore2} suggests two ways of  thinking about the  systemic beta's  $\beta_{it}$.   First, the left hand side equation shows systemic stress $\beta_{it}$ serves to shift the mean of put prices  by, on average, $\sigma_\phi$.   The shift $\beta_{it}\sigma_\phi$ is the market price of stress embedded in firm $i$ at time $t$.   Firms with large shifts embody stress risky firms.
 
-The second interpretation   is suggested by the  right hand side relation in \eref{zscore2}.   Thus  $\beta_{it}$ is thought of a usual finance type ``beta" with respect to the given $\phi$.   Stress is measured in standardised units.  Units of stress take on different meaning depending on  context as discussed below.  
+The second interpretation is based on  the right hand side approximation in \eref{zscore2} showing   the change in the  expected Basel put price if  $\sigma_\phi$ units of stress $\phi$ are applied.  The quantity $(\phi-1)/\sigma_\phi$ is thought of as a ``stress factor."   The stress factor has mean 0 and standard deviation 1 and is scaled by $\beta_{it}$ to yield the actual stress effect on  $p_{it}$.  Thus  $\beta_{it}$ is thought of a usual finance type ``beta" with respect to the given $\phi$.   Stress is measured in standardised units.  Units of stress take on different meaning depending on  $\phi$ as discussed below. The distribution of $\phi$ determines the distribution of the stress factor. If the stress factor is normally distributed then a stress effect more than doubling of the put value  occurs less than about $2.5\%$ of the time. 
 
-Note $\beta_{it}$ is stated per unit of debt.   The actual monetary stress of a firm is 
+Note the systemic beta's are stated in terms of additions to the normal put price $\E(p_{it}$. Thus in an increasingly dire financial situation $\E(p_{it})$ will increase.   However stress $\beta_{it}$ measures the  change in current put values  under  further $\phi$--stress.  This varies from  \cite{brownlees2015} where $\mathrm{SRISK}_i$ does not distinguish between the current, possibly high, put prices $\E(p_{it})$ and the further increment due to potential stress.   Thus in an increasingly dire financial situation put prices are liable to increase on account of decreasing expected returns and increasing volatility.   However our definition of systemic stress using systemic beta's measures the further effect on account of potential extra stress imposed onto the system over and above the already existing stress.   The systemic beta's capture   ``marginal" effects.        
+
+The  monetary stress of a firm is 
 $
 d_{it}\beta_{it}
 $
-and represents the change in the value of the Basel put  if stress, as captured with $\phi$, is applied. 
+and represents the change in the monetary value of the Basel put  if stress, as captured with $\phi$, is applied. 
 
 
 
 
 
-\section{Total systemic beta}
+\section{Systemic beta for a group of firms}
 
-A measure of the total effect is to consider effect on  the debt weighted put
-\be{ssrisk}
-p_{t}\equiv \Ex(p_{it}) \cq \beta_t\equiv\frac{\Es(p_{t}) -\E(p_{t})}{\sigma_\phi} = \frac{\cov[\E\{\Ex(p_{it})|\phi\},\phi]}{\sigma_\phi}=\Ex(\beta_{it}) .
+A measure of the total systemic stress is to consider the debt weighted put 
+\be{sysput}
+p_t\equiv\Ex(p_{it})
 \ee
-The ``system" put $p_t$ pays out zero if all firms meet the Basel requirement with payments increasing with the number of Basel breaches, the sizes of the breaches, and the relative debt sizes of the breaching firms.  The system systemic risk $\beta_t$ measures the response in the system as a whole to $\sigma_\phi$ units of stress.
+This ``system" put \eref{sysput} pays out zero if all firms meet the Basel requirement with payments increasing with the number of Basel breaches, the sizes of the breaches, and the relative debt sizes of the breaching firms.  
 
-The monetary Basel system stress at time $t$ is the sum of monetary firm stresses
+In terms of \eref{sysput}, the  systemic beta $\beta_t$ for the system is defined as
+\be{ssrisk}
+ \beta_t\equiv\frac{\Es(p_{t}) -\E(p_{t})}{\sigma_\phi} = \frac{\cov[\E\{\Ex(p_{it})|\phi\},\phi]}{\sigma_\phi}=\Ex(\beta_{it}) .
+\ee
+Thus the system systemic beta is the debt weighted average of firm systemic beta's.  The equalities in \eref{ssrisk} follow from the fact that  $\E$ and $\Es$ and $\Ex$ are all linear.
+
+The monetary value  system stress at time $t$ is the sum of monetary firm stresses
 $$
 d_t\beta_t = d_t\Ex(\beta_{it}) = \sum_i d_{it}\beta_{it}\ . 
 $$
-
-   Note the Basel stress is stated in terms of unit increases in stress $\phi$.   Further it measures the impact of stress.  Thus in an increasingly dire financial situation it is expected that put prices $p_{it}$ will increase.   However stress $\beta_{it}$ measures the  change in current put values  under  further $\phi$--stress.   
 
 
 \section{Determining systemic beta's via simulation}
@@ -317,6 +327,13 @@ where $S$ is the simulation effort.  The approximation is increasingly accurate 
 
 \section{Systemic beta's based on  market return}
 The setup is illustrated with  examples generalising and fine--tuning the approach of Engle.
+
+\subsection{Market return}
+
+Suppose $\phi=\e^{-\lambda\nu_{mt}}\approx 1-\lambda\nu_{mt}$ where $\lambda$ is a parameter.   Then  if $\nu_{mt}$ is normal with mean $h\mu_{mt}$ and variance $ h\sigma^2_{mt}$ then
+$$
+\beta_{it} = \frac{\cov(p_{it},\phi)}{\sigma_\phi}  \approx \frac{-\cov(p_{it},\nu_{mt})}{\sqrt{\e^{h(2\mu_{mt}+\sigma_{mt}^2)}\left(\e^{h\sigma_{mt}^2}-1\right)}}\ ,
+$$
 \subsection{Market return below a percentile threshold} 
 
 Suppose the stress event is a market return in the bottom $\alpha$--tail of the  market return distribution.   Then  $\phi(u)=1/\alpha$ for $u< \alpha$ and 0  otherwise and
@@ -354,7 +371,7 @@ The above two situations can be combined.   Suppose  $\phi(u)=c(0.05-u)^{19}$ fo
 $$
 \E(p_{it}) \approx \frac{1}{S/c}\sum_{u^s_{mt}<1/20}  \left(u^s_{mt}-\frac{1}{20}\right)^{20}p_{it}^s\ .
 $$
- Similar to the first example, the stressed sample picks up the bottom 5\% of market returns. The bottom 5\% of market returns is further stressed by  progressively downweighing returns as the percentile approaches 1/20.   Enormous simulation effort $S$ is required for a reasonable approximation since $S/c$ is the effective simulation size.
+ Similar to the first example, the stressed sample picks up the bottom 5\% of market returns. The bottom 5\% of market returns is further stressed by  progressively downweighing returns as the percentile approaches 1/20.   Large simulation effort $S$ is required for a reasonable approximation since $S/c$ is the effective simulation size and $c$ is small.
  
  \subsection{Stressors as  weighted linear combinations of tail events}
 
@@ -373,7 +390,7 @@ $$
 Stress can be based on a vector of variables $x$ with distribution $F(x)=u$ and marginal densities $f(x_j)$.    Suppose $c(u)$ is the copula density of $x$ implying the density of $x$ is $c(u)\prod_jf(x_j)$.    If  $\Phi(u)$ is another copula with density $\phi(u)$ 
 consider
 \be{copula}
-\Es(p_{it}) \equiv \int \E(p_{it}|x)\phi(u)c(u)\prod_j\{f(x_j)\}  \de x   \ ,
+\Es(p_{it}) \equiv \int \E(p_{it}|x)\phi(u)c(u)\prod_j\{f(x_j)\}  \de x   \ .
 \ee
 If $\phi(u)=1$  then $\Es(p_{it})=\E(p_{it})$, the ordinary expectation.   The density $\phi(u)$ magnifies potentially stressful situation such as where all component of $x$ are highly  tail dependent.     In the extreme case  $\Phi(u)=\min_j(u_j)$ making the  variables in $x$  comonotonic. 
 
@@ -451,27 +468,6 @@ $$
 k - \frac{1}{S}\sum_s\phi^s\Ex_a(\e^{\nu_{ijt}^s})\ ,
 $$
 is the proportionate increase capital shortfall on account of risk weighting and as a proportion of total assets.
-
-
- 
-
-
-\renewcommand{\c}{\ensuremath{\mathrm{CoVaR_q}}}
-\renewcommand{\v}{\ensuremath{\mathrm{VaR}_q}}
-
-\section{Contagion and systematic risk measured with \c}
-
-
- \cite{adrian2011covar}  propose a measure, called $\covar_q$, for measuring contagion, exposure and systemic risk.   Broadly speaking \c \ is the change in \v\   in one variable given a \v\  breach in another variable.  Variables can be capital shortfall, market return or other.
- 
- 
- It  suffers from a number of drawbacks:
-\bi
-\i Couched in terms of $\var_q$ containing the scale of the original measurements.   It is worthwhile to have measures and techniques robust to scale.
-\i  Conditioning  on $\var_{0.5}$ is undesirable and relatively intractable.  In our proposal we reference stress with respect  to the unconditional $\var_q$.   This permits a more transparent analysis and estimation. 
-\i  Our proposed approach  separates out scale effects and interdependence effects and aims to  relates these separately to external variables including shocks and drivers of systemic risk.   Thus $\var_q$ movements due to scale are disentangled from movements due to codependence with separate driver responses.
-\ei
-
 
 
 

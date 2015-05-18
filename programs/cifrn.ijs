@@ -125,7 +125,7 @@ figBloglev=: 3 : 0
    pd 'new'
    pd opt
    pd yrmo;_4{.lstarit
-   pd 'pdf 320 150 ',fdir,'Bloglev.pdf'
+   pd 'pdf 350 150 ',fdir,'Bloglev.pdf'
    pd 'show'
 )
   

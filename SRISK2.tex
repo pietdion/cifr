@@ -87,134 +87,110 @@
 % Second field is the short title of the paper
 {Systemic risk}
 
+\begin{abstract}
+This article refines and further develops the SRISK methodology recently proposed in the literature.
+\end{abstract}
+
 \maketitle
 
+\section{Literature review}
 
-
-\section{Simplified notation}
-
-Suppose the system is currently at time $t$ and the capital shortfall for firm $i$ at time $t+h$ is
-$$
-c_i \equiv  kd_i -(1-k)w_i(1+r_i)
-$$
-where $k$ is the prudential requirement, $d_i$ and $w_i$ are debt and equity at time $t$, and $r_i$ is the return on equity from time $t$ to $t+h$. The only random quantity in the above definition is $r_i$. The total capital shortfall in the system is
-$$
-c_m = \sum_i c_i = k\sum_i d_i -(1-k)\sum_i w_i(1+r_i) = k d_m - (1-k)w_m(1+r_m) 
-$$
-where
-$$
-d_m \equiv \sum_i d_i \cq w_i \equiv \sum_i w_i \cq r_m \equiv \frac{\sum_i w_ir_i}{\sum_i w_i}
-$$
-are the overall debt and equity for the market at time $t$ and the market return on equity from time $t$ to $t+h$. Note it is assumed that capital surpluses in certain firms are used to offset shortfalls in other firms, that is a diversification benefit is allowed in the system.
-
-The systemic risk contribution by firm $i$ at time $t+h$ is the expected shortfall in systemic event $r_m<a$
-$$
-\mathrm{SRISK}_i = \E(c_i|r_m<a) = kd_i -(1-k)w_i\{1+\E(r_i|r_m<a)\} \;,
-$$
-and is computed from the joint probability distribution of $(r_i,r_m)$. Replace the systemic event with one having a probabilistic interpretation: $u_m < a$ where $0<a<1$ and $u_m$ is the percentile rank of $r_m$. The refined systemic event $u < a$ captures the worst $a$ of possible market returns and has probability $a$. In addition the threshold $a$ is simply the percentile rank of the original threshold. Hence the revised systemic risk of firm $i$ is
-$$
-\mathrm{SRISK}_i \equiv \E(c_i|u_m<a) = kd_i -(1-k)w_i\{1+\E(r_i|u_m<a)\} \;.
-$$
-In addition the aggregate systemic risk is
-$$
-\mathrm{SRISK}_m \equiv \sum_i \mathrm{SRISK}_i = \sum_i \E(c_i|u_m<a) = \E(c_m|u_m<a)
-$$
-$$
-=kd_m -(1-k)w_m\{1+\E(r_m|u_m<a)\} \;.
-$$
-Note the original definition of aggregate systemic risk is the sum of positive systemic risks of individual firms
-$$
-\sum_i \left(\mathrm{SRISK}_i\right)_+
-$$
-and does not result in the above simplification. The original definition assumes no diversification: capital surpluses cannot cover shortfalls. The systemic risk of firm $i$ is positive, indicating capital shortfall, if and only if
-$$
-\E(r_i|u_m<a) < \frac{kd_i}{(1-k)w_i} - 1
-$$
+The starting point for the proposed research is the recent literature and the CIFR targeted areas and APRA aims and functions.
+This recent literature includes the following
+\cite{adrian2011covar},
+\cite{acharya2012capital},
+\cite{acharya2012measuring}
+and \cite{brownlees2010volatility}.   The proposed research aims to extend and apply these techniques particularly in relation to the entities regulated by APRA.   Thus our  broad aim is to develop, implement and bring to bear recent developments in stress testing  on the aims of APRA and the CIFR targeted research areas detailed above.   
 
 
 
 
+\section{Capital shortfall and leverage}
 
-
-
-\section{Systemic risk}
-
-If $d_{it}$ and $w_{it}$ are the debt and equity of a firm $i$ at time $t$ then the capital shortfall at time $t$ is 
+If $d_{it}$ and $w_{it}$ are the debt and equity of a firm $i$ at time $t$ and $k$ is the capital requirement,  then the capital shortfall at time $t$ is 
 \be{shortfall}
-kd_{it}  - (1-k) w_{it} = kd_{it}\left(1-\e^{-\ell^*_{it}}\right)\ ,
+k(d_{it}+w_{it}) - w_{it} = kd_{it}  - (1-k) w_{it} = kd_{it}\left(1-\e^{-\ell^*_{it}}\right)\ ,
 \ee
 where 
 $$
-\ell^*_{it} \equiv \ell_{it} + \ln \frac{k}{1-k}\cq \ell_{it} \equiv \ln\frac{d_{it}}{w_{it}}\ .
+\ell_{it} \equiv \ln\frac{d_{it}}{w_{it}}\cq \ell_{it}^* \equiv \ell_{it} + \logit\ k \cq \logit\ k\equiv \ln \frac{k}{1-k} \ .
 $$
 The quantity $\ell^*_{it}$ is called Basel adjusted the log--leverage and $\ell^*_{it}>0$ implies capital shortfall \eref{shortfall} is positive. 
 
 
-Basel II assumes $k=0.08$ implying $\ell_{it}^*=\ell_{it}-2.44$  and there is  positive  ``Basel shortfall"  if
-$\ell_{it} > 2.44$.
+Basel II assumes $k=0.08$ implying $\logit(k)=-2.44$,  $\ell_{it}^*=\ell_{it}-2.44$  and there is  positive  ``Basel shortfall"  if
+$\ell^*_{it}>0$ or $\ell_{it} > 2.44$.
 As the log leverage $\ell_{it}$  increases to 2.44 the firm approaches the Basel II threshold. 
 
-\subsection{Future returns}
+\fref{Bloglev} displays Basel log--leverages for the four major and four minor Australian banks listed in \tref{banks} on the first trading day of each month from January 2003  through to December 2014.  Note most banks are Basel compliant up to about 2008.
 
-Consider  firm $i$ at time  $t+h$ where $h>0$.  Then
+\begin{figure}[htbp]
+\begin{center}
+\label{Bloglev}
+\includegraphics{Bloglev.pdf}
+\caption{Basel log--leverages for four major (left panel) and four minor (right panel) Australian banks from 2003 through to end of 2014.  Note all banks contravene the Basel II threshold (corresponding to Basel log-leverage of 0) on or around the early part of 2009.}
+\end{center}
+\end{figure}
+
+
+\section{Future capital shortfall}
+
+Financial institutions and regulators are concerned with future Basel compliance and having an understanding of  the likelihood of a  future Basel breach.   Future compliance depends on the future return on equity.   Consider  firm $i$ at time  $t+h$ where $h>0$.  Then
 $$
-\ell_{i,t+h} = \ln \frac{d_{i,t+h}}{w_{i,t+h}} = \ell_{it} -\nu_{t}\cq \nu_{it}\equiv \ln\frac{w_{i,t+h}}{w_{it}}  \ ,
+\ell_{i,t+h} = \ln \frac{d_{i,t+h}}{w_{i,t+h}} = \ell_{it} -\nu_{it}\cq \nu_{it}\equiv \ln\frac{w_{i,t+h}}{w_{it}}  \ ,
 $$
-where it is assumed $d_{i,t+h}=d_{it}$.  Hence $\nu_{it}$ is the return on equity over $(t,t+h)$. 
+where it is assumed $d_{i,t+h}=d_{it}$.  Hence $\nu_{it}$ is the return on equity over $(t,t+h)$.  The future return is unknown at time $t$ but may be reasonably well understood in terms of its distribution.
+
 In terms of the Basel leverage $\ell_{it}^*$ at time $t$, the  Basel II shortfall  at time $t+h$ is,
 \be{bs}
-d_{it}k(1-\e^{\nu^*_{it}})\cq \nu_{it}^*\equiv \nu_{it}-\ell^*_{it}=\nu_{it}-\ln\frac{d_{it}}{w_{it}}-\ln\frac{k}{1+k}\ . 
+d_{it}k(1-\e^{\nu^*_{it}})\cq \nu_{it}^*\equiv \nu_{it}-\ell^*_{it}=\nu_{it}-\ln\frac{d_{it}}{w_{it}}-\logit\ k\ . 
 \ee 
-The Basel II limit is reached at $t+h$ if $\nu_{it}=\ell_{it}^*$ and  breached  if
+The Basel II limit is reached at $t+h$ if $\nu_{it}=\ell_{it}^*$ ($\nu_{it}^*=0$) and  breached  if
 $
 \nu_{it}< \ell_{it}^*
-$.
-A breach is  unlikely if $\ell^*_{it}$ is low.
-\newcommand{\Es}{\tilde\E}
+$ ($\nu_{it}^*<0$).
+A breach is  unlikely if $\ell^*_{it}$ is low i.e. either the log--leverage is low, or the Basel constant $k$ is low.
+\newcommand{\Es}{\E_\phi}
 
 
 
 
 
-\subsection{Engle systemic risk}
+\section{Systemic risk -- SRISK}
 
-\cite{brownlees2015} defines the systemic risk (SRISK) of a firm $i$ as the expected Basel II shortfall at $t+h$,
+\cite{brownlees2015} defines the systemic risk (SRISK) of a financial system defined by a group of firms  at time $t$ as
 \be{esrisk}
- d_{it}\Es\{k(1-\e^{\nu^*_{it}})\} = d_{it}k\{1-\Es(\e^{\nu^*_{it}})\} \ ,
+k\sum_i d_{it}|1-\Es(\e^{\nu^*_{it}})|^+  \cq |x|^+\equiv \max(0,x) \ ,
 \ee
-where the expectation $\Es$ is a ``stressed" expectation i.e. an expectation conditional on a stress in the system such as a major market downturn.
+where $k$ is the Basel constant, $d_{it}$ is the debt of firm $i$ at time $t$ and $\nu_t$  and $\Es$ denotes  expectation conditional on a stress event:  in their case a severe general market downturn.
+The contribution of firm $i$ is thus a put on the conditional expected value of the Basel II shortfall of firm $i$ at $t+h$.
 
-The systemic risk of firm $i$ and the system systemic risk are defined as
-\be{essrisk}
-d_{it}k\{1-\Es(\e^{\nu^*_{it}})\} \cq  k\sum_i d_{it}|1-\Es(\e^{\nu^*_{it}})|^+\cq |x|^+\equiv \max(0,x) \ ,
-\ee
-respectively.  Finally the contribution of firm $i$ to total systemic risk is defined as the positive expected capital shortfall relative to the same when aggregated across all firms:
+ The proportionate contribution of firm $i$  to \eref{esrisk} is called the systemic risk of firm $i$
+ \be{sriskperc}
+ \mathrm{SRISK}_i\equiv\frac{|1-\Es(\e^{\nu^*_{it}})|^+}{\Ex\{|1-\Es(\e^{\nu^*_{it}})|^+\}}\ , 
+ \ee
+where $\Ex$ denotes  debt weighted averaging.     A large proportion indicates a systemically important firm.  The  expression \eref{sriskperc} depends on $k$ only through its logit.  The values of the ``puts" $|1-\Es(\e^{\nu^*_{it}})|^+$  in \eref{sriskperc} are known at time $t$:  there is no uncertainty except for possible estimation uncertainty in the expected value.
+
+ If the stressed distribution of $\nu^*_{it} $ is concentrated on the negative axis then  $\e^{\nu^*_{it}}<0$ and
 $$
-\frac{d_{it}|1-\Es(\e^{\nu^*_{it}})|^+}{\sum_i d_{it}|1-\Es(\e^{\nu^*_{it}})|^+} = \frac{|1-\Es(\e^{\nu^*_{it}})|^+}{\Ex\{|1-\Es(\e^{\nu^*_{it}})|^+\}}\ , 
+|1-\Es(\e^{\nu^*_{it}})|^+ =\Es(|1-\e^{\nu^*_{it}}|^+)\ .
 $$
-where $\Ex$ denotes a debt--weighted average.  A large proportion indicates a systemically important firm. 
-
-
-The following comments appear relevant:
-\begin{enumerate}
-\item The SRISK contribution of a firm is zero whenever
+If, under stress, the probability of $\nu^*_{it}>0$ is positive  then the last relation only holds approximately.   The SRISK contribution of a firm is zero whenever
 \be{cond}
-\Es(\e^{\nu_{it}})\le\e^{\ell^*_{it}}\ .
+\Es(\e^{\nu^*_{it}})\equiv \e^{-\ell_{it}^*}\Es(\e^{\nu_{it}})\le 1\cq \ln \Es(\e^{\nu_{it}})\le\ell^*_{it}\equiv\ln\frac{d_{it}}{w_{it}}+\logit(k)\ .
 \ee
-This inequality generally holds even if the expectation is severely stressed. 
-\item  If $\nu_{it}$ is normal then 
+This inequality often holds even if the expectation is severely stressed.  In particular if the stressed distribution of $\nu_{it}$ is normal with mean $\mu$ and variance $\sigma^2$ then
 $$
-\Es(\e^{\nu_{it}}) = \e^{h\mu_{it} +h^2\sigma^2_{it}/2}
+\ln \Es(\e^{\nu_{it}}) = h\mu +h^2\frac{\sigma^2}{2}\ ,
 $$
-where the mean and standard deviation are the stressed versions.  In terms of this notation \eref{cond}
-is equivalent to
+and  \eref{cond} is equivalent to
 $$
-\mu_{it} +h\frac{\sigma^2_{it}}{2}\le \ell_{it}^* \ ,
+\mu +h\frac{\sigma^2}{2}\le \frac{\ell_{it}^*}{h} \ ,
 $$
 indicating a Basel breach is unlikely unless $\ell_{it}$ is near 2.44, the Basel limit.
 
-\item The system SRISK is zero if all firm the SRISK contributions are zero that is if \eref{cond} holds for every $i$.  This would be usual in the Australian case.
-\end{enumerate}
+
+The system SRISK is zero if all firm the SRISK contributions are zero that is if \eref{cond} holds for every $i$.  This would be usual in the Australian case.
 
 
 
@@ -231,15 +207,13 @@ $$
 $$
 the product of the equity of firm $i$ relative to total market equity and return movement of firm $i$ in a market downturn relative to overall market movement.
 
-
-
-\subsection{Improved systemic risk measurement}
+\section{Improved systemic risk measurement}
 
 For  firm $i$ define the  Basel put and  Basel risk as 
 \be{put}
-p_{it}\equiv k |1-\e^{\nu^*_{it}}|^+\cq \E(p_{it})>0\ ,
+p_{it}\equiv k |1-\e^{\nu^*_{it}}|^+\cq \E(p_{it})\ge 0\ ,
 \ee
-where $\E$ denotes normal or unstressed expectation.  The Basel risk in firm $i$ depends only $k$,  the present leverage  and the lower tail of the  $\nu_{it}$ distribution.  The put value \eref{put} is stated in terms of unit debt and increases with $k$, both directly from  multiplication by $k$ and indirectly through its logit, making a positive put outcome more likely.  
+where $\E$ denotes normal or unstressed expectation.  The Basel risk in firm $i$ depends only $k$,  the present leverage,  and the lower tail of the  $\nu_{it}$ distribution.  The put value \eref{put} is stated in terms of unit debt and increases with $k$, both directly from  multiplication by $k$ and indirectly through its logit, making a positive put outcome more likely.  
 
 Default put options similar to \eref{put} have been discussed in the insurance literature as critical to an evaluation of a firm:  see for
 example \citet{merton1977analytic}, \citet{doherty1986price}, \citet{cummins1988risk}, \citet{myers2001capital} and \citet{sherris2006solvency}.
@@ -250,72 +224,355 @@ The put $p_{it}$ is tradable since, given $k$, it relies only on the present lev
 
 In terms of the put values $\E(p_{it})$, the  system Basel risk is defined as the debt weighted average of the individual firm's put values:
 \be{nsrisk}
-\Ex\{\E(p_{it})\} = \E\{\Ex(p_{it})\}  \ . 
+\Ex\{\E(p_{it})\} = \E\{\Ex(p_{it})\}  \ , 
 \ee
-The standardised system Basel risk is stated per unit of system debt.  Further
+since both $\E$ and $\Ex$ are linear.
+The  system Basel risk is stated per unit of system debt.  The dollar value of Basel risk is the Basel risk multiplied by the total system debt:
 $$
-d_t\Ex\{\E(p_{it})\}  = \sum_id_{it}\E(p_{it}) \cq d_t\equiv\sum_id_{it}\ ,
+d_t\Ex\{\E(p_{it})\}  = \sum_id_{it}\E(p_{it}) \cq d_t\equiv\sum_id_{it}\ .
 $$
-shows, on the left, the system Basel risk and, on the right, the weighted sum of firm Basel risks.  
+Thus the monetary  Basel risk is a  weighted average  of firm specific monetary Basel risks.  
 
-\subsection{Stressed expectations}
 
-In the above development $\E$  denotes  unstressed expectation:  that is expectation that does not assume a stressful scenario.   A stressed expectation, denoted $\Es$, is 
-linear combination of  expectations that do assume stress:
+
+
+\section{Systemic stress as stressed expectation}
+
+In the above development $\E$  denotes  unstressed expectation:  that is expectation that does not assume a stressful scenario.   A stressed expectation, denoted $\Es$, is a
+linear combination of  expectations, each assuming some level of stress
 \be{formula}
-\Es(p_{it}) \equiv \E\{\phi\E(p_{it}|\phi)\} = \E(\phi p_{it}) = \E(p_{it}) + \cov(p_{it},\phi)\ .
+\Es(p_{it}) \equiv \E\{\phi\E(p_{it}|\phi)\} = \E(\phi p_{it}) = \E(p_{it}) + \cov\{\E(p_{it}|\phi),\phi\}\ .
+\ee 
+Here $\phi\ge 0$ with $\E(\phi)=1$ is thought of as a stress factor or ``stressor,"  defining events impacting $p_{it}$  and serving as a basis for stress testing.  Thus $\phi$--stressing  changes the expected value $\E(p_{it})$ by the covariance between the conditional expectation $\E(p_{it}|\phi)$  and the stressor $\phi$.
+
+The conditioning variable $\phi$  downplay or highlight different scenarios.  The conditioning events are scenarios of interest and  probabilistic weighting is according to the level of interest.  The first equality in \eref{formula}  from the definition of conditional probability \citep{whittle2000probability}.  The second equality follows from
+$$
+\cov(p_{it},\phi)=\cov\{\E(p_{it}|\phi),\phi\}\ .
+$$
+The covariance is zero whenever  $p_{it}$ is independent of $\phi$ which occurs if $\phi=1$.
+
+  To a Bayesian the stressed expectation \eref{formula}  is the mean in  a posterior density of $p_{it}$:
+\be{post}
+\int \phi f(p_{it}|\phi) f(\phi)\de \phi=\int \phi f(p_{it},\phi)\de \phi= \E(\phi|p_{it})f(p_{it})\ .
 \ee
-Here $\phi\ge 0$ with $\E(\phi)=1$ is thought of as a ``stressor,"  defining events impacting put values and serving as a basis for stress testing.  In practice the conditioning events $\phi$  downplay or highlight different scenarios.  The conditioning events are scenarios of interest and  probabilistic weighting is according to the level of interest.
+Any outcome $p_{it}$ such that $\E(\phi|p_{it})$ is large  is amplified and vice versa.  Note \eref{post} is a density since $\phi\ge 0$ and $\E(\phi)=1$.  Further note
+$$
+\E_s(p_{it}) = \E(p_{it}\phi) = \E\left\{x \frac{\phi f(p_{it})}{f(p_{it})}\right\}\ ,
+$$
+that is the density  $f(p_{it})$ of $p_{it}$  is replaced by  the density $\phi f(p_{it})$.  Hence more importance is given to those outcomes deemed more important by $\phi$. 
 
 
-Writing  $\sigma_{\phi}$ as the standard deviation of $\phi$,  define the Basel stress of firm $i$ with respect to stress $\phi$ as
+\section{Systemic beta}
+Writing  $\sigma_{\phi}$ as the standard deviation of $\phi$,  define the stress in firm $i$ with respect to stress $\phi$ as
 \be{zscore}
-\beta_{it}\equiv \frac{\Es(p_{it})- \E(p_{it})}{\sigma_\phi}= \frac{\E\{(\phi-1)p_{it}\}}{\sigma_\phi}= \frac{\cov(p_{it},\phi)}{\sigma_\phi} \cq
+\beta_{it}\equiv \frac{\Es(p_{it})- \E(p_{it})}{\sigma_\phi}= \frac{\E\{(\phi-1)p_{it}\}}{\sigma_\phi}= \frac{ \cov\{\E(p_{it}|\phi),\phi\}}{\sigma_\phi} \cq
 \ee
-where  $\sigma_\phi$ is the standard deviation of $\phi$. 
+where  $\sigma_\phi$ is the standard deviation of $\phi$.  Thus
+\be{zscore2}
+\Es(p_{it}) = \E(p_{it}) + \sigma_\phi\beta_{it}\cq \E(p_{it}|\phi) \approx \E(p_{it}) + \beta_{it}\frac{\phi-1}{\sigma_\phi}\ .
+\ee
+The second, approximate, relationship is suggested using a regression interpretation.  
 
-Stress $\beta_{it}$ captures the change in the expected put price  when $\sigma_\phi$ units of stress $\phi$ are applied. Hence the change in stress is measured in standardised units.  Units of stress take on different meaning depending on the specific context as discussed below.  
+The formulas in \eref{zscore2} suggests two ways of  thinking about the  stress effect $\beta_{it}$.   First, the left hand side equation shows  it is the change in the expected Basel put price if  $\sigma_\phi$ units of stress are applied, and where $\phi$ is used to model the stress.  The quantity $(\phi-1)/\sigma_\phi$ is thought of as a ``stress factor."   The stress factor has mean 0 and standard deviation 1 and serves to scale  $p_{it}$ to yield a stress effect.  The distribution of $\phi$ determines the distribution of the stress factor. If the stress factor is normally distributed then a stress effect more than doubling of the put value  occurs less than about $2.5\%$ of the time.    
 
-The quantity $(\phi-1)/\sigma_\phi$ is thought of a ``stress factor."   The stress factor has mean 0 and standard deviation 1 and serves to scale the put value $p_{it}$ to yield a stress effect.  The distribution of $\phi$ determines the distribution of the stress factor. If the stress factor is normally distributed then a stress effect more than doubling of the put value  occurs less than about $2.5\%$ of the time.   
+The second interpretation   is suggested by the  right hand side relation in \eref{zscore2}.   Thus  $\beta_{it}$ is thought of a usual finance type ``beta" with respect to the given $\phi$.   Stress is measured in standardised units.  Units of stress take on different meaning depending on  context as discussed below.  
 
-
-
-
-
-
-Stress effects can be determined by simulation:
-$$
-\beta_{it} \approx \frac{1}{\sigma_\phi S}\sum_{s=1}^S (\phi^s-1)p_{it}^s\ ,
-$$
-where $S$ is the simulation effort.
-
- 
-
-
-
-Stress events implicit in \eref{zscore} and captured with $\phi$ can be defined with respect any events.  This article is concerned with stresses caused by systemic events such as a severe market downturn i.e. a large negative value for the forward return  $\nu_{mt}$.      In this context   the aim is to compute $\Es(p_{it})$  given stress in $\nu_{it}$ defined as an extreme   percentile $u_{mt}$ of $\nu_{mt}$.
-
-The monetary Basel stress of firm $i$ at time $t$ is 
+Note $\beta_{it}$ is stated per unit of debt.   The actual monetary stress of a firm is 
 $
 d_{it}\beta_{it}
-$.   Note the Basel stress is stated in terms of unit increases in stress $\phi$.   Further it measures the impact of stress.  Thus in an increasingly dire financial situation it is expected that put prices $p_{it}$ will increase.   However stress $\beta_{it}$ measures the  change in current put values  under  further $\phi$--stress.   
+$
+and represents the change in the value of the Basel put  if stress, as captured with $\phi$, is applied. 
 
-\subsection{System stress}
 
-Systemic events are expected to affect all firms $i$.   A measure of the total effect is to consider effect on  the debt weighted put
-$$
-p_{t}\equiv \Ex(p_{it}) \cq \Es(p_{t}) -\E(p_{t}) = \cov\{\Ex(p_{it}),\phi\}=\Ex\{\cov(p_{it},\phi)\}\ .
-$$
-The ``system" put $p_t$ pays out zero if all firms meet the Basel requirement with payments increasing with the number of Basel breaches, the sizes of the breaches, and the relative debt sizes of the breaching firms. 
 
-Define the system systemic risk as
+
+
+\section{Total systemic beta}
+
+A measure of the total effect is to consider effect on  the debt weighted put
 \be{ssrisk}
-\beta_t \equiv \frac{\Es(p_t)-\E(p_t)}{\sigma_\phi}=\Ex(\beta_{it})\ ,
+p_{t}\equiv \Ex(p_{it}) \cq \beta_t\equiv\frac{\Es(p_{t}) -\E(p_{t})}{\sigma_\phi} = \frac{\cov[\E\{\Ex(p_{it})|\phi\},\phi]}{\sigma_\phi}=\Ex(\beta_{it}) .
 \ee
+The ``system" put $p_t$ pays out zero if all firms meet the Basel requirement with payments increasing with the number of Basel breaches, the sizes of the breaches, and the relative debt sizes of the breaching firms.  The system systemic risk $\beta_t$ measures the response in the system as a whole to $\sigma_\phi$ units of stress.
+
 The monetary Basel system stress at time $t$ is the sum of monetary firm stresses
 $$
 d_t\beta_t = d_t\Ex(\beta_{it}) = \sum_i d_{it}\beta_{it}\ . 
 $$
+
+   Note the Basel stress is stated in terms of unit increases in stress $\phi$.   Further it measures the impact of stress.  Thus in an increasingly dire financial situation it is expected that put prices $p_{it}$ will increase.   However stress $\beta_{it}$ measures the  change in current put values  under  further $\phi$--stress.   
+
+
+\section{Determining systemic beta's via simulation}
+
+Firm specific stress $\beta_{it}$ and system stress  can be determined using simulation.   For the former
+\be{simulate}
+\beta_{it} \approx \frac{1}{\sigma_\phi S}\sum_{s=1}^S (\phi^s-1)p_{it}^s\ ,
+\ee
+where $S$ is the simulation effort.  The approximation is increasingly accurate as $S$ becomes large.  In this simulation, the $(\phi^s,p_{it}^s)$ are pairs of stress and put values generated from a model: for example $\phi^s$ may be zero unless there is a market drop below the $\alpha$--percentile in which case it is $1/\alpha$.   In this latter case the simulation \eref{simulate} averages over all simulated put values $p_{it}^s$ paired with an at least $\alpha$--drop in the market.
+
+
+
+
+
+\section{Systemic beta's based on  market return}
+The setup is illustrated with  examples generalising and fine--tuning the approach of Engle.
+\subsection{Market return below a percentile threshold} 
+
+Suppose the stress event is a market return in the bottom $\alpha$--tail of the  market return distribution.   Then  $\phi(u)=1/\alpha$ for $u< \alpha$ and 0  otherwise and
+$$
+\Es(p_{it}) \equiv \E\{\phi\E(p_{it}|\phi)\} = \frac{1}{\alpha}\int_0^\alpha\E(p_{it}|u)\de u = \E(p_{it}|\nu_{mt}<c_{t}) \ .
+$$
+where $c_t$ cuts out $\alpha$ probability in the lower tail of the $\nu_{mt}$ distribution.   Then
+$$
+\beta_{it} \approx  \frac{\e^{(\logit\ \alpha)/2}}{S/\alpha} \sum_{u^s_{mt}<1/\alpha}  p_{it}^s\ ,
+$$
+where the estimate of $\sigma_\phi$ implicit in the final expression is established using a direct calculation.  In the right hand side $s=1,\ldots,S$ denotes simulations.  The approximation decreases with the simulation effort $S$.   The effective simulation effort is $S/\alpha$ and hence $\alpha$ small requires a  large effort.
+
+A fixed $\alpha$ cutoff  implies the actual threshold depends on the distribution and hence  on volatility and  time.  The actual threshold drop in the market $c_t=F_{mt}^-(\alpha)$, where $F_{mt}^-$ is the inverse distribution function of $\nu_{mt}$.  The volatility associated with the latter distribution is approximately $\sqrt{h}\sigma_{mt}$ where $\sigma_{mt}$ is current market volatility.   Regulators and practitioners  are well versed in working with VaR type calculations and hence a varying VaR type cutoff combining market volatility and stress is closely aligned to current practice. 
+
+
+\subsection{Expected worst market return in independent copies} 
+If $\phi(u)=n(1-u)^n$ then $\phi(u)\de u = \de\{1-(1-u)^n\}$ and 
+$$
+\Es(p_{it}) \equiv \E\{\phi\E(p_{it}|\phi)\} = \int_0^1\E(p_{it}|u)\de\{1-(1-u)^n\}\ .
+$$
+If $u$ is the market return percentile then  $1-(1-u)^n$ is the distribution of the worst percentile outcome in $n$ identical trials and hence the stressed expectation is that of the expected put price given the worst percentile market return in $n$ identical trials.  Further 
+ $\sigma_\phi=(n-1)/\sqrt{2n-1}$ and 
+$$
+\beta_{it}  \approx \frac{n\sqrt{2n-1}}{(n-1)S} \sum_s (1-u^s_{mt})^{n-1}p_{it}^s \ . 
+$$
+
+Simulated returns $\nu^s_{mt}$ in the upper tail of the distribution  have percentiles $u^s_{mt}\approx 1$ and hence for these returns the first factor in the sum is  small if not negligable: the associated simulated put  is heavily downweighed.
+
+Note the contrast with the previous example where the bottom $\alpha$ proportion of simulated market returns are selected as the stressed sample. With the current specification for $\phi$,   every simulated value contributes to the stress computation, albeit with  different weights.
+
+
+\subsection{Expected worst market return given a tail event}
+
+The above two situations can be combined.   Suppose  $\phi(u)=c(0.05-u)^{19}$ for $u\le 0.05$ and 0 otherwise and where $c$ is such that $\phi(u)$ integrates to 1.  Then
+$$
+\E(p_{it}) \approx \frac{1}{S/c}\sum_{u^s_{mt}<1/20}  \left(u^s_{mt}-\frac{1}{20}\right)^{20}p_{it}^s\ .
+$$
+ Similar to the first example, the stressed sample picks up the bottom 5\% of market returns. The bottom 5\% of market returns is further stressed by  progressively downweighing returns as the percentile approaches 1/20.   Enormous simulation effort $S$ is required for a reasonable approximation since $S/c$ is the effective simulation size.
+ 
+ \subsection{Stressors as  weighted linear combinations of tail events}
+
+\cite{brownlees2015} define a systemic event as a market based downturn greater than a certain threshold and a systemic event  depends on the chosen threshold.   This arbitrariness is partially sidestepped by choosing a decreasing function $\phi=\phi(u_{mt})$ on the unit interval and noting 
+\be{wave}
+\E\{\phi\E(p_{it}|\phi)\} = -\E\{u\phi'(u)\E(p_{it}|u_{mt}\le u)\}\ .
+\ee
+Thus a stressed expectation, stressed with a decreasing function of the market return, is equivalent to taking a weighted average of conditional lower tail expectations.  This circumvents an explicit choice for the market threshold, enabling a mixture of thresholds.  The equivalence of the left and right hand sides of \eref{wave}  is established with, writing $\E_v$ as expectation given $u_{mt}=v$,  (*** Weihao can you check this****)
+$$
+\int_0^1 \phi'(u)  \int_0^u \E_v(\nu_{it})\de v   \de u =\int_0^1\E_v(\nu_{it})\int_v^1  \phi'(u) \de u \de v\ .   
+$$
+
+\subsection{Copula stressors}
+
+
+Stress can be based on a vector of variables $x$ with distribution $F(x)=u$ and marginal densities $f(x_j)$.    Suppose $c(u)$ is the copula density of $x$ implying the density of $x$ is $c(u)\prod_jf(x_j)$.    If  $\Phi(u)$ is another copula with density $\phi(u)$ 
+consider
+\be{copula}
+\Es(p_{it}) \equiv \int \E(p_{it}|x)\phi(u)c(u)\prod_j\{f(x_j)\}  \de x   \ ,
+\ee
+If $\phi(u)=1$  then $\Es(p_{it})=\E(p_{it})$, the ordinary expectation.   The density $\phi(u)$ magnifies potentially stressful situation such as where all component of $x$ are highly  tail dependent.     In the extreme case  $\Phi(u)=\min_j(u_j)$ making the  variables in $x$  comonotonic. 
+
+The copula density stressor $\phi(u)$  can be combined with marginal stressors written as functions of $x_j$ or  percentiles $u_j$.  If the latter then $\phi(u)\prod\phi(u_j)$ is the total stressor, corresponding to a density on the unit hypercube with non--uniform marginals  $\phi(u_j)\ne 1$. 
+  
+Copula stress effects are simulated as follows.   Suppose $x$ is a vector $\nu_{mt}$ of  market factors  over the period $(t,t+h)$.   Simulations of a joint model are  used to  derive  vectors $(p_{it}^s,\nu_{mt}^s)$, $ s=1,\ldots, S$.  The $\nu_{mt}^s$ are  converted to percentiles $u^s$ and scalars 
+$$
+\phi^s\equiv\phi(u^s)\prod_j\phi(u_j^s)\cq s=1,\ldots, S\ .
+$$
+The stress beta is then estimated as in \eref{simulate}.
+
+
+
+   
+Marginal distributions of $r_m$ and $r_n$ may be altered or unchanged. If unchanged then
+$$
+f(r_n) = \int f(r_m,r_n) \de r_m = \int f_\phi(r_m,r_n) \de r_m
+$$
+or 
+$$
+1 = \int f(r_m)c(u_m,u_n) \de r_m = \int f(r_m)\phi(r_m,r_n) c(u_m,u_n) \de r_m
+$$
+since $f(r_m,r_n)=f(r_m)f(r_n)c(u_m,u_n)$.   
+
+
+ 
+ \subsection{Scenario based stress testing}
+ Stress events captured with $\phi$ and used  in \eref{zscore}  can be defined with respect any events, including a discrete number of scenarios labelled $k=1,2, \ldots$.   In this case 
+$$
+\Es(p_{it})= \sum_k \pi_k\phi_k\E(p_{it}|k)\cq \sum_k\pi_k\phi_k = \E(\phi) = 1 ,
+$$
+where $\phi_k$ is the weight assigned to scenario $k$.   The $\pi_k\phi_k\ge 0$ are  modified  probabilities which weigh different scenarios according to level of interest.   For example in standard stress testing the $\phi_k$ are chosen such that significant weight is given to scenarios $k$ causing high  firm distress.   The ``real world" probabilities $\pi_k$ are  usually ignored by  simply choosing  $\pi_k\phi_k$ to be of  required magnitude. 
+
+In the discrete case $\beta_{it}$ compares the expected value under an average of distress scenarios to the average without distress.  The quantity $\sigma_\phi$ is now of limited relevance, signalling the volatility in the distress probabilities. 
+
+   
+
+\section{Risk weighted asset valuation}
+
+Risk weighted asset calculations recognise that some assets are more susceptible to  devaluation in times of stress.  In a firm  valuation these more risky assets are  valued less and the  resulting leverage is used to assess Basel compliance.
+
+The broad approach fits into the present framework.   Suppose total assets of firm $i$ at time $t$ are
+$$
+a_{it}\equiv d_{it}+w_{it}  = \sum_j a_{ijt} \ ,
+$$
+where  $a_{ijt}$ is the value of the class  $j$ assets at time $t$.   Similarly the total value assets at time $t+h$ is, denoting $\nu_{ijt}$ as the return on asset class $j$ over the period $(t,t+h)$, 
+$$
+ a_{i,t+h} = a_{it}\sum_j \frac{\e^{\nu_{ijt}}a_{ijt}}{a_{it}} = a_{it}\Ex_a(\e^{\nu_{ijt}})\ ,
+$$
+where $\Ex_a$ denotes asset weighted averaging using asset values at time $t$.
+The log of the debt to equity ratio at time $t+h$ is thus, assuming debt is constant over the period,
+$$
+\ell_{i,t+h} = -\ln \frac{a_{i,t+h}-d_{it}}{d_{it}} = -\ln\{(1+\e^{-\ell_{it}})\Ex_a(\e^{\nu_{ijt}})-1\}\ ,
+$$
+and the Basel put equals, using the previous notation $\ell_{it}^*\equiv\ell_{it}+\logit(k)$,
+\be{asset}
+p_{it} = k|1-\e^{\ell^*_{i,t+h}}|^+ = k\left|1-\frac{\e^{\logit(k)}}{(1+\e^{-\ell_{it}})\Ex_a(\e^{\nu_{ijt}})-1}\right|^+ \ .
+\ee
+
+A return sample size $S$ is assembled by simulating asset specific forward returns $\nu^s_{ijt}$ and  stress factor $\phi^s$ and combining to arrive at stressed put prices.   Initially assume the stress  is a market return in the bottom $\alpha$--tail of the market return  distribution.   Then realisations with market return in the lower tail  are used to compute an average  of put values \eref{asset}.  The average approaches $\Es(p_{it})$ as $S$ becomes large.   The average put value across all $S$ is  subtracted from the stressed sample average and divided by $\sigma_\phi$  to arrive at the estimate of $\beta_{it}$. 
+
+For more general $\phi$ it is  convenient to estimate $\beta_{it}$ using \eref{simulate}.   Thus given $\phi$, simulated asset returns $\nu_{ijt}^s$ are used to compute the corresponding simulated put value $p_{it}^s$ as in \eref{asset} and weighted market percentile $\phi^s\equiv \phi(u^s_{mt})$.   These are then combined as in \eref{simulate}.   If required, the stressed expectation is estimated using 
+$$
+\Es(p_{it}) \approx \mu_{it} + \sigma_\phi\beta_{it}\cq \mu_{it} \approx \frac{1}{S}\sum_s p_{it}^s\ .
+$$
+
+The above framework formalises risk weighted asset methodology  used in capital setting.   Easily (dis)stressed assets have a return distribution sensitive to market downturn.   This implies, in a downturn, $\e^{\nu_{ijt}}$ is likely to be much less than 1 and the asset value $a_{ijt}$ is downweighed in the computation of $\Ex(\e^{\nu_{ijt}})$.  In turn the put price is increased.  The responsiveness of the put price depends on the proportion $a_{ijt}/a_{it}$ of assets in class $j$ held by firm $i$ at time $t$.   Thus the $\e^{\nu_{ijt}}$ can be viewed  as risk weights where the averaging over put values corresponds  to an implicit average risk weight.   The implicit weights can be backed out to give risk weighted assets
+\be{rwa}
+a_{it}\Ex_a\left( \frac{1}{S}\sum_s\phi^s\e^{\nu_{ijt}^s}\right)\approx \Es\{\Ex_a(\e^{\nu_{ijt}})\} \ .
+\ee
+The expression in  brackets in the left is the risk weight for asset $j$.   Assets whose return $\nu_{ijt}$  tends to be very negative under stress $\phi$ are has high risk and low weight.  An asset whose value does not vary has $\nu_{ijt}\equiv 0$ and  a risk weight of 1 since on average $\phi^s$ is 1.
+
+The difference
+$$
+k - \frac{1}{S}\sum_s\phi^s\Ex_a(\e^{\nu_{ijt}^s})\ ,
+$$
+is the proportionate increase capital shortfall on account of risk weighting and as a proportion of total assets.
+
+
+ 
+
+
+\renewcommand{\c}{\ensuremath{\mathrm{CoVaR_q}}}
+\renewcommand{\v}{\ensuremath{\mathrm{VaR}_q}}
+
+\section{Contagion and systematic risk measured with \c}
+
+
+ \cite{adrian2011covar}  propose a measure, called $\covar_q$, for measuring contagion, exposure and systemic risk.   Broadly speaking \c \ is the change in \v\   in one variable given a \v\  breach in another variable.  Variables can be capital shortfall, market return or other.
+ 
+ 
+ It  suffers from a number of drawbacks:
+\bi
+\i Couched in terms of $\var_q$ containing the scale of the original measurements.   It is worthwhile to have measures and techniques robust to scale.
+\i  Conditioning  on $\var_{0.5}$ is undesirable and relatively intractable.  In our proposal we reference stress with respect  to the unconditional $\var_q$.   This permits a more transparent analysis and estimation. 
+\i  Our proposed approach  separates out scale effects and interdependence effects and aims to  relates these separately to external variables including shocks and drivers of systemic risk.   Thus $\var_q$ movements due to scale are disentangled from movements due to codependence with separate driver responses.
+\ei
+
+
+
+
+\section{Application to Australian financial institutions}
+
+In this study we consider financial data for  the 8 Australian banks.
+
+\begin{table}[htdp]
+\caption{Four major and four minor Australian banks}
+\begin{center}
+\begin{tabular}{l|l}
+\hline
+cba & Commonwealth Bank of Australia\\
+anz & Australia \& New Zealand Bank\\
+nab & National Australia Bank\\
+wbc & Westpac Banking Corporation\\
+\hline
+mqg & Macquarie Banking Group\\
+boq & Bank of Queensland\\
+ben & Bendigo and Adelaide Bank\\
+aba & Auswide Bank\\
+\hline
+\end{tabular}
+\end{center}
+\label{banks}
+\end{table}%
+
+
+The analysis is based on daily return data is collected from   3 April 2000 through to 1 December 2014 for a total of  3848 trading days.
+Prices, adjusted for dividends are plotted in \fref{prices}.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics{prices.pdf}
+\caption{Basel log--leverages for four major (left panel) and four minor (right panel) Australian banks from April 2000 through to December 2014.  Note all banks suffer  falls starting the middle of 2008.}
+\label{prices}
+\end{center}
+\end{figure}
+ 
+At each of the first trading day in the months from January 2003 through to December 2014,  all previous returns were used estimate a TARCH-DCC model described below.   For each first trading day of the month, the fitted model is then used to, simulate the forward return distribution over the next 22 trading days, corresponding to approximately one month.  The details of the fitted models are described in the next subsection.
+
+\subsection{TARCH-DCC modelling}
+
+For notational convenience the $i$ subscript is dropped and denote the daily (log) return as
+\newcommand{\vareps}{\varepsilon}
+\be{mean.model}
+r_{t}=\mu+\sigma_t\eps_t\cq \eps_t\sim (0,1)\cq  \eps^-_t\equiv I(\eps_t<0)=I(r_t<\mu)\ ,
+\ee
+Thus returns are assumed to have an unconditionally constant mean.   The notation $\eps_t^-$ indicates whether there is a negative return:  $I$ denoting the indicator function.  The volatility is modelled with the TARCH model
+\be{vol}
+\sigma_{t+1}^2 = \omega+ \sigma^2_t\{\beta+(\alpha+\gamma \eps^-_t)\eps_{t}^2\}\\ .
+\ee
+Hence the response of the variance to $\eps_t^2$  is increased by $\gamma$   if $\eps_{t}<0$ compared to the response if $\eps_t>0$.  This is a simple threshold GARCH model:  called TARCH.   In the fits it is assumed the mean $\mu$ does not vary with time $t$ and the single lag in both the $\sigma_t^2$ and $\eps_t$ is sufficient to capture the dynamics of volatility. 
+
+The model \eref{mean.model} and \eref{vol} is fit  for each security $i$ including the market,  $i=m$.   The correlations between securities and the market are also modelled using  positive definite recursions   \citep{engle2002dynamic}
+$$
+(Q_{t+1}-S) = \alpha (\eta_t\eta_t'-S) + \beta (Q_t-S)\cq \eta_t\equiv(\eps_{it},\eps_{mt})' ,
+$$
+A   Dynamic Conditional Correlation (DCC) model is estimated for  firm and market returns.  Write
+\newcommand{\veps}{\varepsilon}
+$$
+\cov (r_t|t) = V_tR_tV_t'\cq R_t\equiv \cov(\veps_t|t)\cq \veps_t=V_t^{-1}r_t\ ,
+$$
+where $R_t$ and  $V_t$  are the correlation and diagonal volatility matrix, respectively, at time $t$.   Volatilities in $V_t$  are estimated using univariate threshold GARCH models.  The estimate of $R_t$ corresponds to the correlations in covariance matrix $C_t$ assuming
+$$
+(C_t - C) = \alpha (C_{t-1}-C)+\beta (\veps_t\veps'_t-C) \cq C\equiv\cov(\veps_t)\ .
+$$
+where $C$ is the long run covariance matrix.
+
+\subsection{Forward return simulation}
+
+The forward simulations are implemented similar to \cite{brownlees2015}.   Given the latest available volatility and correlation estimates the filter recursions are moved forward in time fed with innovations randomly chosen from past standardised innovations.  Thus the innovations are chosen to have the same marginal distributions as applicable in the past.  The random choices are such  that the same market return innovations are used in each bivariate analysis.   
+
+Figure \fref{simulation} displays  6000 forward simulations for the joint CBA and market return on each of  two dates, the first trading days in January 2009 and December 2014. 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics{simulation.pdf}
+\caption{Six thousand simulated bivariate 1 month forward returns for CBA and the market at start of January 2009 (left panel)  and December 2014 (right panel). Note scales in both panels are the same, the relatively large volatility in the left panel, and the left skew in the  marginal distributions.}
+\label{simulation}
+\end{center}
+\end{figure}
+
+\subsection{Basel beta risk}
+
+Figure \fref{Bbeta} displays Basel beta's over the years from 2003 through to the end of 2014.  The employed stressor is the expected worst outcome in 12 independent copies:
+$$
+\phi(u) = 12(1-u)^{11}\cq \beta_{it} = \frac{\E\{\min(p^1_{it},\ldots,p^{12}_{it})\}-\E(p_{it})}{\sigma_\phi}
+$$
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics{Bbeta.pdf}
+\caption{Basel beta's.  The left panel displays the overall beta.   The right panel ...}
+\label{Bbeta}
+\end{center}
+\end{figure}
+
+\subsection{Stressors}
+
+Two different stressors are used:   
 
 
 
@@ -341,49 +598,15 @@ $$
 
 
 
-The setup is illustrated with two examples generalising the approach of Engle.
-
-\subsubsection{Market return below a percentile threshold} 
-
-Suppose the stress event is a market return in the bottom $\alpha$--tail of the  market return distribution.   Then  $\phi(u)=1/\alpha$ for $u< \alpha$ and 0  otherwise and 
-$$
-\sigma_\phi = \sqrt{ \int_0^\alpha\frac{\de u}{\alpha^2} - 1}= \sqrt{\frac{1-\alpha}{\alpha}}=\e^{-(\logit\ \alpha)/2}\ .
-$$
-Then
-$$
-\beta_{it} =\frac{\tilde\E(p_{it})-\mu_{it}}{\sqrt{(1-\alpha)/\alpha}}
- = \frac{\alpha\E\{I(u_{mt}<\alpha)p_{it}\}}{\e^{-(\logit\ \alpha)/2}}\approx \frac{\e^{(\logit\ \alpha)/2}}{S/\alpha} \sum_{u^s_{mt}<1/\alpha}  p_{it}^s \ ,
-$$
-where $s=1,\ldots,S$ denotes simulations and $I$ the indicator function.  The approximation decreases with the simulation effort $S$.   The effective simulation effort is $S/\alpha$ and hence $\alpha$ small requires a  large $S$.
-
-A fixed percentage threshold means the actual threshold depends on the distribution and hence  on volatility and  time.
-
-\subsubsection{Expected worst market return in independent copies} 
-
-Assume $\phi(u)=n(1-u)^{n-1}$ where $u$ is the market return percentile. Then $\E\{\phi(u)\}=1$ and $\sigma_\phi=xx$  and $\Es$ is computed assuming the worst $h$ day return in $n$  independent and identical copies of the current situation, and
-$$
-\beta_{it} = \frac{n\E\{(1-u)^{n-1}p_{it}\}}{\sigma_\phi} \approx \frac{1}{xxS/n} \sum_s (1-u^s_{mt})^{n-1}p_{it}^s \ . 
-$$
-Simulated returns $\nu^s_{mt}$ in the upper tail of the distribution  have percentiles $u^s_{mt}\approx 1$ and hence for these returns the second factor in the sum is  small if not negligable: the associated simulated put  is heavily downweighed.
-
-Note the contrast with the previous example where the bottom $\alpha$ proportion of simulated market returns are selected as the stressed sample. In the latter situation every simulated value contributes to the expectation, albeit with vastly different weights.
 
 
-\subsubsection{Worst market return given a tail event}
+\section{Comparing SRISK for different firms (not sure)}
 
-The above two situations can be combined.   Suppose  $\phi(u)=c(0.05-u)^{19}$ for $u\le 0.05$ and 0 otherwise and where $c$ is such that $\phi(u)$ integrates to 1.  Then
-$$
-\E(p_{it}) \approx \frac{1}{S/c}\sum_{u^s_{mt}<1/20}  \left(u^s_{mt}-\frac{1}{20}\right)^{20}p_{it}^s\ .
-$$
- Similar to the first example, the stressed sample picks up the bottom 5\% of market returns. The bottom 5\% of market returns is further stressed by  progressively downweighing returns as the percentile approaches 1/20.   Enormous simulation effort $S$ is required for a reasonable approximation since $S/c$ is the effective simulation size.
-
-\subsection{Comparing SRISK for different firms (not sure)}
-
-Suppose of interest is whether $\beta_{it}$ varies similarly or different across firms as $\tau$ varies where $\tau$ is the threshold, $k$ or some other parameter used to compute $\beta_{it}$. High correlation implies high systemic risk since firms are simultaneously affected.
+Suppose of interest is whether $\beta_{it}$ varies similarly  across firms as $\tau$ varies where $\tau$ is the threshold, $k$, or some other parameter used to compute $\beta_{it}$. High correlation implies high systemic risk since firms are simultaneously affected.
 
 Define $\eps_{it}\equiv(\phi-1)p_{it}$ and $\eps_t$ as the vector with components $\eps_{it}$.  Then $\E(\eps_{it}|\tau)=\sigma_\phi(\tau)\beta_{it}(\tau)$, the stress in firm $i$ at the given parameter setting $\tau$  and
 $$
-\cov(\eps_{t})=\cov\{\E(\eps_{it}|\tau)\}+\E\{\cov(\eps_{it}|\tau)\}\ ,
+\cov\{\E(\eps_{it}|\tau)\}=\cov(\eps_{t})-\E\{\cov(\eps_{it}|\tau)\}\ ,
 $$
 is the covariance between stresses as $\tau$, the stress parameter varies.   Thus the covariances and correlations between firms as stress parameters vary can be computed from the covariability between the $\eps_{it}$ and the ...
 
@@ -402,7 +625,6 @@ k_i\E\{(1-\e^{-\ell^*_{it}+\nu_{it}}) I(\nu_{mt}<\ell_{mt}^*)\}
 $$
 and applying $\Ex$ to the above expression yields $\E(p_{mt})$.
 \end{comment}
-
 
 \section{Standardised SRISK and layer dependence}
 
@@ -458,62 +680,6 @@ p_t\equiv k|1-\e^{\nu_t-\ell_t^*}|^+\cq \Es(p_t)\le\Ex\{\Es(p_{it})\}\ .
 $$
 The inequality is a result  of diversification effects:   low liquidity  in one firm is implicitly offset by high liquidity  in other  firms.
 
-\subsection{Risk weighted assets}
-
-Suppose total assets of a company are $d_t+w_t$.   Total assets are often replaced by  risk weighted assets implying
-$$
-w_t =  d_t\{\Ex_\pi(a_{jt}) - 1\}\cq \ln\frac{d_t}{w_t} = -\ln\{\Ex_{\pi}(a_{jt})-1\}
-$$
-where $j$ runs over the various asset classes and $\Ex_\pi$ denotes a risk weighted average of assets: the weights in this average typically do not add to 1.  
-
-In $h$ periods time, supposing debt does not change, the change in log--leverage is 
-$$
-\ln\{\Ex_\pi(a_{j,t+h})-1\}-\ln\{\Ex_\pi(a_{jt})-1\}
-$$
-Suppose the asset portfollow grows at rate $\Ex(\nu_{jt})$.
- 
-
- $d_{it}+\e^{-v_{it}}w_{it}$ where $v_{it}>0$ is the implicit discounting on equity used to arrive at risk weighted assets.  
-  Using risk weighted assets implies the modified leverage
-$$
- \ln\left\{ \frac{d_{it}}{\e^{-v_{it}}w_{it}}\right\}=\ell_{it} +v_{it}\ .
-$$
-In terms of this setup the systemic risk in firm $i$ is then $\E(p_{it})$ computed with 
-$$
-p_{t}\equiv  k|1-\e^{\nu_{t}-\ell^*_{t}-v_{it}}|^+
-$$
-Since $v_{it}\ge 0$ the put is more valuable.   Note 
-$$
-v_{it} =-\ln\left\{ \frac{\Ex_\pi(a_{it})}{w_{it}} - \e^{\ell_{it}}\right\}
-$$
-
-\section{Alternative market  stressors}
-
-If $\phi=\phi(u_{mt})$ with $\phi$  decreasing on $[0,1]$ then  stress is modelled in terms of market return and with larger stress if $u_{mt}$ is smaller. The impact on $\Es(p_{it})$ is larger if $\nu_{it}$ and $\nu_{mt}$ are highly correlated and 
-\be{wave}
-\tilde\E(p_{it}) = -\E\{u\phi'(u)\E(p_{it}|u_{mt}\le u)\}\ ,
-\ee
-and hence if the stressor is market return, then the stressed expectation can be written as a stressed expectation of conditional  tail expectations.   This circumvents an explicit choice for the market threshold, enabling a mixture of thresholds.
-
-\cite{brownlees2015} define a systemic event as a market based downturn greater than a certain threshold and hence is dependent on the chosen threshold.   Explicit choice of the threshold is avoided by choosing a weighted average of percentile thresholds 
-
-
-
-The left hand side expresses stressed expectation in terms of a weighted average $w(u)$ of tail expectations across different percentiles while the right hand side is the  form in \eref{formula}.  The equivalence of the left and right hand sides of \eref{wave}  is established with
-$$
-\int_0^1 \frac{w(u)}{u} \left\{ \int_0^u \E(\nu_{it}|u_{mt}=v)\} \de v \right\}  \de u =\int_0^1\E(\nu_{it}|u_{mt}=v)\int_v^1  \frac{w(u)}{u} \de u \de v\ ,   
-$$
-which reduces to the right hand side of \eref{wave}  provided $w(u)=-u\phi'(u)$ implying $\E\{\phi(u)\}=1$.
-If $w(u)\ge 0$ then  $\phi$ is a decreasing function. 
-
-(Not sure if the next paragraph is still relevant.   The issue is that all our risk stuff is encapsulated in the put price and change in put price)  Applying the same weighted averaging to SRISK yields
-$$
-\widetilde{\mathrm{SRISK}}_i \equiv \int_0^1 \mathrm{SRISK}_i(a) w(a) \de a = \E\{c_i\phi(u_m)\} 
-$$
-$$
-= kd_i-(1-k)w_i[1+\E\{r_i\phi(u_m)\}] \;,
-$$
-which is the aversion adjusted expected capital shortfall.
 
 
 

@@ -48,7 +48,6 @@ dcccore=: 4 : 0        NB. library(rmgarch)
   veps=.((epsi-rho*epsm)%%:1-*:rho),.epsm  NB. Tx2
   a=.ai,am[o=.oi,om[b=.bi,bm[g=.gi,gm[mu=.mui,mum['ai bi gi mui oi am bm gm mum om aj bj'=.{:"1 Rget 'mfit$coef'
   vepsf=.(S,h,2)$,(?(S*h)##veps){veps[9!:1[3^10  NB. choose past veps given random seeds
-  if. x=0 do.
   rhot=.tocor"2 Q['rf sigt Q'=.(S&#)@:,: L:0 ('',.'');({:sig);2 2$1,rhot,1,~rhot=.{:rho    
   for_t. i.h do.
     'veit emt'=.|:t{"2 vepsf
@@ -57,22 +56,7 @@ dcccore=: 4 : 0        NB. library(rmgarch)
     sigt=.%:o+"1(*:sigt)*b+"1(a+"1 g*"1(et<0))*et^2              NB. Sx2
     rhot=.tocor"2 Q=.(Qbar*1-aj+bj)+"2 (aj*(*/~)"1 et)+"2 bj*Q   NB. S, Sx2x2
   end.
-  |:(/:{:"1) +/"2 rf  NB. Sx2  (nu_i,nu_m) sorted  according nu_m
-NB.
-  else. 
-     for_s. i.S do.
-        Sr=.,:'',''[sigt=.{:sig[Q=.2 2$1,rhot,1,~rhot=.{:rho    NB. Sx2x1, Sx2x1, Sx2x2    
-        for_t. i.h do.
-          et=.(2 2 $ (%:1-rhot^2),rhot,0 1) mp t{s{vepsf
-          Sr=.Sr,mu+sigt*et  NB. Sx2x1
-          sigt=.%:o+(*:sigt)*b+(a+g*(et<0))*et^2                      NB. Sx2x1
-          rhot=.tocor Q=.(Qbar*1-aj+bj)+(aj*(*/~)et)+bj*Q              NB. Sx2x1, Sx2x2
-         end.
-         rf=.rf,}.Sr
-      end.
-      rf=.}.rf          NB. Sxhx2  array of simulated future returns
-      |:(/:{:"1) +/"2 rf  NB. Sx2 pairs (nu_i,nu_m)' sorted  according nu_m
-  end.
+  |:(/:{:"1) +/"2 rf  NB. Sx2 pairs (nu_i,nu_m) sorted  according nu_m
 )
 
 dcc=:0&dcccore
@@ -82,11 +66,9 @@ ct=: 4 : 0   NB. actual (x=0) or predicted (x~:0) capital shortfall for a single
   'd w r'=."."1 y,"1 0 'dw '
   if. x=0 do. d,w,:r return. end.
   ind=:(year>:2003)*.newmonth
-  lstar=.(-/"1 ln ind#d,.w)+logit k=.0.08    NB. T
+  lstar=.(-/"1 ln ind#d,.w)+logit k=:0.08    NB. T
   nu=.(ind#i.#r) (dcc@:{.)"0 2 r,.asx        NB. Tx2xS predictive distributions
-  'nui num'=.1 0 2|:nu%100                   NB. 2xTxS
-  put=.k*(*>&0)1-^nui-"1 0 lstar             NB. TxS
-  (ind#d);put,:"1 num                        NB. T;Tx2xS
+  (lstar,:ind#d);1 2 0|:nu%100               NB. 2xT;2xSxT
 )
 
 dwk=:0&ct   NB. T x 3 matrix d,w,k     
@@ -111,25 +93,119 @@ NB. xxx=:1 ct 'cba'
 cte=:(%@] * <:)& 0.05
 min12=:(12&*)@(^&11)@(1&-)
 phi=:min12
+
 lo=:_15"0
 ln=: (lo`^.@.(>&0))"0                     	NB. log or zero
 
-
 sr=: 3 : 0    
-  'dit pn'=:|:(1&ct)"1 y             NB. (mxT);mxTx2xS  -- m=#y
-  'pit numt'=:2 3 0 1|:pn            NB. 2xSxmxT
-  'muit sigit'=:(mean,:sd) pit       NB. (mxT);mxT
-  phium=:phi 2 0 1|:P"1[1 2 0|:numt  NB. SxmxT <- mxTxS <- SxmxT
-  sigphi=:mean^:2 sd phium           NB. 1
-  betait=:(E(phium-1)*pit)%sigphi    NB. mxT
-  Ex=:+/@:(* %"1 +/@:])&dit          NB.   (mxT) Ex mxT 
-  sigt=:sd pt=:Ex"2 pit              NB. T;SxT
-  betat=:Ex betait  
+NB. 'ldit pn'=:|:(1&ct)"1 y               NB. (mx2xT);mx2xSxT  -- m=#y
+  'lstarit dit'=:1 0 2|:ldit            NB. 2xmxT
+  'nusit nusmt'=:1 2 0 3|:pn            NB. 2xSxmxT
+  nustarsit=:nusit-"2 lstarit           NB. SxmxT
+  psit=:(*>&0) 1-^nustarsit             NB. SxmxT
+  'muit sigit'=:(E,:sd) psit            NB. 2xmxT
+  phiumsit=:phi (P"1)&.|:nusmt          NB. SxmxT <- TxmxS <- SxmxT
+  sigphi=:mean^:2 sd phiumsit           NB. 1
+  phistarsit=:(phiumsit-1)%sigphi       NB. SxmxT
+  betait=:E phistarsit*psit             NB. mxT
+  Ex=:+/@:(* %"1 +/@:])&dit             NB.   (mxT) Ex mxT 
+  sigt=:sd pit=:E psit                  NB. T;mxT
+  betat=:Ex betait                      NB. T
   yrmo=:(yr-2000)+(mo-1)%12['yr mo da'=:|:ind#ymd
 )
 
+figBloglev=: 3 : 0
+   pd 'reset'
+   opt=. 'yticpos -1 -0.5 0 0.5 1;xticpos 3 4 5 6 7 8 9 10 11 12 13 14 15'
+   opt=. opt,';xcaption year-2000'
+   pd 'sub 1 2'
+   pd 'new'
+   pd opt   
+   pd yrmo;4{.lstarit
+   pd 'new'
+   pd opt
+   pd yrmo;_4{.lstarit
+   pd 'pdf 320 150 ',fdir,'Bloglev.pdf'
+   pd 'show'
+)
+  
+figBloglev''
+stop
 
-xxx=:sr 'cba','anz','nab','wbc','mqg','boq',:'ben'       NB. m=#firms
+
+figprices=: 3 : 0
+   yrmo=.(yr-2000)+(mo-1)%12['yr mo da'=.|:ymd
+   pd 'reset'
+   opt=. 'yticpos 0 3 6 9;xticpos 1 3 5 7 9 11 13 15'
+   opt=. opt,';xcaption year'
+   pd 'sub 1 2'
+   pd 'new'
+   pd opt   
+   pd yrmo;*/\"1 ^%&100 cba,anz,nab,:wbc
+   pd 'new'
+   pd opt
+   pd yrmo;*/\"1 ^%&100 mqg,boq,ben,:aba
+   pd 'pdf 320 150 ',fdir,'prices.pdf'
+   pd 'show'
+)
+
+NB. figprices''
+
+figsimulation=: 3 : 0
+   xtract1=.{.@(72&{)@|:
+   xtract1=. 72&({.@:([ { |:@]))
+   xtract2=.{.@{:@|:
+   xtract=.({.@:([ { |:@]))
+   'nusij nusmj'=.72 xtract"2 nusit,:nusmt
+   'nusid nusmd'=.143 xtract"2 nusit,:nusmt
+   ticpos=.'-0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6'
+   pd 'reset'
+   opt=. 'yticpos ',ticpos,';xticpos ',ticpos
+   opt=. opt,';xcaption market return'
+   pd 'sub 1 2'
+   pd 'new;type dot'
+   pd opt
+   pd (xtract1 nusmt);xtract1 nusit  
+   pd 'new;type dot'
+   pd opt
+   pd (xtract2 nusmt);xtract2 nusit 
+   pd 'pdf 320 150 ',fdir,'simulation.pdf'
+   pd 'show'
+)
+
+  figsimulation''
+
+stop
+
+figBbeta=: 3 : 0
+   yrmo=:(yr-2000)+(mo-1)%12['yr mo da'=.|:ind#ymd
+   ticpos=.'0 0.02 0.04 0.06 0.08 0.1'
+   pd 'reset'
+   opt=.'yticpos ',ticpos,'NB.;xticpos ',ticpos
+   opt=. opt,';xcaption year'
+   pd 'sub 1 2'
+   pd 'new;xcaption year'
+   pd 'yticpos ',ticpos
+   pd 'xticpos 3 5 7 9  11  13 15'
+   pd yrmo;Ex betait
+   pd 'new;xcaption year'
+   pd 'yticpos ',ticpos
+   pd 'xticpos 3 5 7 9  11  13 15'
+   pd yrmo;betait
+   pd 'pdf 320 150 ',fdir,'Bbeta.pdf'
+   pd 'show'
+)
+
+NB. figBbeta ''
+
+srisk=: 3 : 0
+  srisk0=:(*>&0) E 1-^nustarsit
+  srisk1=:E (*>&0) 1-^nustarsit
+  dplot ;/ 2{"2 sriskmit,:sriskpit
+)
+    
+
+xxx=:sr 'cba','anz','nab','wbc','mqg','boq','ben',:'aba'       NB. m=#firms
 
 stop
 
@@ -137,7 +213,7 @@ xxx=:sr ''
 
 stop
 
-dpl=:('xticpos 03 04 05 06 07 08 09 10 11 12 13 14 15'&plot)@(yrmo&;)@(1000&*)
+dpl=:('xticpos 03 04 05 06 07 08 09 10 11 12 13 14 15'&plot)@(yrmo&;)
 
 stop
 

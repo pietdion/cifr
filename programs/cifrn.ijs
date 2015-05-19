@@ -120,23 +120,31 @@ figBloglev=: 3 : 0
    opt=. opt,';xcaption year-2000'
    pd 'sub 1 2'
    pd 'new'
-   pd opt   
+   pd opt
+   pd 'key cba anz nab wbc'
+   pd 'keyfont Arial 6'
+   pd 'keypos top left'
+   pd 'keystyle thin'    
    pd yrmo;4{.lstarit
    pd 'new'
    pd opt
+  pd 'key mqg boq ben aba'
+   pd 'keyfont Arial 6'
+   pd 'keypos top left'
+   pd 'keystyle thin'
    pd yrmo;_4{.lstarit
    pd 'pdf 350 150 ',fdir,'Bloglev.pdf'
    pd 'show'
 )
   
-NB.  figBloglev''
+NB. figBloglev''
 
 
 figprices=: 3 : 0
    yrmo=.(yr-2000)+(mo-1)%12['yr mo da'=.|:ymd
    pd 'reset'
    opt=. 'yticpos 0 3 6 9;xticpos 1 3 5 7 9 11 13 15'
-   opt=. opt,';xcaption year - 2000'
+   opt=. opt,';xcaption year-2000'
    pd 'sub 1 2'
    pd 'new'
    pd opt
@@ -156,9 +164,7 @@ figprices=: 3 : 0
    pd 'show'
 )
 
- figprices''
-
-stop
+NB. figprices''
 
 figsimulation=: 3 : 0
    xtract=.({.@:([ { |:@]))
@@ -199,7 +205,7 @@ figBbeta=: 3 : 0
    yrmo=:(yr-2000)+(mo-1)%12['yr mo da'=.|:ind#ymd
    pd 'reset'
    opt=.'yticpos 0 0.02 0.04 0.06 0.08 0.1'
-   opt=. opt,';xcaption year - 2000;xticpos 3 5 7 9 11 13 15'
+   opt=. opt,';xcaption year-2000;xticpos 3 5 7 9 11 13 15'
    pd 'sub 1 2'
    pd 'new'
    pd opt
@@ -215,15 +221,63 @@ figBbeta=: 3 : 0
    pd 'show'
 )
 
- figBbeta ''
+NB. figBbeta ''
 
-stop
 
 srisk=: 3 : 0
-  srisk0=:(*>&0) E 1-^nustarsit
-  srisk1=:E (*>&0) 1-^nustarsit
-  dplot ;/ 2{"2 sriskmit,:sriskpit
+  xxx=.(nustarsit) (/:"1)&.|: {."2 nusmt
+  SRISKit=:(*>&0) E 1-^60{.xxx
+  PRISKit=:E (*>&0) 1-^60{.xxx
+  plot 4{ 100*PRISKit (-%[)SRISKit
 )
+
+NB. srisk ''
+
+figstress=: 3 : 0
+   yrmo=:(yr-2000)+(mo-1)%12['yr mo da'=.|:ind#ymd
+   pd 'reset'
+   opt=.'yticpos 0 0.02 0.04 0.06 0.08 0.1'
+   opt=. opt,';xcaption year-2000;xticpos 3 5 7 9 11 13 15'
+   pd 'sub 1 2'
+   pd 'new'
+   pd opt
+   pd yrmo;Ex betait
+   pd 'new'
+   pd opt
+   pd 'key cba anz nab wbc mqg boq ben aba'
+   pd 'keyfont Arial 6'
+   pd 'keypos top left'
+   pd 'keystyle thin'
+   pd yrmo;betait
+   pd 'pdf 350 150 ',fdir,'Bbeta.pdf'
+   pd 'show'
+)
+
+figaddstress=: 3 : 0
+   sysstress=.sigphi*betait
+   volstress=.0.0001+muit
+   totstress=.volstress+sysstress
+   pd 'reset'
+   pd 'sub 1 2' 
+   ticpos=.''
+   opt=.'yticpos 0 0.05 0.1 0.15 0.2 0.25'
+   opt=.opt,';xticpos 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7'
+   opt=.opt,';xcaption vol stress;ycaption sys stress'
+   opt=.opt,';pensize 1;type dot'
+   pd 'new'
+   pd opt
+   pd"1  (0 1 2 3{volstress);"1[ 0 1 2 3{sysstress
+   pd 'new'
+   pd opt
+   pd"1  (4 5 6 7{volstress);"1 [ 4 5 6 7{sysstress
+   pd 'show'
+   pd 'pdf 350 150 ',fdir,'betaitmuit.pdf'
+)
+  
+figaddstress''
+stop
+
+
     
 
 xxx=:sr 'cba','anz','nab','wbc','mqg','boq','ben',:'aba'       NB. m=#firms

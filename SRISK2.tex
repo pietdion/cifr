@@ -196,19 +196,6 @@ The system SRISK is zero if all firm the SRISK contributions are zero that is if
 
 
 
-An improvement is where firms with capital surplus are included, since they, especially those with large surpluses, are systemically important but in a positive way by dampening the impact from distressed firms.  Second, it is  appropriate to consider the departure from the unconditional expectation to differentiate firms which only experience capital shortfall during a market downturn as opposed to those who already have large shortfalls in average conditions.   This leads to the revised computation
-$$
-\frac{1-\Es(\e^{\nu^*_{it}})-\{1-\E(\e^{\nu^*_{it}})\}}{\Ex\{|1-\Es(\e^{\nu^*_{it}})|^+-|1-\Es(\e^{\nu^*_{it}})|^+\}} = \frac{\E(\e^{\nu^*_{it}})-\Es(\e^{\nu^*_{it}})}{\Ex\{|1-\Es(\e^{\nu^*_{it}})|^+-|1-\Es(\e^{\nu^*_{it}})|^+\}} 
-$$
-
-
-The revised contribution of firm $i$ to total systemic risk is hence
-$$
-\frac{\mathrm{SRISK}_i-\E(c_i)}{\mathrm{SRISK}_m-\E(c_m)}
-=\frac{w_i }{w_m } \frac{\E(r_i)-\E(r_i|u_m<a)}{\E(r_m)-\E(r_m|u_m<a)} \;,
-$$
-the product of the equity of firm $i$ relative to total market equity and return movement of firm $i$ in a market downturn relative to overall market movement.
-
 \section{Improved systemic risk measurement}
 
 For  firm $i$ define the  Basel put and  Basel risk as 
@@ -249,7 +236,7 @@ linear combination of  expectations, each assuming some level of stress
 \ee 
 Here $\phi\ge 0$ with $\E(\phi)=1$ is thought of as a stress factor or ``stressor,"  defining events impacting $p_{it}$  and serving as a basis for stress testing.  Thus $\phi$--stressing  changes the expected value $\E(p_{it})$ by the covariance between the conditional expectation $\E(p_{it}|\phi)$  and the stressor $\phi$.
 
-The conditioning variable $\phi$  downplay or highlight different scenarios.  The conditioning events are scenarios of interest and  probabilistic weighting is according to the level of interest.  The first equality in \eref{formula}  from the definition of conditional probability \citep{whittle2000probability}.  The second equality follows from
+The conditioning variable $\phi$  downplays or highlight different scenarios.  The conditioning events are scenarios of interest and  probabilistic weighting is according to the level of interest.  The first equality in \eref{formula}  from the definition of conditional probability \citep{whittle2000probability}.  The second equality follows from
 $$
 \cov(p_{it},\phi)=\cov\{\E(p_{it}|\phi),\phi\}\ .
 $$
@@ -328,12 +315,6 @@ where $S$ is the simulation effort.  The approximation is increasingly accurate 
 \section{Systemic beta's based on  market return}
 The setup is illustrated with  examples generalising and fine--tuning the approach of Engle.
 
-\subsection{Market return}
-
-Suppose $\phi=\e^{-\lambda\nu_{mt}}\approx 1-\lambda\nu_{mt}$ where $\lambda$ is a parameter.   Then  if $\nu_{mt}$ is normal with mean $h\mu_{mt}$ and variance $ h\sigma^2_{mt}$ then
-$$
-\beta_{it} = \frac{\cov(p_{it},\phi)}{\sigma_\phi}  \approx \frac{-\cov(p_{it},\nu_{mt})}{\sqrt{\e^{h(2\mu_{mt}+\sigma_{mt}^2)}\left(\e^{h\sigma_{mt}^2}-1\right)}}\ ,
-$$
 \subsection{Market return below a percentile threshold} 
 
 Suppose the stress event is a market return in the bottom $\alpha$--tail of the  market return distribution.   Then  $\phi(u)=1/\alpha$ for $u< \alpha$ and 0  otherwise and
@@ -349,7 +330,7 @@ where the estimate of $\sigma_\phi$ implicit in the final expression is establis
 A fixed $\alpha$ cutoff  implies the actual threshold depends on the distribution and hence  on volatility and  time.  The actual threshold drop in the market $c_t=F_{mt}^-(\alpha)$, where $F_{mt}^-$ is the inverse distribution function of $\nu_{mt}$.  The volatility associated with the latter distribution is approximately $\sqrt{h}\sigma_{mt}$ where $\sigma_{mt}$ is current market volatility.   Regulators and practitioners  are well versed in working with VaR type calculations and hence a varying VaR type cutoff combining market volatility and stress is closely aligned to current practice. 
 
 
-\subsection{Expected worst market return in independent copies} 
+\subsection{Expected worst market return in $n$ identical scenarios} 
 If $\phi(u)=n(1-u)^{n-1}$ then $\phi(u)\de u = \de\{1-(1-u)^n\}$ and 
 $$
 \Es(p_{it}) \equiv \E\{\phi\E(p_{it}|\phi)\} = \int_0^1\E(p_{it}|u)\de\{1-(1-u)^n\}\ .
@@ -379,10 +360,11 @@ $$
 \be{wave}
 \E\{\phi\E(p_{it}|\phi)\} = -\E\{u\phi'(u)\E(p_{it}|u_{mt}\le u)\}\ .
 \ee
-Thus a stressed expectation, stressed with a decreasing function of the market return, is equivalent to taking a weighted average of conditional lower tail expectations.  This circumvents an explicit choice for the market threshold, enabling a mixture of thresholds.  The equivalence of the left and right hand sides of \eref{wave}  is established with, writing $\E_v$ as expectation given $u_{mt}=v$,  (*** Weihao can you check this****)
+Thus a stressed expectation, stressed with a decreasing function of the market return, is equivalent to taking a weighted average of conditional lower tail expectations.  This circumvents an explicit choice for the market threshold, enabling a mixture of thresholds.  The equivalence of the left and right hand sides of \eref{wave}  is established with, writing $\E_v$ as expectation given $u_{mt}=v$,  
 $$
-\int_0^1 \phi'(u)  \int_0^u \E_v(\nu_{it})\de v   \de u =\int_0^1\E_v(\nu_{it})\int_v^1  \phi'(u) \de u \de v\ .   
+\int_0^1 \phi'(u)  \int_0^u \E_v(\nu_{it})\de v   \de u =\int_0^1\E_v(\nu_{it})\int_v^1  \phi'(u) \de u \de v\ ,   
 $$
+provided $\phi(1)=0$.
 
 \subsection{Copula stressors}
 
@@ -426,6 +408,14 @@ where $\phi_k$ is the weight assigned to scenario $k$.   The $\pi_k\phi_k\ge 0$ 
 
 In the discrete case $\beta_{it}$ compares the expected value under an average of distress scenarios to the average without distress.  The quantity $\sigma_\phi$ is now of limited relevance, signalling the volatility in the distress probabilities. 
 
+\subsection{Market return}
+
+Suppose $\phi=\e^{-\lambda\nu_{mt}}\approx 1-\lambda\nu_{mt}$ where $\lambda$ is a parameter.   Then  if $\nu_{mt}$ is normal with mean $h\mu_{mt}$ and variance $ h\sigma^2_{mt}$ then
+$$
+\beta_{it} = \frac{\cov(p_{it},\phi)}{\sigma_\phi}  \approx \frac{-\cov(p_{it},\nu_{mt})}{\e^{h(\mu_{mt}+\sigma_{mt}^2/2)}\sqrt{\e^{h\sigma_{mt}^2}-1}}\ ,
+$$
+
+
    
 
 \section{Risk weighted asset valuation}
@@ -454,7 +444,7 @@ A return sample size $S$ is assembled by simulating asset specific forward retur
 
 For more general $\phi$ it is  convenient to estimate $\beta_{it}$ using \eref{simulate}.   Thus given $\phi$, simulated asset returns $\nu_{ijt}^s$ are used to compute the corresponding simulated put value $p_{it}^s$ as in \eref{asset} and weighted market percentile $\phi^s\equiv \phi(u^s_{mt})$.   These are then combined as in \eref{simulate}.   If required, the stressed expectation is estimated using 
 $$
-\Es(p_{it}) \approx \mu_{it} + \sigma_\phi\beta_{it}\cq \mu_{it} \approx \frac{1}{S}\sum_s p_{it}^s\ .
+\Es(p_{it}) = \mu_{it} + \sigma_\phi\beta_{it}\cq  \frac{1}{S}\sum_s p_{it}^s\rightarrow \E(p_{it})\equiv \mu_{it}\ .
 $$
 
 The above framework formalises risk weighted asset methodology  used in capital setting.   Easily (dis)stressed assets have a return distribution sensitive to market downturn.   This implies, in a downturn, $\e^{\nu_{ijt}}$ is likely to be much less than 1 and the asset value $a_{ijt}$ is downweighed in the computation of $\Ex(\e^{\nu_{ijt}})$.  In turn the put price is increased.  The responsiveness of the put price depends on the proportion $a_{ijt}/a_{it}$ of assets in class $j$ held by firm $i$ at time $t$.   Thus the $\e^{\nu_{ijt}}$ can be viewed  as risk weights where the averaging over put values corresponds  to an implicit average risk weight.   The implicit weights can be backed out to give risk weighted assets
@@ -484,7 +474,7 @@ The time series models used for projecting are stochastic volatility models base
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics{simulation.pdf}
-\caption{Six thousand simulated bivariate 1 month forward returns for CBA and the market at start of January 2009 (left panel)  and December 2014 (right panel). Note scales in both panels are the same, the relatively large volatility in the left panel, and the left skew in the  marginal distributions.}
+\caption{Six thousand simulated bivariate 1 month forward returns for CBA and the market at start of January 2009 (left panel)  and December 2014 (right panel). Note scales in both panels are the same, the relatively large volatility in the left panel, and the left skew in the  marginal distributions.  Black dot in each panel indicates realized forward return.   Red lines indicate Basel breach points -- any firm return below the red line indicates a Basel breach given the bank leverage on each of the two dates.}
 \label{simulation}
 \end{center}
 \end{figure}
@@ -553,11 +543,48 @@ The forward simulations are implemented similar to \cite{brownlees2015}.   Given
 
 The left panel of \fref{Bbeta} indicates that up to about late 2008, there was no system systemic stress:  The chance of a Basel default was virtually zero.   However, indicated in the right panel, the BOQ bank did have have substantial systemic risk -- ie a substantial risk of sliding into Basel default under the systemic stress of a broad market downturn.
 
-\subsection{Stressors}
+\section{Systemic beta's  versus SRISK}
 
-Two different stressors are used:   
+The methodology developed and employed in this article departs in two respects from the SRISK methodology set out in \cite{brownlees2015}.  This section examines the force of these differences.
 
+\subsection{Put value versus put on expected value} 
 
+The SRISK methodology, employs, apart from scaling by actual debt and the Basel constant $k$,
+\be{prisk}
+\mathrm{SRISK}_{it} = |1-\E_\phi(\e^{\nu_{it}-\ell_{it}^*})|^+\le \Es(|1-\e^{\nu_{it}-\ell_{it}^*}|^+) \equiv \mathrm{PRISK}_{it}\ , 
+\ee
+where stressed expectation $\Es$ in the \cite{brownlees2015} article is conditional expectation given on a major market downturn.  The   ``put" in the first expression is evaluated after the expectation $\Es$ and checks, in essence, whether on average, in a significant market downturn, the $h$ period ahead return $\nu_{it}$ exceeds the   log--leverage adjusted for $k$.  Even if on average this holds true there may be substantial risk of a Basel breach, depending on the volatility of the return.   Volatility in $\nu_{it}$ is ignored in the $\mathrm{SRISK}_{it}$ computation other than through the usual adjustment on account of continual compounding.
+
+With $\mathrm{PRISK}_{it}$ volatility issues are taken into consideration.  Other things equal, high volatility leads to higher put values since breach size  is taken into consideration.   Two identical situations save for volatility will lead to the same SRISK but different PRISK.  \fref{simulation} emphasises volatility  can vary significantly.
+
+To evaluate the difference consider the percentage difference
+$$
+100\times \frac{\mathrm{PRISK}_{it}-\mathrm{SRISK}_{it}}{\mathrm{PRISK}_{it}}
+$$
+(to be continued -- or maybe need some other measure)
+
+\subsection{Systemic stress versus volatility stress}
+
+This article measures stress using $\beta_{it}$, a scaled version of $\Es(p_{it})-\E(p_{it})$.   \cite{brownlees2015} use $\Es$ as in \eref{prisk}.  A stressed expectation may be high simply on account of put prices being high, again reflecting higher than normal volatility.
+Stress measure with $\Es$ alone picks up both current stress, due to high volatility, and the additional stress imparted by the stressing variable.
+
+To gain insight into the relative sizes of these two components, consider the proportion of the stressed put price due to a possible future stress scenario
+$$
+\frac{\Es(p_{it})-\E(p_{it})}{\Es(p_{it})} = \frac{\sigma_\phi\beta_{it}}{\mu_{it}+\sigma_\phi\beta_{it}}  \ . 
+$$
+The denominator is total stress in firm $i$, made up of two components:   the volatility stress $\mu_{it}=\E(p_{it})$ and the systemic stress $\sigma_\phi\beta_{it}=\Es(p_it)-\E(p_{it})$.   Volatility stress  arises on account  of high volatility in the markets causing high put prices.   Systemic stress is the additional stress caused by  a potential  bad systemic event.     
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics{betaitmuit.pdf}
+\caption{Plots of systemic stress $\sigma_\phi\beta_{it}\equiv \Es(p_{it})-\E(p_{it})$  vesus volatility stress  $\mu_{it}\equiv\E(p_{it})$   for four major banks (left panel) and four minor banks (right panel).}
+\label{betaitmuit}
+\end{center}
+\end{figure}
+
+\fref{betaitmuit} plots systemic stress versus volatility stress for the eight Australian banks of \tref{banks}.   Generally volatility stress is higher than systemic stress.
+
+\subsection{Flexible definition stress via functional forms versus cutoffs}
 
 \section{Standardised SRISK and layer dependence}
 

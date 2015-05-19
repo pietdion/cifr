@@ -129,74 +129,95 @@ figBloglev=: 3 : 0
    pd 'show'
 )
   
-figBloglev''
-stop
+NB.  figBloglev''
 
 
 figprices=: 3 : 0
    yrmo=.(yr-2000)+(mo-1)%12['yr mo da'=.|:ymd
    pd 'reset'
    opt=. 'yticpos 0 3 6 9;xticpos 1 3 5 7 9 11 13 15'
-   opt=. opt,';xcaption year'
+   opt=. opt,';xcaption year - 2000'
    pd 'sub 1 2'
    pd 'new'
-   pd opt   
+   pd opt
+   pd 'key cba anz nab wbc'
+   pd 'keyfont Arial 6'
+   pd 'keypos top left'
+   pd 'keystyle thin' 
    pd yrmo;*/\"1 ^%&100 cba,anz,nab,:wbc
    pd 'new'
    pd opt
+   pd 'key mqg boq ben aba'
+   pd 'keyfont Arial 6'
+   pd 'keypos top left'
+   pd 'keystyle thin'
    pd yrmo;*/\"1 ^%&100 mqg,boq,ben,:aba
-   pd 'pdf 320 150 ',fdir,'prices.pdf'
+   pd 'pdf 350 150 ',fdir,'prices.pdf'
    pd 'show'
 )
 
-NB. figprices''
-
-figsimulation=: 3 : 0
-   xtract1=.{.@(72&{)@|:
-   xtract1=. 72&({.@:([ { |:@]))
-   xtract2=.{.@{:@|:
-   xtract=.({.@:([ { |:@]))
-   'nusij nusmj'=.72 xtract"2 nusit,:nusmt
-   'nusid nusmd'=.143 xtract"2 nusit,:nusmt
-   ticpos=.'-0.8 -0.6 -0.4 -0.2 0 0.2 0.4 0.6'
-   pd 'reset'
-   opt=. 'yticpos ',ticpos,';xticpos ',ticpos
-   opt=. opt,';xcaption market return'
-   pd 'sub 1 2'
-   pd 'new;type dot'
-   pd opt
-   pd (xtract1 nusmt);xtract1 nusit  
-   pd 'new;type dot'
-   pd opt
-   pd (xtract2 nusmt);xtract2 nusit 
-   pd 'pdf 320 150 ',fdir,'simulation.pdf'
-   pd 'show'
-)
-
-  figsimulation''
+ figprices''
 
 stop
 
-figBbeta=: 3 : 0
-   yrmo=:(yr-2000)+(mo-1)%12['yr mo da'=.|:ind#ymd
-   ticpos=.'0 0.02 0.04 0.06 0.08 0.1'
+figsimulation=: 3 : 0
+   xtract=.({.@:([ { |:@]))
+   perc=.100&* L:0 
+   two=.'first secnd'=.72 142   NB. jan09 nov14
+   'nusmf nusif'=.first xtract"2 nusmt,:nusit
+   'nusms nusis'=.secnd xtract"2 nusmt,:nusit
+   Blimits=.two xtract"0 2 lstarit
+   'cbaprice asxprice'=.((*/\)@:>:@:(%&100))"1 cba,:asx
+   'nuit numt'=.|:dif ln ind#cbaprice,.asxprice 
+   ticpos=.'-80 -60 -40 -20 0 20 40 60'
    pd 'reset'
-   opt=.'yticpos ',ticpos,'NB.;xticpos ',ticpos
-   opt=. opt,';xcaption year'
+   opt=.'yticpos ',ticpos,';xticpos ',ticpos
+   opt=. opt,';xcaption % market return '
    pd 'sub 1 2'
-   pd 'new;xcaption year'
-   pd 'yticpos ',ticpos
-   pd 'xticpos 3 5 7 9  11  13 15'
-   pd yrmo;Ex betait
-   pd 'new;xcaption year'
-   pd 'yticpos ',ticpos
-   pd 'xticpos 3 5 7 9  11  13 15'
-   pd yrmo;betait
-   pd 'pdf 320 150 ',fdir,'Bbeta.pdf'
+   pd 'new;type dot'
+   pd opt
+   pd perc nusmf;nusif
+   pd 'type line;color red' 
+   pd perc nusif;(#nusmf)#{.Blimits
+   pd 'type dot;color black;pensize 2'
+   pd 2&# L:0 perc (first{numt);first{nuit
+   pd 'new;type dot;pensize 1;color blue'
+   pd opt
+   pd perc nusms;nusis
+   pd 'type line;color red'
+   pd perc nusif;(#nusif)#{:Blimits
+   pd 'color black;type dot;pensize 2'
+   pd  2&# L:0 perc (secnd{numt);secnd{nuit
+   pd 'pdf 350 150 ',fdir,'simulation.pdf'
    pd 'show'
 )
 
-NB. figBbeta ''
+NB.  figsimulation''
+
+
+figBbeta=: 3 : 0
+   yrmo=:(yr-2000)+(mo-1)%12['yr mo da'=.|:ind#ymd
+   pd 'reset'
+   opt=.'yticpos 0 0.02 0.04 0.06 0.08 0.1'
+   opt=. opt,';xcaption year - 2000;xticpos 3 5 7 9 11 13 15'
+   pd 'sub 1 2'
+   pd 'new'
+   pd opt
+   pd yrmo;Ex betait
+   pd 'new'
+   pd opt
+   pd 'key cba anz nab wbc mqg boq ben aba'
+   pd 'keyfont Arial 6'
+   pd 'keypos top left'
+   pd 'keystyle thin'
+   pd yrmo;betait
+   pd 'pdf 350 150 ',fdir,'Bbeta.pdf'
+   pd 'show'
+)
+
+ figBbeta ''
+
+stop
 
 srisk=: 3 : 0
   srisk0=:(*>&0) E 1-^nustarsit

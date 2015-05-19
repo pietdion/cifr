@@ -266,7 +266,7 @@ $$
 that is the density  $f(p_{it})$ of $p_{it}$  is replaced by  the density $\phi f(p_{it})$.  Hence more importance is given to those outcomes given more weight by $\phi$. 
 
 
-\section{Systemic beta}
+\section{Systemic beta's}
 Writing  $\sigma_{\phi}$ as the standard deviation of $\phi$,  define the systemic beta of firm $i$ with respect to stress $\phi$ as
 \be{zscore}
 \beta_{it}\equiv \frac{\Es(p_{it})- \E(p_{it})}{\sigma_\phi}= \frac{\E\{(\phi-1)p_{it}\}}{\sigma_\phi}= \frac{ \cov\{\E(p_{it}|\phi),\phi\}}{\sigma_\phi} \cq
@@ -317,7 +317,7 @@ $$
 
 Firm specific stress $\beta_{it}$ and system stress  can be determined using simulation.   For the former
 \be{simulate}
-\beta_{it} \approx \frac{1}{\sigma_\phi S}\sum_{s=1}^S (\phi^s-1)p_{it}^s\ ,
+\frac{1}{\sigma_\phi S}\sum_{s=1}^S (\phi^s-1)p_{it}^s\rightarrow \beta_{it} \cq S\rightarrow\infty\ ,
 \ee
 where $S$ is the simulation effort.  The approximation is increasingly accurate as $S$ becomes large.  In this simulation, the $(\phi^s,p_{it}^s)$ are pairs of stress and put values generated from a model: for example $\phi^s$ may be zero unless there is a market drop below the $\alpha$--percentile in which case it is $1/\alpha$.   In this latter case the simulation \eref{simulate} averages over all simulated put values $p_{it}^s$ paired with an at least $\alpha$--drop in the market.
 
@@ -350,7 +350,7 @@ A fixed $\alpha$ cutoff  implies the actual threshold depends on the distributio
 
 
 \subsection{Expected worst market return in independent copies} 
-If $\phi(u)=n(1-u)^n$ then $\phi(u)\de u = \de\{1-(1-u)^n\}$ and 
+If $\phi(u)=n(1-u)^{n-1}$ then $\phi(u)\de u = \de\{1-(1-u)^n\}$ and 
 $$
 \Es(p_{it}) \equiv \E\{\phi\E(p_{it}|\phi)\} = \int_0^1\E(p_{it}|u)\de\{1-(1-u)^n\}\ .
 $$
@@ -459,15 +459,37 @@ $$
 
 The above framework formalises risk weighted asset methodology  used in capital setting.   Easily (dis)stressed assets have a return distribution sensitive to market downturn.   This implies, in a downturn, $\e^{\nu_{ijt}}$ is likely to be much less than 1 and the asset value $a_{ijt}$ is downweighed in the computation of $\Ex(\e^{\nu_{ijt}})$.  In turn the put price is increased.  The responsiveness of the put price depends on the proportion $a_{ijt}/a_{it}$ of assets in class $j$ held by firm $i$ at time $t$.   Thus the $\e^{\nu_{ijt}}$ can be viewed  as risk weights where the averaging over put values corresponds  to an implicit average risk weight.   The implicit weights can be backed out to give risk weighted assets
 \be{rwa}
-a_{it}\Ex_a\left( \frac{1}{S}\sum_s\phi^s\e^{\nu_{ijt}^s}\right)\approx \Es\{\Ex_a(\e^{\nu_{ijt}})\} \ .
+a_{it}\Ex_a\left( \frac{1}{S}\sum_s\phi^s\e^{\nu_{ijt}^s}\right)\rightarrow \Es\{\Ex_a(\e^{\nu_{ijt}})\}\cq S\rightarrow\infty \ .
 \ee
-The expression in  brackets in the left is the risk weight for asset $j$.   Assets whose return $\nu_{ijt}$  tends to be very negative under stress $\phi$ are has high risk and low weight.  An asset whose value does not vary has $\nu_{ijt}\equiv 0$ and  a risk weight of 1 since on average $\phi^s$ is 1.
+The expression in  brackets in the left is the risk weight for asset $j$.   Assets whose return $\nu_{ijt}$  tends to be very negative under stress $\phi$ have high risk and low weight.  An asset whose value does not vary has $\nu_{ijt}\equiv 0$ and  a risk weight of 1 since, on average, $\phi^s$ is 1.
 
 The difference
 $$
 k - \frac{1}{S}\sum_s\phi^s\Ex_a(\e^{\nu_{ijt}^s})\ ,
 $$
 is the proportionate increase capital shortfall on account of risk weighting and as a proportion of total assets.
+
+\section{Simulating future capital shortfall and market return}
+
+The estimation of systemic beta's requires  projections of future capital shortfalls and future stressors.   As in \cite{brownlees2015} in this article projections are constructed  using time series models modelling the forward rates of return $\nu_{it}$ for firms $i$ and $\nu_{mt}$ for the market.   The market return is used as the stressor with different choices of the stress function $\phi$ modelling different stress scenarios.
+
+The time series models used for projecting are stochastic volatility models based on the GARCH--DCC model of \cite{engle2002dynamic}.   For completeness we summarise the model below.    It must be emphasised however that the GARCH--DCC framework is only one possible implementation.   For example future return scenarios may be constructed in a more ad--hoc manner e.g. judiciously chosen scenarios decided on by regulators or policy makers.   This emphasises that the  systemic beta framework can be based on  any  method of generating  future  scenarios.
+
+ \fref{simulation}   displays two snapshot outputs from GARCH--DCC projections:  6000  simulated one month ahead projected returns for  CBA and the market, on  two dates: the first trading day in January 2009 and the first trading day in December 2014.    Both panels use the same horizontal and vertical scales.   Thus based on the available data at those two points in  time, policy makers and regulators faced entirely different projections based on the same time series model.   The scatter of dots are the forward simulations.  Note there is no lookahead bias as the model at each time point is based on the available data to that point in time.    The red horizontal line in each panel indicates the projected Basel limit:  any firm return less than the limit would constitute a Basel breach.   In the left panel there is little confidence that the Basel limit will be reached since it requires a return on equity approaching 20\% -- with confidence less than xxx the Basel standard will be breached.  In the right panel there is no chance of a Basel breach under any of the projected return on equity -- the bank is ``safe.".   
+ 
+ The black dots in each panel indicate the actual outcome after one month.    In the left panel the outcome is a decline in the market and stock price of xxx and xxx, respectively.    In the right panel the returns are xxx and xxx.    Thus in January  2009 the CBA bank was far from compliance while in December 2015 it is very much compliant.  
+ 
+ The two panels thus display very different volatility and slopes.  These snapshots are used to compute systemic stress.   Appendix xxx details the GARCH--DCC model used in this study.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics{simulation.pdf}
+\caption{Six thousand simulated bivariate 1 month forward returns for CBA and the market at start of January 2009 (left panel)  and December 2014 (right panel). Note scales in both panels are the same, the relatively large volatility in the left panel, and the left skew in the  marginal distributions.}
+\label{simulation}
+\end{center}
+\end{figure}
+
+While the above discussion suggests the, as is obvious after the fact, that December 2009 the CBA bank was under much stress the above calculations do not actually reflect the reflect the real stress.   In terms of the development of the previous sections the actual stress is beta given a stressor function $\phi$ and stressor variable.   In this case the stressor variable is the market return, on the horizontal axis in each panel.   Stress occurs if the market return is low.   In the left panel low market outcomes are likely to lead to sharply lower CBA bank returns, as compared to the right panel.   This is suggested by the slope of the scatter plots:  the left slope appears steeper than the right and hence any stress in the market -- in the sense of a market downturn is expected to lead to a larger drop in the CBA bank return in the left scenario as compared to the right scenario.   The magnitudes of the two responses depends on the stressor function.   In essence the stressor function formalises the notion as to what constitutes a ``big" drop.   If a big drop is the expected worst in 20 similar market scenarios then the stress in the left and right are xxx and xxx, respectively.        
 
 
 
@@ -507,64 +529,29 @@ Prices, adjusted for dividends are plotted in \fref{prices}.
 \end{center}
 \end{figure}
  
-At each of the first trading day in the months from January 2003 through to December 2014,  all previous returns were used estimate a TARCH-DCC model described below.   For each first trading day of the month, the fitted model is then used to, simulate the forward return distribution over the next 22 trading days, corresponding to approximately one month.  The details of the fitted models are described in the next subsection.
+At each of the first trading day in the months from January 2003 through to December 2014,  all prior returns are used estimate a TARCH-DCC model described below.   For each first trading day of the month, the fitted model is then used to simulate the forward return distribution over the next 22 trading days, corresponding to approximately one month.  The details of the fitted models are described in the next subsection.
 
-\subsection{TARCH-DCC modelling}
 
-For notational convenience the $i$ subscript is dropped and denote the daily (log) return as
-\newcommand{\vareps}{\varepsilon}
-\be{mean.model}
-r_{t}=\mu+\sigma_t\eps_t\cq \eps_t\sim (0,1)\cq  \eps^-_t\equiv I(\eps_t<0)=I(r_t<\mu)\ ,
-\ee
-Thus returns are assumed to have an unconditionally constant mean.   The notation $\eps_t^-$ indicates whether there is a negative return:  $I$ denoting the indicator function.  The volatility is modelled with the TARCH model
-\be{vol}
-\sigma_{t+1}^2 = \omega+ \sigma^2_t\{\beta+(\alpha+\gamma \eps^-_t)\eps_{t}^2\}\\ .
-\ee
-Hence the response of the variance to $\eps_t^2$  is increased by $\gamma$   if $\eps_{t}<0$ compared to the response if $\eps_t>0$.  This is a simple threshold GARCH model:  called TARCH.   In the fits it is assumed the mean $\mu$ does not vary with time $t$ and the single lag in both the $\sigma_t^2$ and $\eps_t$ is sufficient to capture the dynamics of volatility. 
-
-The model \eref{mean.model} and \eref{vol} is fit  for each security $i$ including the market,  $i=m$.   The correlations between securities and the market are also modelled using  positive definite recursions   \citep{engle2002dynamic}
-$$
-(Q_{t+1}-S) = \alpha (\eta_t\eta_t'-S) + \beta (Q_t-S)\cq \eta_t\equiv(\eps_{it},\eps_{mt})' ,
-$$
-A   Dynamic Conditional Correlation (DCC) model is estimated for  firm and market returns.  Write
-\newcommand{\veps}{\varepsilon}
-$$
-\cov (r_t|t) = V_tR_tV_t'\cq R_t\equiv \cov(\veps_t|t)\cq \veps_t=V_t^{-1}r_t\ ,
-$$
-where $R_t$ and  $V_t$  are the correlation and diagonal volatility matrix, respectively, at time $t$.   Volatilities in $V_t$  are estimated using univariate threshold GARCH models.  The estimate of $R_t$ corresponds to the correlations in covariance matrix $C_t$ assuming
-$$
-(C_t - C) = \alpha (C_{t-1}-C)+\beta (\veps_t\veps'_t-C) \cq C\equiv\cov(\veps_t)\ .
-$$
-where $C$ is the long run covariance matrix.
 
 \subsection{Forward return simulation}
 
-The forward simulations are implemented similar to \cite{brownlees2015}.   Given the latest available volatility and correlation estimates the filter recursions are moved forward in time fed with innovations randomly chosen from past standardised innovations.  Thus the innovations are chosen to have the same marginal distributions as applicable in the past.  The random choices are such  that the same market return innovations are used in each bivariate analysis.   
+The forward simulations are implemented similar to \cite{brownlees2015}.   Given the latest available volatility and correlation estimates the filter recursions are moved forward in time using innovations randomly chosen from past standardised innovations.  Thus the innovations are chosen to have the same marginal distributions as applicable in the past.  The random choices are such  that the same market return innovations are used in each bivariate analysis.   
 
-Figure \fref{simulation} displays  6000 forward simulations for the joint CBA and market return on each of  two dates, the first trading days in January 2009 and December 2014. 
 
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics{simulation.pdf}
-\caption{Six thousand simulated bivariate 1 month forward returns for CBA and the market at start of January 2009 (left panel)  and December 2014 (right panel). Note scales in both panels are the same, the relatively large volatility in the left panel, and the left skew in the  marginal distributions.}
-\label{simulation}
-\end{center}
-\end{figure}
 
-\subsection{Basel beta risk}
+\subsection{Systemic beta's}
 
-Figure \fref{Bbeta} displays Basel beta's over the years from 2003 through to the end of 2014.  The employed stressor is the expected worst outcome in 12 independent copies:
-$$
-\phi(u) = 12(1-u)^{11}\cq \beta_{it} = \frac{\E\{\min(p^1_{it},\ldots,p^{12}_{it})\}-\E(p_{it})}{\sigma_\phi}
-$$
+\fref{Bbeta} displays the system systemic beta (left panel) and the firm specific systemic beta's (right panel)  for each month from January 2003 through to December 2014.   The stressor is the ASX market return while the stressor function is the expected worst outcome in $n=12$ identical scenarios:  $\phi(u)=n(1-u)^{n-1}$.
 
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics{Bbeta.pdf}
-\caption{Basel beta's.  The left panel displays the overall beta.   The right panel ...}
+\caption{Systemic beta's.  The left panel displays the system systemic beta.   The right panel indicates systemic beta's for each of the eight banks.  In each case the stressor is market return and the stress function is the expected worst outcome in 12 identical scenarios.}
 \label{Bbeta}
 \end{center}
 \end{figure}
+
+The left panel of \fref{Bbeta} indicates that up to about late 2008, there was no system systemic stress:  The chance of a Basel default was virtually zero.   However, indicated in the right panel, the BOQ bank did have have substantial systemic risk -- ie a substantial risk of sliding into Basel default under the systemic stress of a broad market downturn.
 
 \subsection{Stressors}
 
@@ -600,7 +587,7 @@ $$
 
 Suppose of interest is whether $\beta_{it}$ varies similarly  across firms as $\tau$ varies where $\tau$ is the threshold, $k$, or some other parameter used to compute $\beta_{it}$. High correlation implies high systemic risk since firms are simultaneously affected.
 
-Define $\eps_{it}\equiv(\phi-1)p_{it}$ and $\eps_t$ as the vector with components $\eps_{it}$.  Then $\E(\eps_{it}|\tau)=\sigma_\phi(\tau)\beta_{it}(\tau)$, the stress in firm $i$ at the given parameter setting $\tau$  and
+Define $\eps_{it}\equiv(\phi-1)p_{it}$ and $\eps_{it}$ as the vector with components $\eps_{it}$.  Then $\E(\eps_{it}|\tau)=\sigma_\phi(\tau)\beta_{it}(\tau)$, the stress in firm $i$ at the given parameter setting $\tau$  and
 $$
 \cov\{\E(\eps_{it}|\tau)\}=\cov(\eps_{t})-\E\{\cov(\eps_{it}|\tau)\}\ ,
 $$
@@ -677,7 +664,33 @@ $$
 The inequality is a result  of diversification effects:   low liquidity  in one firm is implicitly offset by high liquidity  in other  firms.
 
 
+\section*{Appendix}
 
+Denote the daily (log) return as
+\newcommand{\vareps}{\varepsilon}
+\be{mean.model}
+\delta_{it}=\mu+\sigma_{it}\ep_{it}s_{it}\cq \eps_{it}\sim (0,1)\cq  \eps^-_{it}\equiv I(\eps_{it}<0)=I(\delta_{it}<\mu)\ ,
+\ee
+Thus returns are assumed to have an unconditionally constant mean.   The notation $\eps_{it}^-$ indicates whether there is a negative return:  $I$ denoting the indicator function.  The volatility is modelled with the TARCH model
+\be{vol}
+\sigma_{t+1}^2 = \omega+ \sigma^2_{it}\{\beta+(\alpha+\gamma \eps^-_{it})\eps_{t}^2\}\\ .
+\ee
+Hence the response of the variance to $\eps_{it}^2$  is increased by $\gamma$   if $\eps_{i_{it}t}<0$ compared to the response if $\eps_{it}>0$.  This is a simple threshold GARCH model:  called TARCH.   In the fits it is assumed the mean $\mu$ does not vary with time $t$ and the single lag in both the $\sigma_{it}^2$ and $\eps_{it}$ is sufficient to capture the dynamics of volatility. 
+
+The model \eref{mean.model} and \eref{vol} is fit  for each security $i$ including the market,  $i=m$.   The correlations between securities and the market are also modelled using  positive definite recursions   \citep{engle2002dynamic}
+$$
+(Q_{t+1}-S) = \alpha (\eta_{it}\eta_{it}'-S) + \beta (Q_{it}-S)\cq \eta_{it}\equiv(\eps_{it},\eps_{mt})' ,
+$$
+A   Dynamic Conditional Correlation (DCC) model is estimated for  firm and market returns.  Write
+\newcommand{\veps}{\varepsilon}
+$$
+\cov (\delta_{it}|t) = V_{it}R_{it}V_{it}'\cq R_{it}\equiv \cov(\veps_{it}|t)\cq \veps_{it}=V_{it}^{-1}\delta_{it}\ ,
+$$
+where $R_{it}$ and  $V_{it}$  are the correlation and diagonal volatility matrix, respectively, at time $t$.   Volatilities in $V_{it}$  are estimated using univariate threshold GARCH models.  The estimate of $R_{it}$ corresponds to the correlations in covariance matrix $C_{it}$ assuming
+$$
+(C_{it} - C) = \alpha (C_{t-1}-C)+\beta (\veps_{it}\veps'_{it}-C) \cq C\equiv\cov(\veps_{it})\ .
+$$
+where $C$ is the long run covariance matrix.
 
 
 

@@ -108,7 +108,9 @@ NB. 'ldit pn'=:|:(1&ct)"1 y               NB. (mx2xT);mx2xSxT  -- m=#y
   sigphi=:mean^:2 sd phiumsit           NB. 1
   phistarsit=:(phiumsit-1)%sigphi       NB. SxmxT
   betait=:E phistarsit*psit             NB. mxT
-  Ex=:+/@:(* %"1 +/@:])&dit             NB.   (mxT) Ex mxT 
+  Ex=:+/@:(* %"1 +/@:])&dit             NB.   (mxT) Ex mxT
+  Exw=:+/@:(* %"1 +/@:])&wit            NB.   (mxT) Ex mxT
+  nut=:ln Exw"2 ^nusit                  NB. SxT
   sigt=:sd pit=:E psit                  NB. T;mxT
   betat=:Ex betait                      NB. T
   yrmo=:(yr-2000)+(mo-1)%12['yr mo da'=:|:ind#ymd
@@ -187,6 +189,8 @@ figsimulation=: 3 : 0
    pd perc nusif;(#nusmf)#{.Blimits
    pd 'type dot;color black;pensize 2'
    pd 2&# L:0 perc (first{numt);first{nuit
+   pd 'type dot;color yellow;pensize 2'
+   pd 2&# L:0 0;0
    pd 'new;type dot;pensize 1;color blue'
    pd opt
    pd perc nusms;nusis
@@ -194,11 +198,14 @@ figsimulation=: 3 : 0
    pd perc nusif;(#nusif)#{:Blimits
    pd 'color black;type dot;pensize 2'
    pd  2&# L:0 perc (secnd{numt);secnd{nuit
+   pd 'type dot;color yellow;pensize 2'
+   pd 2&# L:0 0;0
    pd 'pdf 350 150 ',fdir,'simulation.pdf'
    pd 'show'
 )
 
-NB.  figsimulation''
+  figsimulation''
+stop
 
 
 figBbeta=: 3 : 0
@@ -253,7 +260,7 @@ figstress=: 3 : 0
    pd 'show'
 )
 
-figaddstress=: 3 : 0
+figsysstress=: 3 : 0
    sysstress=.sigphi*betait
    volstress=.0.0001+muit
    totstress=.volstress+sysstress
@@ -266,15 +273,23 @@ figaddstress=: 3 : 0
    opt=.opt,';pensize 1;type dot'
    pd 'new'
    pd opt
+  pd 'key cba anz nab wbc'
+   pd 'keyfont Arial 6'
+   pd 'keypos top right'
+   pd 'keystyle thin' 
    pd"1  (0 1 2 3{volstress);"1[ 0 1 2 3{sysstress
    pd 'new'
    pd opt
+  pd 'key mqg boq ben aba'
+   pd 'keyfont Arial 6'
+   pd 'keypos top right'
+   pd 'keystyle thin'
    pd"1  (4 5 6 7{volstress);"1 [ 4 5 6 7{sysstress
    pd 'show'
-   pd 'pdf 350 150 ',fdir,'betaitmuit.pdf'
+   pd 'pdf 350 150 ',fdir,'sysstress.pdf'
 )
   
-figaddstress''
+figsysstress''
 stop
 
 

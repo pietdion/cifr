@@ -8,6 +8,9 @@
 *.toc
 *.spl
 
+## j data files
+*.j
+
 ## Intermediate documents:
 *.dvi
 *-converted-to.*
